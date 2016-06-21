@@ -1,0 +1,179 @@
+{% extends "exp/base_user.html" %}
+{% block title %}Rastreo{% endblock %}
+{% block addcss_user %}
+  <link rel="stylesheet" href="{{ STATIC_URL}}css/alertify.core.css">
+  <link rel="stylesheet" href="{{ STATIC_URL}}css/alertify.default.css">
+{% endblock%}
+{% block content_user %}
+<div class="one column row">
+  <div class="column">
+    <div class="ui labeled huge input">
+      <a href="{% url 'pedido:index_pedido' %}" class="ui teal icon huge button">
+        <i class="express-atras icon"></i>
+      </a>
+      <a class="ui olive label">Rastreo</a>
+    </div>
+  </div>
+</div>
+<div class="ui container grid" style="margin-bottom:50px;margin-top:15px;">
+  <div class="center aligned column">
+    <div class="ui stackable two column grid">
+        <div class="c lista">
+          <input type="text" name="search" placeholder="Search.." id="search">
+            <div class="contenedor">
+              <ul class="lis_emp">
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+                <li name="empleado">Un empleado
+                  <ul>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <li>un atributoo</li>
+                    <input type="radio" name="selec">
+                  </ul>
+                </li>
+              </ul>
+            </div>
+        </div>
+        <div class="c mapa"></div>
+    </div>
+  </div>
+</div>
+<input type="hidden" id="empresa" values="{% if empresa %} {{ empresa }} {% else %} nada {% endif%}">
+{% endblock %}
+{% block addjs %}
+<script src="{{ STATIC_URL}}api/js/alertify.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL}}api/js/notificaciones_pedidos.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}api/js/json2.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}api/js/listar_motorizado_rastreo.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}api/js/md5.js">
+
+  </script>
+  <style type="text/css">
+    .c{
+      width: 100px;
+      height: 500px;
+      border-style: solid;
+      border-width: 2px;
+    }
+
+    .lista{
+      width: 200px;
+    }
+
+    .mapa{
+      width: 900px;
+    }
+
+    input[type=text] {
+        width: 180px;
+        box-sizing: border-box;
+        border: 2px solid black;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: white;
+        background-image: url('/static/img/searchicon.png');
+        background-position: 10px 10px;
+        background-repeat: no-repeat;
+        padding: 12px 20px 12px 40px;
+        -webkit-transition: width 0.4s ease-in-out;
+        transition: width 0.4s ease-in-out;
+    }
+
+    input[type=text]:focus {
+        width: 100%;
+    }
+
+    div.c.lista{
+      padding-left: -6px;
+      padding-right: 0px;
+    }
+
+    .contenedor{
+      height: 90%;
+      overflow-y: scroll;
+    }
+
+    ul{
+      margin:0;
+      padding:0;
+      display:block;
+      list-style-type:none;
+    }
+
+    .fondo_noti{
+      background-color: red;
+    }
+
+  </style>
+{% endblock %}

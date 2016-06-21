@@ -1,9 +1,0 @@
-Django==1.8.2
-Pillow==2.6.1
-django-suit
-django-easy-pdf
-xhtml2pdf==0.0.5
-reportlab>=2.7,<3
-supra
-
-

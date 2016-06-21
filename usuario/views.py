@@ -10,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 from motorizado import models as motorizado
-from braces.views import AjaxResponseMixin, JSONResponseMixin
+# from braces.views import AjaxResponseMixin, JSONResponseMixin
 from django.views.generic import View
 from django.views import generic
 from django.views.generic.edit import UpdateView

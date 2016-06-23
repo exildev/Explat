@@ -251,3 +251,22 @@ class SearchMotorizadoPed(View):
         row = cursor.fetchone()
         return HttpResponse(row[0], content_type="application/json")
     # end def
+
+
+class ListarRastreo(supra.SupraListView):
+    model = models.Motorizado
+    search_key = 'q'
+    list_display = ['nombre', 'apellido', 'identificador', 'placa', 'pk']
+    search_fields = ['empleado__first_name', 'empleado__last_name',
+                     'licencia', 'identifier', 'moto__placa']
+    list_filter = ['empleado__first_name', 'empleado__last_name',
+                   'licencia', 'identifier', 'moto__placa']
+    paginate_by = 10
+
+    class Renderer:
+        nombre = 'empleado__first_name'
+        apellido = 'empleado__last_name'
+        identificador = 'identifier'
+        placa = 'moto__placa'
+    # end class
+# end class

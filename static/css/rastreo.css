@@ -1,0 +1,46 @@
+.c {
+    width: 100px;
+    height: 500px;
+    border-style: solid;
+    border-width: 2px;
+}
+.lista {
+    width: 200px;
+}
+.mapa {
+    width: 900px;
+}
+input[type=text] {
+    width: 180px;
+    box-sizing: border-box;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('/static/img/searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+input[type=text]:focus {
+    width: 100%;
+}
+div.c.lista {
+    padding-left: -6px;
+    padding-right: 0px;
+}
+.contenedor {
+    height: 90%;
+    overflow-y: scroll;
+}
+ul {
+    margin: 0;
+    padding: 0;
+    display: block;
+    list-style-type: none;
+}
+.fondo_noti {
+    background-color: red;
+}

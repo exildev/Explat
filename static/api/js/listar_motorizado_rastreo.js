@@ -1,20 +1,18 @@
 $(document).on('ready', function() {
+    cargarMotorizados(null, 1, false);
     $('#search').on('keyup', function() {
-        cargarMotorizados($(this).val(), 1, 2);
+        cargarMotorizados($(this).val(), 1, false);
     });
-    console.log('ok');
 });
 
-function cargarMotorizados(bus, star, pag) {
-    console.log(bus, star, pag);
+function cargarMotorizados(q, pag, sub) {
     $.ajax({
-        url: '/plataforma/motorizado/listar/rastreo/',
-        type: 'post',
+        url: '/motorizado/ws/list/rastreo/',
+        type: 'get',
         dataType: 'json',
         data: {
-            busq: bus,
-            start: star,
-            pag: pag
+            q: q? q: '',
+            page: pag
         },
         statusCode: {
             400: function() {
@@ -25,22 +23,31 @@ function cargarMotorizados(bus, star, pag) {
             }
         }
     }).done(function(data) {
-        if (data.data.length > 0) {
+        var list = data.object_list;
+        var next = data.next;
+        if(list.length > 0){
+            console.log(list);
             var l = $('.lis_emp');
-            l.html("");
-            for (var i = 0; i < data.data.length; i++) {
-                var nom = data.data[i].nom,
-                    ape = data.data[i].ape;
-                ide = data.data[i].ide;
+            if (!sub){
+                l.html("");
+            }
+            for (var key = 0; key < list.length; key++) {
+                var val = list[key];
                 l.append(
+                    "<li>" +
+                    "<span>" + val.placa + "</span>" +
                     "<ul>" +
-                    "<li>" + nom + "</li>" +
-                    "<li>" + ape + "</li>" +
-                    "<li>" + ide + "</li>" +
+                    "<li>" + val.nombre + "</li>" +
+                    "<li>" + val.apellido + "</li>" +
+                    "<li>" + val.identificador + "</li>" +
                     "<input type=\"radio\" name=\"selec\">" +
-                    "</ul>"
+                    "</ul>" +
+                    "</li>"
                 );
             }
+        }
+        if(next){
+            cargarMotorizados(q, next, true);
         }
     });
 }

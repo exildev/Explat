@@ -256,7 +256,7 @@ class SearchMotorizadoPed(View):
 class ListarRastreo(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
-    list_display = ['nombre', 'apellido', 'identificador', 'placa', 'pk']
+    list_display = ['nombre', 'apellido', 'identificador', 'placa', 'pk','direccion']
     search_fields = ['empleado__first_name', 'empleado__last_name',
                      'licencia', 'identifier', 'moto__placa']
     list_filter = ['empleado__first_name', 'empleado__last_name',
@@ -268,5 +268,6 @@ class ListarRastreo(supra.SupraListView):
         apellido = 'empleado__last_name'
         identificador = 'identifier'
         placa = 'moto__placa'
+        direccion = 'empleado__direccion'
     # end class
 # end class

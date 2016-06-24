@@ -13,7 +13,7 @@ class AddPedidoApiForm(forms.ModelForm):
                    'empresa', 'npedido_express',)
         widgets = {
             "num_pedido": forms.TextInput(attrs={'placeholder': 'Numero de Pedido'}),
-            "tienda": forms.TextInput(attrs={'placeholder': 'Tienda'}),
+            "tienda": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
             "cliente": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
             "alistador": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
             "tipo_pago": forms.Select(attrs={'class': 'ui dropdown'}),
@@ -29,7 +29,7 @@ class AddPedidoAdminApiForm(forms.ModelForm):
         exclude = ('total', 'empresa', 'npedido_express', 'motorizado',)
         widgets = {
             "num_pedido": forms.TextInput(attrs={'placeholder': 'Numero de Pedido'}),
-            "tienda": forms.TextInput(attrs={'placeholder': 'Tienda'}),
+            "tienda": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
             "cliente": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
             "tipo_pago": forms.Select(attrs={'class': 'ui dropdown'}),
             "observacion": forms.Textarea(attrs={'rows': '4', 'placeholder': 'Observaciones'}),
@@ -56,7 +56,7 @@ class AddPedidoAdminApiForm(forms.ModelForm):
             'num_pedido': nom_pedido
         })
         super(AddPedidoAdminApiForm, self).__init__(*args, **kwargs)
-
+        #self.fields['tienda'].queryset = usuario.Tienda.objects.filter(empresa__id=empresa)
 
 class AddItemsApiForm(forms.ModelForm):
 
@@ -105,7 +105,7 @@ class EditPedidoAdminApiForm(forms.ModelForm):
         exclude = ('total', 'empresa', 'npedido_express',)
         widgets = {
             "num_pedido": forms.TextInput(attrs={'placeholder': 'Numero de Pedido'}),
-            "tienda": forms.TextInput(attrs={'placeholder': 'Tienda'}),
+            "tienda": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
             "cliente": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
             "tipo_pago": forms.Select(attrs={'class': 'ui dropdown'}),
             "observacion": forms.Textarea(attrs={'rows': '4', 'placeholder': 'Observaciones'}),
@@ -113,3 +113,9 @@ class EditPedidoAdminApiForm(forms.ModelForm):
             "supervisor": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
             "motorizado": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
         }
+    # end class
+
+    def __init__(self, *args, **kwargs):
+        super(EditPedidoAdminApiForm, self).__init__(*args, **kwargs)
+        #self.fields['tienda'].queryset = usuario.Tienda.objects.filter(empresa__id=empresa)
+        print

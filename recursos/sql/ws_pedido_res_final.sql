@@ -2,6 +2,12 @@
 
 select ws_add_pedido_service('{"pedido":[{"id":"ws_ped","cliente":{"nombre":"mirlan","apellidos":"Reyes Polo","identificacion":"45454545454","dirreccion":"dsdsdsdsddsdsdsdsdssds"},"tienda":{"identificador":"3"},"descripcion":[{"nombre":"jajaja","cantidad":5,"valor":1000},{"nombre":"jajaja","cantidad":5,"valor":1000}],"total_pedido":50000,"tipo_pago":1},{"id":"ws_ped","cliente":{"nombre":"mirlan","apellidos":"Reyes Polo","identificacion":"45454545454","dirreccion":"dsdsdsdsddsdsdsdsdssds"},"tienda":{"identificador":"123456"},"descripcion":[{"nombre":"jajaja","cantidad":5,"valor":1000},{"nombre":"jajaja","cantidad":5,"valor":1000}],"total_pedido":50000,"tipo_pago":1}]}')
 
+create or replace function get_add_pedido_admin(id_pedido integer) return json as $$
+declare 
+begin
+end;
+$$language plpgsql;
+
 
 CREATE OR REPLACE FUNCTION ws_add_pedido_service(_json json)
   RETURNS text AS
@@ -44,7 +50,7 @@ begin
 						select id,nit,direccion,latitud,longitud,referencia,celular,fijo from usuario_tienda where id = cast(id_emp as integer) limit 1
 					) p into l;
 					
-					cont_pedido:=cont_pedido||case when not ban_pedido then ',' else''end||'{"id":'||id_inser||'"empresa":'||l||',"info":'||x."value"::json||'}';
+					cont_pedido:=cont_pedido||case when not ban_pedido then ',' else''end||'{"id":'||id_inser||',"empresa":'||l||',"info":'||x."value"::json||'}';
 					ban_pedido:=false;
 					raise notice 'este es el pedido valido % ',cont_pedido;
 				else
@@ -56,10 +62,10 @@ begin
 			end if;
 			
 		end loop;
-	raise notice 'El pedido valido %',cont_pedido;
-	raise notice 'El pedido error %',error;
-	return '{"respuesta":true,"error":['||error||'],"pedidos":['||cont_pedido||']}';
-
+		return '{"respuesta":true,"error":['||error||'],"pedidos":['||cont_pedido||']}';
+	EXCEPTION WHEN others THEN
+		raise notice 'descripcion';
+		return '{"respuesta":false,"mensage":"Error en la estructura del json"}';
 end;
 $BODY$
   LANGUAGE plpgsql VOLATILE

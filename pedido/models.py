@@ -140,7 +140,7 @@ class PedidoWS(models.Model):
         verbose_name_plural = "Pedidos"
 
     def __str__(self):
-        return self.npedido_express
+        return self.cliente
 
 
 class TimeWS(models.Model):

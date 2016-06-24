@@ -548,7 +548,7 @@ class WsPedidoEmpresa(View):
         cursor.execute('select ws_add_pedido_service(\'%s\'::json)' %
                        request.body.decode('utf-8'))
         row = cursor.fetchone()
-        print row[0]
+        #print row[0]
         return HttpResponse(row[0], content_type="application/json")
     # end def
 # end class

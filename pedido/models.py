@@ -1,5 +1,5 @@
 from django.db import models
-from usuario.models import Cliente,  Empleado,  Empresa
+from usuario.models import Cliente,  Empleado,  Empresa, Tienda
 import re
 from django.core import validators
 # Create your models here.
@@ -118,7 +118,6 @@ class PedidoWS(models.Model):
     num_pedido = models.CharField(max_length=50)
     npedido_express = models.CharField(max_length=50)
     fecha_pedido = models.DateField(auto_now=True)
-    tienda = models.CharField(max_length=50,  blank=True,  null=True)
     cliente = models.CharField(max_length=300,  blank=True,  null=True)
     supervisor = models.ForeignKey(
         Empleado, related_name='supervisorws', null=True)
@@ -128,7 +127,7 @@ class PedidoWS(models.Model):
         Empleado, related_name='motorizado_enviadows', null=True)
     tipo_pago = models.CharField(max_length=50)
     observacion = models.TextField(max_length=200,  null=True,  blank=True)
-    empresa = models.ForeignKey(Empresa, blank=True,  null=True)
+    tienda = models.ForeignKey(Tienda, blank=True,  null=True)
     total = models.DecimalField(max_digits=20, decimal_places=2,  null=True)
     entregado = models.BooleanField(default=False)
     despachado = models.BooleanField(default=False)

@@ -20,6 +20,8 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic import TemplateView
 from exp.decorators import administrador_required, alistador_required, supervisor_required
 from django.utils.decorators import method_decorator
+import json
+from socketIO_client import SocketIO, LoggingNamespace
 
 
 class Despacho(TemplateView):
@@ -60,7 +62,9 @@ class AddPedidoAdmin(View):
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
             empleado__empresa=empresa)
-        return render(request, 'pedido/addPedidoAdmin.html', {'formC': formC, 'formP': formP, 'motorizados': mod_motorizado.Motorizado.objects.filter(empleado__empresa=empresa), 'motorizadosE': mod_motorizado.Motorizado.objects.filter(empleado__empresa__username="express")})
+        return render(request, 'pedido/addPedidoAdmin.html',
+                      {'formC': formC, 'formP': formP, 'motorizados':
+                       mod_motorizado.Motorizado.objects.filter(empleado__empresa=empresa), 'motorizadosE': mod_motorizado.Motorizado.objects.filter(empleado__empresa__username="express")})
     # end def
 
     def post(self, request, *args, **kwargs):
@@ -90,7 +94,10 @@ class AddPedidoAdmin(View):
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
             empleado__empresa=empresa)
-        return render(request, 'pedido/addPedidoAdmin.html', {'formC': formC, 'formP': formP, 'motorizados': mod_motorizado.Motorizado.objects.filter(empleado__empresa=empresa), 'motorizadosE': mod_motorizado.Motorizado.objects.filter(empleado__empresa__username="express")})
+        info = {'formC': formC, 'formP': formP,
+                'motorizados': mod_motorizado.Motorizado.objects.filter(empleado__empresa=empresa),
+                'motorizadosE': mod_motorizado.Motorizado.objects.filter(empleado__empresa__username="express")}
+        return render(request, 'pedido/addPedidoAdmin.html', info)
     # end def
 # end class
 
@@ -531,25 +538,20 @@ class WsPedidoEmpresa(View):
     # end def
 
     def post(self, request, *args, **kwargs):
-        #print   (request.body.decode('utf-8')),request.body, 'jajajja' if request.body else 'nooo'
-        # print 'correcto' if request.body.decode('utf-8') != 'undefined=' else 'mala'
-        # print request.body.decode('utf-8')
-        # print json.loads((request.body.decode('utf-8')))
-        """
-        for x in json.loads((request.body.decode('utf-8'))):
-            print x
-            print x['total_pedido']
-            print x['tienda']['identificador']
-            print x['cliente']
-            print x['descripcion_pedido']
-        """
-        print request.body.decode('utf-8')
         cursor = connection.cursor()
         cursor.execute('select ws_add_pedido_service(\'%s\'::json)' %
                        request.body.decode('utf-8'))
         row = cursor.fetchone()
-        #print row[0]
-        return HttpResponse(row[0], content_type="application/json")
+        lista = json.loads(row[0])
+        if len(lista['pedidos']) > 0:
+            with SocketIO('127.0.0.1', 3000, LoggingNamespace) as socketIO:
+                socketIO.emit('add_pedido_ws', {
+                              'pedidos': lista['pedidos'], 'tipo': 2})
+                socketIO.wait(seconds=0)
+            # end with
+        # end if
+        lista.pop('pedidos')
+        return HttpResponse(json.dumps(lista), content_type="application/json")
     # end def
 # end class
 

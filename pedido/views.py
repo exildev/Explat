@@ -525,6 +525,7 @@ class UpdPedSerEntrega(View):
 
 class WsPedidoEmpresa(View):
 
+    @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(WsPedidoEmpresa, self).dispatch(*args, **kwargs)
     # end def
@@ -547,6 +548,7 @@ class WsPedidoEmpresa(View):
         cursor.execute('select ws_add_pedido_service(\'%s\'::json)' %
                        request.body.decode('utf-8'))
         row = cursor.fetchone()
+        print row[0]
         return HttpResponse(row[0], content_type="application/json")
     # end def
 # end class

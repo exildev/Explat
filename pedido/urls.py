@@ -45,9 +45,16 @@ urlpatterns += [
 
 # Getsion de actualizacion de pedidos
 urlpatterns += [
-    url(r'^motorizado/up/ser/pedido/$', views.UpSerPedido.as_view(), name='up_serPedido'),
+    url(r'^motorizado/up/ser/pedido/$', views.UpSerPedido.as_view(), name='mot_up_serPedido'),
     url(r'^motorizado/up/ser/entrega/$', views.UpdPedSerEntrega.as_view(), name='up_ser_entrega_pedido'),
 ]
+
+
+# Getsion de actualizacion de pedidos
+urlpatterns += [
+    url(r'^res/ws/pedido/$', views.WsPedidoEmpresa.as_view(), name='ws_serPedido'),
+]
+
 
 # Gestion de Ws
 urlpatterns += [

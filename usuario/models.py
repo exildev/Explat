@@ -16,6 +16,7 @@ class Ciudad(models.Model):
 # end class
 
 
+
 class Usuario(User):
     TIPO_ID = (
         ("", "Tipo de identificación"),

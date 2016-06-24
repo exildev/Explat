@@ -2,6 +2,8 @@ from django.db import models
 from usuario.models import Cliente,  Empleado,  Empresa, Tienda
 import re
 from django.core import validators
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 # Create your models here.
 
 
@@ -35,11 +37,10 @@ TIPO_PAGO = (
 
 
 class Pedido(models.Model):
-
     num_pedido = models.CharField(max_length=50)
     npedido_express = models.CharField(max_length=50, null=True, blank=True)
     fecha_pedido = models.DateField(auto_now=True)
-    tienda = models.CharField(max_length=50,  blank=True,  null=True)
+    tienda = models.ForeignKey(Tienda)
     cliente = models.ForeignKey(Cliente,  null=True)
     supervisor = models.ForeignKey(Empleado,  related_name='supervisor')
     alistador = models.ForeignKey(Empleado,  related_name='alistador')
@@ -118,6 +119,7 @@ class PedidoWS(models.Model):
     num_pedido = models.CharField(max_length=50)
     npedido_express = models.CharField(max_length=50)
     fecha_pedido = models.DateField(auto_now=True)
+    tienda = models.CharField(max_length=50,  blank=True,  null=True)
     cliente = models.CharField(max_length=300,  blank=True,  null=True)
     supervisor = models.ForeignKey(
         Empleado, related_name='supervisorws', null=True)
@@ -127,7 +129,7 @@ class PedidoWS(models.Model):
         Empleado, related_name='motorizado_enviadows', null=True)
     tipo_pago = models.CharField(max_length=50)
     observacion = models.TextField(max_length=200,  null=True,  blank=True)
-    tienda = models.ForeignKey(Tienda, blank=True,  null=True)
+    empresa = models.ForeignKey(Empresa, blank=True,  null=True)
     total = models.DecimalField(max_digits=20, decimal_places=2,  null=True)
     entregado = models.BooleanField(default=False)
     despachado = models.BooleanField(default=False)
@@ -140,7 +142,7 @@ class PedidoWS(models.Model):
         verbose_name_plural = "Pedidos"
 
     def __str__(self):
-        return self.cliente
+        return self.npedido_express
 
 
 class TimeWS(models.Model):
@@ -176,5 +178,20 @@ class Seguimiento(models.Model):
 
     def __unicode__(self):
         return '%s' % (self.pedido.num_pedido)
+    # end def
+# end class
+
+
+class ConfiguracionTiempo(models.Model):
+    retraso = models.FloatField(verbose_name="Retraso de Motorizado (Min)", validators=[MinValueValidator(0), MaxValueValidator(100)])
+    pedido=models.FloatField(verbose_name = "Asignacion de Pedido (Min)", validators = [MinValueValidator(0), MaxValueValidator(100)])
+    distancia=models.FloatField(verbose_name="Distancia de pedido (Mts)", validators=[MinValueValidator(0), MaxValueValidator(100)])
+
+    def __unicode__(self):
+        return 'Tiempo retraso %d' % self.retraso
+    # end def
+
+    def __str__(self):
+        return 'Tiempo retraso %d' % self.retraso
     # end def
 # end class

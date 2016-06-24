@@ -5,6 +5,7 @@ select ws_add_pedido_service('{"pedido":[{"id":"ws_ped","cliente":{"nombre":"mir
 create or replace function get_add_pedido_admin(id_pedido integer) return json as $$
 declare 
 begin
+	select * from pedido_pedido
 end;
 $$language plpgsql;
 

@@ -183,9 +183,12 @@ class Seguimiento(models.Model):
 
 
 class ConfiguracionTiempo(models.Model):
-    retraso = models.FloatField(verbose_name="Retraso de Motorizado (Min)", validators=[MinValueValidator(0), MaxValueValidator(100)])
-    pedido=models.FloatField(verbose_name = "Asignacion de Pedido (Min)", validators = [MinValueValidator(0), MaxValueValidator(100)])
-    distancia=models.FloatField(verbose_name="Distancia de pedido (Mts)", validators=[MinValueValidator(0), MaxValueValidator(100)])
+    retraso = models.FloatField(verbose_name="Retraso de Motorizado (Min)", validators=[
+                                MinValueValidator(0), MaxValueValidator(100)])
+    pedido = models.FloatField(verbose_name="Asignacion de Pedido (Min)", validators=[
+                               MinValueValidator(0), MaxValueValidator(100)])
+    distancia = models.FloatField(verbose_name="Distancia de pedido (Mts)", validators=[
+                                  MinValueValidator(0), MaxValueValidator(100)])
 
     def __unicode__(self):
         return 'Tiempo retraso %d' % self.retraso

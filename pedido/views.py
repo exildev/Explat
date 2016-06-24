@@ -68,13 +68,16 @@ class AddPedidoAdmin(View):
     # end def
 
     def post(self, request, *args, **kwargs):
+        print 'Llego 1'
         motorizado = mod_usuario.Empleado.objects.filter(
             identificacion=request.POST['motorizado']).first()
         if motorizado:
+            print 'Llego 2'
             formP = forms.AddPedidoAdminApiForm(request.POST)
             empresa = mod_usuario.Empresa.objects.filter(
                 empleado__id=request.user.id).first()
             if formP.is_valid():
+                print 'Llego 3'
                 form = formP.save(commit=False)
                 form.motorizado = motorizado
                 form.empresa = empresa

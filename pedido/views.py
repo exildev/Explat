@@ -58,6 +58,7 @@ class AddPedidoAdmin(View):
         formP = forms.AddPedidoAdminApiForm(num_pedido=empresa.id)
         formP.fields["alistador"].queryset = mod_usuario.Empleado.objects.filter(
             cargo="ALISTADOR").filter(empresa=empresa)
+        formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(empresa=empresa)
         formP.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
@@ -82,6 +83,9 @@ class AddPedidoAdmin(View):
                 form.motorizado = motorizado
                 form.empresa = empresa
                 form.save()
+                cursor = connection.cursor()
+                cursor.execute('select get_add_pedido_admin(%d)'%form.id)
+                row = cursor.fetchone()
                 return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': form.id}))
             # end if
         # end if
@@ -97,6 +101,7 @@ class AddPedidoAdmin(View):
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
             empleado__empresa=empresa)
+        formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(empresa=empresa)
         info = {'formC': formC, 'formP': formP,
                 'motorizados': mod_motorizado.Motorizado.objects.filter(empleado__empresa=empresa),
                 'motorizadosE': mod_motorizado.Motorizado.objects.filter(empleado__empresa__username="express")}
@@ -115,6 +120,7 @@ class EditPedido(FormView):
             pedidoForm = forms.EditPedidoAdminApiForm(instance=pedido)
             pedidoForm.fields["alistador"].queryset = mod_usuario.Empleado.objects.filter(
                 cargo="ALISTADOR").filter(empresa=empresa)
+            pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(empresa=empresa)
             pedidoForm.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
                 cargo="SUPERVISOR").filter(empresa=empresa)
             motorizado = mod_motorizado.Motorizado.objects.filter(
@@ -138,6 +144,7 @@ class EditPedido(FormView):
             f.save()
             return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': f.id}))
         # end if
+        pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(empresa=empresa)
         return render(request, 'pedido/editPedido.html', {'pedidoForm': pedidoForm})
     # end def
 

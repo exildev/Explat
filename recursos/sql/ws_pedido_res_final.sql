@@ -1,15 +1,39 @@
 ﻿select ws_add_pedido_service('{"pedido":{"id":"ws_ped","cliente":{"nombre":"mirlan","apellidos":"Reyes Polo","identificacion":"45454545454","dirreccion":"dsdsdsdsddsdsdsdsdssds"},"tienda":{"identificador":"3"},"descripcion":[{"nombre":"jajaja","cantidad":5,"valor":1000},{"nombre":"jajaja","cantidad":5,"valor":1000}],"total_pedido":50000,"tipo_pago":1},"pedido":{"id":"ws_ped","cliente":{"nombre":"mirlan","apellidos":"Reyes Polo","identificacion":"45454545454","dirreccion":"dsdsdsdsddsdsdsdsdssds"},"tienda":{"identificador":"123456"},"descripcion":[{"nombre":"jajaja","cantidad":5,"valor":1000},{"nombre":"jajaja","cantidad":5,"valor":1000}],"total_pedido":50000,"tipo_pago":1}}')
 
 select ws_add_pedido_service('{"pedido":[{"id":"ws_ped","cliente":{"nombre":"mirlan","apellidos":"Reyes Polo","identificacion":"45454545454","dirreccion":"dsdsdsdsddsdsdsdsdssds"},"tienda":{"identificador":"3"},"descripcion":[{"nombre":"jajaja","cantidad":5,"valor":1000},{"nombre":"jajaja","cantidad":5,"valor":1000}],"total_pedido":50000,"tipo_pago":1},{"id":"ws_ped","cliente":{"nombre":"mirlan","apellidos":"Reyes Polo","identificacion":"45454545454","dirreccion":"dsdsdsdsddsdsdsdsdssds"},"tienda":{"identificador":"123456"},"descripcion":[{"nombre":"jajaja","cantidad":5,"valor":1000},{"nombre":"jajaja","cantidad":5,"valor":1000}],"total_pedido":50000,"tipo_pago":1}]}')
-
-create or replace function get_add_pedido_admin(id_pedido integer) return json as $$
+select get_add_pedido_admin(11)
+select * from pedido_configuraciontiempo
+create or replace function get_add_pedido_admin(id_pedido integer) returns json as $$
 declare 
 begin
-	select * from pedido_pedido
+	return (SELECT COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (
+		select id, motorizado_id as motorizado,10000*(select retraso from pedido_configuraciontiempo order by id desc limit 1) as retraso,
+		(
+			SELECT COALESCE(array_to_json(array_agg(row_to_json(emp))), '[]') from (
+						select id,nit,direccion,latitud,longitud,referencia,celular,fijo from usuario_tienda where id = tienda_id limit 1
+					) emp
+		) as empresa,
+		(
+			SELECT COALESCE(array_to_json(array_agg(row_to_json(items))), '[]') from (
+				select i.descripcion as nombre,pi.cantidad as cantidad,pi.valor_unitario as valor from pedido_itemspedido as pi inner join pedido_items as i on(pi.pedido_id=id_pedido and pi.item_id=i.id)
+			) items
+		) as info,
+		(
+			select sum(pi.cantidad*pi.valor_unitario) from pedido_itemspedido as pi inner join pedido_items as i on(pi.pedido_id=id_pedido and pi.item_id=i.id)
+		) as total
+		from pedido_pedido where id = id_pedido limit 1
+	) p);
 end;
 $$language plpgsql;
+	select * from pedido_pedido
+(SELECT COALESCE(array_to_json(array_agg(row_to_json(items))), '[]') from (
+	select i.descripcion as nombre,pi.cantidad as cantidad,pi.valor_unitario as valor from pedido_itemspedido as pi inner join pedido_items as i on(pi.pedido_id=11 and pi.item_id=i.id)
+) items
 
+select i.descripcion as nombre,pi.cantidad as cantidad,pi.valor_unitario as valor from pedido_itemspedido as pi inner join pedido_items as i on(pi.pedido_id=11 and pi.item_id=i.id)
 
+select * from pedido_itemspedido as pi inner join pedido_items as i on(pi.pedido_id=11 and pi.item_id=i.id)
+select * from pedido_items
 CREATE OR REPLACE FUNCTION ws_add_pedido_service(_json json)
   RETURNS text AS
 $BODY$

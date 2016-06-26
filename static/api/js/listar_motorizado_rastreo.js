@@ -66,7 +66,7 @@ function enviarPedido() {
             "dirreccion": "dsdsdsdsddsdsdsdsdssds"
         },
         "tienda": {
-            "identificador": "123456"
+            "identificador": "3"
         },
         "descripcion": [{
             "nombre": "jajaja",
@@ -81,7 +81,7 @@ function enviarPedido() {
         "tipo_pago": 1
     }]};
     $.ajax({
-        url: '/pedidos/res/ws/pedido/',
+        url: '/pedidos/emp/ws/pedido/',
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify(res),

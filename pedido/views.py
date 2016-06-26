@@ -58,7 +58,8 @@ class AddPedidoAdmin(View):
         formP = forms.AddPedidoAdminApiForm(num_pedido=empresa.id)
         formP.fields["alistador"].queryset = mod_usuario.Empleado.objects.filter(
             cargo="ALISTADOR").filter(empresa=empresa)
-        formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(empresa=empresa)
+        formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+            empresa=empresa)
         formP.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
@@ -84,7 +85,7 @@ class AddPedidoAdmin(View):
                 form.empresa = empresa
                 form.save()
                 cursor = connection.cursor()
-                cursor.execute('select get_add_pedido_admin(%d)'%form.id)
+                cursor.execute('select get_add_pedido_admin(%d)' % form.id)
                 row = cursor.fetchone()
                 return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': form.id}))
             # end if
@@ -101,7 +102,8 @@ class AddPedidoAdmin(View):
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
             empleado__empresa=empresa)
-        formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(empresa=empresa)
+        formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+            empresa=empresa)
         info = {'formC': formC, 'formP': formP,
                 'motorizados': mod_motorizado.Motorizado.objects.filter(empleado__empresa=empresa),
                 'motorizadosE': mod_motorizado.Motorizado.objects.filter(empleado__empresa__username="express")}
@@ -120,7 +122,8 @@ class EditPedido(FormView):
             pedidoForm = forms.EditPedidoAdminApiForm(instance=pedido)
             pedidoForm.fields["alistador"].queryset = mod_usuario.Empleado.objects.filter(
                 cargo="ALISTADOR").filter(empresa=empresa)
-            pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(empresa=empresa)
+            pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+                empresa=empresa)
             pedidoForm.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
                 cargo="SUPERVISOR").filter(empresa=empresa)
             motorizado = mod_motorizado.Motorizado.objects.filter(
@@ -144,7 +147,8 @@ class EditPedido(FormView):
             f.save()
             return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': f.id}))
         # end if
-        pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(empresa=empresa)
+        pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+            empresa=empresa)
         return render(request, 'pedido/editPedido.html', {'pedidoForm': pedidoForm})
     # end def
 
@@ -204,6 +208,18 @@ class FinalizarPedido(View):
                     if total > 0:
                         models.Pedido.objects.filter(id=kwargs['pk']).update(
                             total=total, confirmado=True)
+                        cursor = connection.cursor()
+                        cursor.execute(
+                            'select get_add_pedido_admin(%d)' % pedido.id)
+                        row = cursor.fetchone()
+                        lista = json.loads(row[0])
+                        if lista:
+                            with SocketIO('127.0.0.1', 3000, LoggingNamespace) as socketIO:
+                                socketIO.emit('add_pedido_pl', {
+                                              'pedido': lista[0], 'tipo': 1})
+                                socketIO.wait(seconds=0)
+                            # end with
+                        # end if
                         return redirect(reverse('pedido:list_pedido'))
                     # end if
                 # end if
@@ -499,7 +515,6 @@ class UpSerPedido(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
-        print 'llego a el servicio'
         return super(UpSerPedido, self).dispatch(*args, **kwargs)
     # end def
 
@@ -544,6 +559,7 @@ class WsPedidoEmpresa(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
+        print "Esta llegando"
         return super(WsPedidoEmpresa, self).dispatch(*args, **kwargs)
     # end def
 
@@ -553,14 +569,16 @@ class WsPedidoEmpresa(View):
                        request.body.decode('utf-8'))
         row = cursor.fetchone()
         lista = json.loads(row[0])
-        if len(lista['pedidos']) > 0:
-            with SocketIO('127.0.0.1', 3000, LoggingNamespace) as socketIO:
-                socketIO.emit('add_pedido_ws', {
-                              'pedidos': lista['pedidos'], 'tipo': 2})
-                socketIO.wait(seconds=0)
-            # end with
+        if lista['respuesta']:
+            if len(lista['pedidos']) > 0:
+                with SocketIO('127.0.0.1', 3000, LoggingNamespace) as socketIO:
+                    socketIO.emit('add_pedido_ws', {
+                                  'pedidos': lista['pedidos'], 'tipo': 2})
+                    socketIO.wait(seconds=0)
+                # end with
+                lista.pop('pedidos')
+            # end if
         # end if
-        lista.pop('pedidos')
         return HttpResponse(json.dumps(lista), content_type="application/json")
     # end def
 # end class

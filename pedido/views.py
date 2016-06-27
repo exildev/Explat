@@ -606,7 +606,7 @@ class RecogerPPlataforma(View):
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
-            if re.match('^\d+$', pedido) and re.match('^\d+$', motorizado):
+            if validNum(pedido) and validNum(motorizado):
                 ped = mod_pedido.PedidoWS.objects.filter(
                     id=int(pedido), morotizado__id=int(mororizado))
                 if ped:
@@ -633,7 +633,7 @@ class AceptarPWService(View):
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
-            if re.match('^\d+$', pedido) and re.match('^\d+$', motorizado):
+            if validNum(pedido) and validNum(motorizado):
                 cursor = connection.cursor()
                 cursor.execute('select aceptar_pw_service(%s,\'%s\')' %
                                (pedido, motorizado))
@@ -645,3 +645,35 @@ class AceptarPWService(View):
         return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
     # end def
     # end class
+
+
+class AceptarPPlataforma(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AceptarPWService, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        motorizado = request.POST.get('idenf_mot', False)
+        pedido = request.POST.get('id_ped', False)
+        if motorizado and pedido:
+            if validNum(motorizado) and validNum(pedido):
+                pedido = models.Pedido.objest.filter(id=int(pedido)).first()
+                if pedido:
+                    if pedido.motorizado.identifier == motorizado:
+                        models.Pedido.objest.filter(
+                            id=int(pedido)).update(notificado=True)
+                        return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                    # end if
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+
+# end class
+
+
+def validNum(cad):
+    return re.match('^\d+$', cad)

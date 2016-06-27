@@ -66,7 +66,7 @@ urlpatterns += [
 # Gestion de recepcion de pedido
 urlpatterns += [
     url(r'^aceptar/pws/$', views.AceptarPWService.as_view(), name='aceptar_pwservice'),
-    #url(r'^recoger/pws/$', views.ListarRastreo.as_view(), name='recoger_wservice'),
+    url(r'^aceptar/pplataforma/$', views.AceptarPPlataforma.as_view(), name='pplataforma'),
 ]
 
 

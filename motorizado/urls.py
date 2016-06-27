@@ -37,9 +37,12 @@ urlpatterns += [
 urlpatterns += [
     url(r'^motorizado/foto/$', TemplateView.as_view(template_name='motorizado/foto.html'),
         name='foto_pedido_motorizado'),
+    url(r'^text/$', TemplateView.as_view(template_name='motorizado/text.html'),
+        name='text'),
 ]
 
 # Gestion de Rastreo pedido
 urlpatterns += [
     url(r'^ws/list/rastreo/$', views.ListarRastreo.as_view(), name='listar_rastreo'),
+
 ]

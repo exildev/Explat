@@ -141,11 +141,11 @@ class PedidoWS(models.Model):
     items = models.CharField(max_length=2000,  blank=True,  null=True)
 
     class Meta:
-        verbose_name = "Pedido"
-        verbose_name_plural = "Pedidos"
+        verbose_name = "PedidoWs"
+        verbose_name_plural = "PedidosWs"
 
     def __str__(self):
-        return self.npedido_express
+        return self.cliente
 
 
 class TimeWS(models.Model):
@@ -157,7 +157,7 @@ class TimeWS(models.Model):
     pedido = models.OneToOneField(PedidoWS)
 
     def __str__(self):
-        return self.num_pedido
+        return self.cliente
     # end def
 # end class
 

@@ -592,3 +592,55 @@ class Rastreo(TemplateView):
         return super(Rastreo, self).dispatch(request, *args, **kwargs)
     # end def
 # end class
+
+
+class RecogerPPlataforma(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(RecogerPPlataforma, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            if re.match('^\d+$', pedido) and re.match('^\d+$', motorizado):
+                ped = mod_pedido.PedidoWS.objects.filter(
+                    id=int(pedido), morotizado__id=int(mororizado))
+                if ped:
+                    mod_pedido.PedidoWS.objects.filter(
+                        id=int(pedido), morotizado__id=int(mororizado)).update(despachado=True)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
+class AceptarPWService(View):
+
+        @method_decorator(csrf_exempt)
+        def dispatch(self, *args, **kwargs):
+            return super(AceptarPPlataforma, self).dispatch(*args, **kwargs)
+        # end def
+
+        def post(self, request, *args, **kwargs):
+            pedido = request.POST.get('pedido', False)
+            motorizado = request.POST.get('motorizado', False)
+            if pedido and motorizado:
+                if re.match('^\d+$', pedido) and re.match('^\d+$', motorizado):
+                    pedws = models.PedidoWS.objects.filter(id = int(pedido)).first()
+                    if pedws:
+                        motorizado = mod_motorizado.Motorizado.objects.filter(id=int(motorizado),)
+                        mod_pedido.PedidoWS.objects.filter(
+                            id=int(pedido), morotizado__id=int(mororizado)).update(despachado=True)
+                        return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                    # end if
+                # end if
+            # end if
+            return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+        # end def
+    # end class

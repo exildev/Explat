@@ -635,7 +635,8 @@ class AceptarPWService(View):
         if pedido and motorizado:
             if re.match('^\d+$', pedido) and re.match('^\d+$', motorizado):
                 cursor = connection.cursor()
-                cursor.execute('select aceptar_pw_service(%s,\'%s\')'%(pedido,motorizado))
+                cursor.execute('select aceptar_pw_service(%s,\'%s\')' %
+                               (pedido, motorizado))
                 row = cursor.fetchone()
                 res = json.loads(row[0])
                 return HttpResponse(row, content_type='application/json', status=200 if res['r'] else 404)

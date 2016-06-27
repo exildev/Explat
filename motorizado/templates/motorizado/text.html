@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<form action="{% url "pedido:aceptar_pwservice" %}" method="post">
+		<input id="id_despachado" name="despachado" type="checkbox">
+		<input type="text" name="motorizado">
+		<input type="text" name="pedido">
+		<input type="submit" name="save">
+	</form>
+</body>
+</html>

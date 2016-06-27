@@ -1,7 +1,7 @@
 ﻿create or replace function update_tiempo_pedidows() returns trigger as $$
 declare 
 begin 
-	if new.despachado and !old.despachado then
+	if new.despachado and old.despachado = false then
 		update pedido_timews set despachado = now() where pedido_id= old.id;
 	elsif new.entregado and old.entregado=false then
 		update pedido_timews set entregado = now() where pedido_id= old.id;

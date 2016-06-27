@@ -61,3 +61,17 @@ urlpatterns += [
     url(r'^rastreo/$', views.Rastreo.as_view(), name='rastreo'),
     url(r'^res/ws/pedido/$', views.UpSerPedido.as_view(), name='up_serPedido'),
 ]
+
+
+# Gestion de recepcion de pedido
+urlpatterns += [
+    url(r'^aceptar/pws/$', views.AceptarPWService.as_view(), name='aceptar_pwservice'),
+    #url(r'^recoger/pws/$', views.ListarRastreo.as_view(), name='recoger_wservice'),
+]
+
+
+# Gestion de recoger de pedido
+urlpatterns += [
+    url(r'^recoger/pplataforma/$', views.RecogerPPlataforma.as_view(), name='text'),
+    #url(r'^recoger/pws/$', views.ListarRastreo.as_view(), name='recoger_wservice'),
+]

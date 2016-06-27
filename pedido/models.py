@@ -55,6 +55,7 @@ class Pedido(models.Model):
     despachado = models.BooleanField(default=False)
     confirmado = models.BooleanField(default=False)
     alistado = models.BooleanField(default=False)
+    notificado = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Pedido"
@@ -105,6 +106,7 @@ class Time(models.Model):
     alistado = models.DateTimeField(null=True)
     despachado = models.DateTimeField(null=True)
     entregado = models.DateTimeField(null=True)
+    notificado = models.DateTimeField(null=True)
     pedido = models.OneToOneField(Pedido)
 
     class Meta:
@@ -143,10 +145,11 @@ class PedidoWS(models.Model):
     class Meta:
         verbose_name = "PedidoWs"
         verbose_name_plural = "PedidosWs"
+    # end if
 
     def __str__(self):
         return self.cliente
-
+    # end if
 
 class TimeWS(models.Model):
     creado = models.DateTimeField()

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.core.urlresolvers import reverse
+import re
 from django.views.generic import View, DeleteView
 from django.views import generic
 from . import forms
@@ -622,25 +623,24 @@ class RecogerPPlataforma(View):
 
 class AceptarPWService(View):
 
-        @method_decorator(csrf_exempt)
-        def dispatch(self, *args, **kwargs):
-            return super(AceptarPPlataforma, self).dispatch(*args, **kwargs)
-        # end def
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AceptarPWService, self).dispatch(*args, **kwargs)
+    # end def
 
-        def post(self, request, *args, **kwargs):
-            pedido = request.POST.get('pedido', False)
-            motorizado = request.POST.get('motorizado', False)
-            if pedido and motorizado:
-                if re.match('^\d+$', pedido) and re.match('^\d+$', motorizado):
-                    pedws = models.PedidoWS.objects.filter(id = int(pedido)).first()
-                    if pedws:
-                        motorizado = mod_motorizado.Motorizado.objects.filter(id=int(motorizado),)
-                        mod_pedido.PedidoWS.objects.filter(
-                            id=int(pedido), morotizado__id=int(mororizado)).update(despachado=True)
-                        return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
-                    # end if
-                # end if
+    def post(self, request, *args, **kwargs):
+        print request.POST
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            if re.match('^\d+$', pedido) and re.match('^\d+$', motorizado):
+                cursor = connection.cursor()
+                cursor.execute('select aceptar_pw_service(%s,\'%s\')'%(pedido,motorizado))
+                row = cursor.fetchone()
+                res = json.loads(row[0])
+                return HttpResponse(row, content_type='application/json', status=200 if res['r'] else 404)
             # end if
-            return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
-        # end def
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
     # end class

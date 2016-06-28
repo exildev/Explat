@@ -13,6 +13,8 @@ begin
 		update pedido_time set alistado = now() where pedido_id= old.id;
 	elsif new.despachado  and old.despachado=false then 
 		update pedido_time set despachado = now() where pedido_id= old.id;
+	elsif new.notificado  and old.notificado=false then 
+		update pedido_time set notificado = now() where pedido_id= old.id;
 	end if;
 	return new;
 end;

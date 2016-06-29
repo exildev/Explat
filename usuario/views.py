@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from supra import views as supra
 import forms
 import models
 from django.views.generic.edit import FormView
+from supra.auths import methods, oauth
 from exp.decorators import *
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -301,7 +303,7 @@ class DeleteTienda(View):
     # end def
 # end def
 
-
+#methods.append(oauth.SupraOAuth)
 class Login(supra.SupraSession):
     # body = True
     @method_decorator(csrf_exempt)
@@ -316,12 +318,22 @@ class Login(supra.SupraSession):
         # end if
         return obj
     # end def
+
+    def login(self, request, cleaned_data):
+        identificador = request.POST.get('username','')
+        motori = motorizado.Motorizado.objects.filter(identifier=identificador).first()
+        cleaned_data={'password': cleaned_data['password']}
+        if motori:
+            cleaned_data['username'] = motori.empleado.username
+        # end if
+        return super(Login, self).login(request, cleaned_data)
+    # end if
 # end class
 
 
 def is_logged(request):
     if request.user.is_authenticated():
-        motori = motorizado.Motorizado.objects.filter(id=request.user.id).first()
+        motori = motorizado.Motorizado.objects.filter(empleado__id=request.user.id).first()
         if motori:
             return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d}'
              % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id), content_type="application/json")

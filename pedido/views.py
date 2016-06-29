@@ -216,8 +216,8 @@ class FinalizarPedido(View):
                         row = cursor.fetchone()
                         lista = json.loads(row[0])
                         if lista:
-                            with SocketIO('127.0.0.1', 3000, LoggingNamespace) as socketIO:
-                                socketIO.emit('add_pedido_pl', {
+                            with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                                socketIO.emit('asignar-pedido', {
                                               'pedido': lista[0], 'tipo': 1})
                                 socketIO.wait(seconds=0)
                             # end with
@@ -573,8 +573,8 @@ class WsPedidoEmpresa(View):
         lista = json.loads(row[0])
         if lista['respuesta']:
             if len(lista['pedidos']) > 0:
-                with SocketIO('127.0.0.1', 3000, LoggingNamespace) as socketIO:
-                    socketIO.emit('add_pedido_ws', {
+                with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                    socketIO.emit('add-pedido', {
                                   'pedidos': lista['pedidos'], 'tipo': 2})
                     socketIO.wait(seconds=0)
                 # end with
@@ -597,7 +597,6 @@ class Rastreo(TemplateView):
 
 
 class RecogerPWService(View):
-
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(RecogerPWService, self).dispatch(*args, **kwargs)
@@ -612,13 +611,11 @@ class RecogerPWService(View):
             if motori:
                 if validNum(pedido) and validNum(motorizado):
                     ped = models.PedidoWS.objects.filter(
-                        id=int(pedido)).first()
-                    if ped.motorizado.id == motori.empleado.id:
-                        if ped:
-                            models.PedidoWS.objects.filter(
-                                id=int(pedido), motorizado__id=motori.empleado.id).update(despachado=True)
-                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
-                        # end if
+                        id=int(pedido), motorizado__id=motori.empleado.id).first()
+                    if ped:
+                        models.PedidoWS.objects.filter(
+                            id=int(pedido), motorizado__id=motori.empleado.id).update(despachado=True)
+                        return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
                 # end if
             # end if
         # end if
@@ -628,7 +625,6 @@ class RecogerPWService(View):
 
 
 class RecogerPPlataforma(View):
-
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(RecogerPPlataforma, self).dispatch(*args, **kwargs)
@@ -640,15 +636,13 @@ class RecogerPPlataforma(View):
         if pedido and motorizado:
             motori = mod_motorizado.Motorizado.objects.filter(
                 identifier=motorizado).first()
-            print 'di del motorizado  ', motori.id
             if motori:
                 if validNum(pedido) and validNum(motorizado):
-                    ped = models.Pedido.objects.filter(id=int(pedido)).first()
+                    ped = models.Pedido.objects.filter(id=int(pedido), motorizado__id=motori.empleado.id).first()
                     if ped:
-                        if ped.motorizado.id == motori.id:
-                            models.Pedido.objects.filter(
-                                id=int(pedido), motorizado__id=motori.id).update(despachado=True)
-                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                        models.Pedido.objects.filter(
+                            id=int(pedido), motorizado__id=motori.empleado.id).update(despachado=True)
+                        return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
                     # end if
                 # end if
             # end if
@@ -699,17 +693,12 @@ class AceptarPPlataforma(View):
                 # mod_usuario.Empleado.objects.filter(ddsdsd=12)
                 pedid = models.Pedido.objects.filter(id=int(pedido)).values(
                     'id', 'motorizado__motorizado__identifier', 'motorizado__id').first()
+                print pedid
                 if pedid:
-                    motori = mod_motorizado.Motorizado.objects.filter(
-                        id=pedid['motorizado__id']).values('id', 'identifier').first()
-                    if motori:
-                        # if pedido.motorizado.motorizado.identifier ==
-                        # motorizado:
-                        if motori['identifier'] == motorizado:
-                            models.Pedido.objects.filter(
-                                id=int(pedido)).update(notificado=True)
-                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
-                    # end if
+                    if pedid['motorizado__motorizado__identifier'] == motorizado:
+                        models.Pedido.objects.filter(
+                            id=int(pedido)).update(notificado=True)
+                        return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
                 # end if
             # end if
         # end if
@@ -730,18 +719,14 @@ class EntregarPWService(View):
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
-            motori = mod_motorizado.Motorizado.objects.filter(
-                identifier=motorizado).first()
-            if motori:
-                if validNum(pedido) and validNum(motorizado):
-                    ped = models.PedidoWS.objects.filter(
-                        id=int(pedido)).first()
-                    if ped.motorizado.id == motori.empleado.id:
-                        if ped:
-                            models.PedidoWS.objects.filter(
-                                id=int(pedido), motorizado__id=motori.empleado.id).update(entregado=True)
-                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
-                        # end if
+            if validNum(pedido) and validNum(motorizado):
+                ped = models.PedidoWS.objects.filter(
+                    id=int(pedido),motorizado__motorizado__identifier=motorizado).values(
+                        'id', 'motorizado__motorizado__identifier', 'motorizado__id').first()
+                if ped:
+                    models.PedidoWS.objects.filter(
+                        id=int(pedido)).update(entregado=True)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
                 # end if
             # end if
         # end if
@@ -761,18 +746,12 @@ class EntregarPPlataforma(View):
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
-            motori = mod_motorizado.Motorizado.objects.filter(
-                identifier=motorizado).first()
-            print 'di del motorizado  ', motori.id
-            if motori:
-                if validNum(pedido) and validNum(motorizado):
-                    ped = models.Pedido.objects.filter(id=int(pedido)).first()
-                    if ped:
-                        if ped.motorizado.id == motori.id:
-                            models.Pedido.objects.filter(
-                                id=int(pedido), motorizado__id=motori.id).update(entregado=True)
-                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
-                    # end if
+            if validNum(pedido) and validNum(motorizado):
+                ped = models.Pedido.objects.filter(id=int(pedido), motorizado__motorizado__identifier=motorizado).first()
+                if ped:
+                    models.Pedido.objects.filter(
+                        id=int(pedido)).update(entregado=True)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
                 # end if
             # end if
         # end if

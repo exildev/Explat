@@ -77,7 +77,7 @@ urlpatterns += [
 ]
 
 
-# Gestion de recoger de pedido
+# Gestion de entrega de pedido
 urlpatterns += [
     url(r'^entregar/pplataforma/$', views.EntregarPPlataforma.as_view(), name='entregar_pplataforma'),
     url(r'^entregar/pws/$', views.EntregarPWService.as_view(), name='entregar_wservice'),

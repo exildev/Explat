@@ -55,6 +55,7 @@ class Pedido(models.Model):
     despachado = models.BooleanField(default=False)
     confirmado = models.BooleanField(default=False)
     alistado = models.BooleanField(default=False)
+    notificado = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Pedido"
@@ -72,8 +73,10 @@ class Pedido(models.Model):
 class ItemsPedido(models.Model):
     pedido = models.ForeignKey(Pedido)
     item = models.ForeignKey(Items)
-    cantidad = models.DecimalField(max_digits=20, decimal_places=2, validators=[validators.RegexValidator(re.compile('^[1-9][0-9]*$'), ('numero no valida'), 'invalid')])
-    valor_unitario = models.DecimalField(max_digits=20, decimal_places=2, validators=[validators.RegexValidator(re.compile('^[1-9][0-9]*$'), ('numero no valida'), 'invalid')])
+    cantidad = models.DecimalField(max_digits=20, decimal_places=2, validators=[
+                                   validators.RegexValidator(re.compile('^[1-9][0-9]*$'), ('numero no valida'), 'invalid')])
+    valor_unitario = models.DecimalField(max_digits=20, decimal_places=2, validators=[
+                                         validators.RegexValidator(re.compile('^[1-9][0-9]*$'), ('numero no valida'), 'invalid')])
     valor_total = models.DecimalField(max_digits=20, decimal_places=2)
 
     def __str__(self):
@@ -84,6 +87,7 @@ class ItemsPedido(models.Model):
         verbose_name = "Item Pedido"
         verbose_name_plural = "Items Pedido"
     #
+
 
 class Tiempo(models.Model):
     tiempo_pedido = models.DateTimeField()
@@ -102,6 +106,7 @@ class Time(models.Model):
     alistado = models.DateTimeField(null=True)
     despachado = models.DateTimeField(null=True)
     entregado = models.DateTimeField(null=True)
+    notificado = models.DateTimeField(null=True)
     pedido = models.OneToOneField(Pedido)
 
     class Meta:
@@ -119,7 +124,6 @@ class PedidoWS(models.Model):
     num_pedido = models.CharField(max_length=50)
     npedido_express = models.CharField(max_length=50)
     fecha_pedido = models.DateField(auto_now=True)
-    tienda = models.CharField(max_length=50,  blank=True,  null=True)
     cliente = models.CharField(max_length=300,  blank=True,  null=True)
     supervisor = models.ForeignKey(
         Empleado, related_name='supervisorws', null=True)
@@ -129,21 +133,23 @@ class PedidoWS(models.Model):
         Empleado, related_name='motorizado_enviadows', null=True)
     tipo_pago = models.CharField(max_length=50)
     observacion = models.TextField(max_length=200,  null=True,  blank=True)
-    empresa = models.ForeignKey(Empresa, blank=True,  null=True)
     total = models.DecimalField(max_digits=20, decimal_places=2,  null=True)
     entregado = models.BooleanField(default=False)
     despachado = models.BooleanField(default=False)
     confirmado = models.BooleanField(default=False)
     alistado = models.BooleanField(default=False)
+    tienda = models.ForeignKey(Tienda)
+    detalle = models.CharField(max_length=10000, null=True, blank=True)
     items = models.CharField(max_length=2000,  blank=True,  null=True)
 
     class Meta:
-        verbose_name = "Pedido"
-        verbose_name_plural = "Pedidos"
+        verbose_name = "PedidoWs"
+        verbose_name_plural = "PedidosWs"
+    # end if
 
     def __str__(self):
-        return self.npedido_express
-
+        return self.cliente
+    # end if
 
 class TimeWS(models.Model):
     creado = models.DateTimeField()
@@ -154,10 +160,9 @@ class TimeWS(models.Model):
     pedido = models.OneToOneField(PedidoWS)
 
     def __str__(self):
-        return self.num_pedido
+        return self.cliente
     # end def
 # end class
-
 
 
 class Punto(models.Model):

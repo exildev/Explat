@@ -77,32 +77,23 @@ function enviarPedido() {
             "total_pedido": 50000,
             "tipo_pago": 1
         },
-        "pedido2": {
-            "id": "ws_ped",
-            "cliente": {
-                "nombre": "mirlan",
-                "apellidos": "Reyes Polo",
-                "identificacion": "45454545454",
-                "dirreccion": "dsdsdsdsddsdsdsdsdssds"
-            },
-            "tienda": {
-                "identificador": "123456"
-            },
-            "descripcion": [{
-                "nombre": "jajaja",
-                "cantidad": 5,
-                "valor": 1000
-            }, {
-                "nombre": "jajaja",
-                "cantidad": 5,
-                "valor": 1000
-            }],
-            "total_pedido": 50000,
-            "tipo_pago": 1
-        }
-    };
+        "tienda": {
+            "identificador": "3"
+        },
+        "descripcion": [{
+            "nombre": "jajaja",
+            "cantidad": 5,
+            "valor": 1000
+        }, {
+            "nombre": "jajaja",
+            "cantidad": 5,
+            "valor": 1000
+        }],
+        "total_pedido": 50000,
+        "tipo_pago": 1
+    }]};
     $.ajax({
-        url: '/pedido/res/ws/pedido/',
+        url: '/pedidos/emp/ws/pedido/',
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify(res),
@@ -111,3 +102,5 @@ function enviarPedido() {
         }
     });
 }
+
+function

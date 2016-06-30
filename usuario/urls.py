@@ -44,3 +44,10 @@ urlpatterns += [
     url(r'^tienda/list/$', views.ListTienda.as_view(), name='list_tienda'),
     url(r'^tienda/list/search/$', views.TablaTienda.as_view(), name='search_tienda'),
 ]
+
+
+# Gestion servicios de autenticacion
+urlpatterns += [
+    url(r'session/', views.Login.as_view(),name='ws_loguin'),
+    url(r'logged/', views.is_logged, name="is_logged"),
+]

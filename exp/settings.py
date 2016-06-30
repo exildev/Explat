@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'supra',
+    'supra.auths.oauth',
     'usuario',
     'motorizado',
     'exp',

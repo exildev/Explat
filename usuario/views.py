@@ -194,7 +194,8 @@ class PassChangeEmpleado(UpdateView):
         form = forms.PassChangeEmpleadoForm(request.POST, instance=empleado)
         if form.is_valid():
             form.save()
-            mensaje = {'tipo': 'success', 'texto': "Se a editado la contraseña un empleado correctamente"}
+            mensaje = {'tipo': 'success',
+                       'texto': "Se a editado la contraseña un empleado correctamente"}
             return render(request, 'usuario/passChangeEmpleado.html', {'form': forms.PassChangeEmpleadoForm(), 'empleado': kwargs['pk'], 'mensaje': mensaje})
         # end def
         return render(request, 'usuario/passChangeEmpleado.html', {'form': form, 'empleado': kwargs['pk'], 'mensaje': mensaje})
@@ -203,9 +204,11 @@ class PassChangeEmpleado(UpdateView):
 
 
 class UpStaCliente(View):
+
     def get(self, request, *args, **kwargs):
         empleado = get_object_or_404(models.Empleado, pk=kwargs['empleado_id'])
-        models.Empleado.objects.filter(id=kwargs['empleado_id']).update(is_active=False if empleado.is_active else True)
+        models.Empleado.objects.filter(id=kwargs['empleado_id']).update(
+            is_active=False if empleado.is_active else True)
         return redirect(reverse('usuario:list_empleado'))
     # end def
 # end def
@@ -220,7 +223,8 @@ class AddTienda(FormView):
         form = forms.AddTienda(request.POST)
         if form.is_valid():
             addtienda = form.save(commit=False)
-            addtienda.empresa = models.Empresa.objects.filter(empleado__id=request.user.id).first()
+            addtienda.empresa = models.Empresa.objects.filter(
+                empleado__id=request.user.id).first()
             addtienda.status = True
             addtienda.save()
             return render(request, 'usuario/addTienda.html', {'mensaje': 'Registro Exitoso', 'form': forms.AddTienda()})
@@ -249,6 +253,7 @@ class DetailTienda(generic.DeleteView):
 
 
 class TablaTienda(View):
+
     def get(self, request):
         length = request.GET.get('length', 0)
         columnas = ['nombre', 'descripcion']
@@ -289,8 +294,45 @@ class IndexTienda(generic.TemplateView):
 
 
 class DeleteTienda(View):
+
     def get(self, request, *args, **kwargs):
         models.Tienda.objects.filter(id=kwargs['pk']).update(status=False)
         return redirect(reverse('usuario:list_tienda'))
     # end def
+# end def
+
+
+class Login(supra.SupraSession):
+    # body = True
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        obj = super(Login, self).dispatch(request, *args, **kwargs)
+        if request.user.is_authenticated():
+            motori = motorizado.Motorizado.objects.filter(id=request.user.id).first()
+            if motori:
+                return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d}'
+                 % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id), content_type="application/json")
+            # end if
+        # end if
+        return obj
+    # end def
+# end class
+
+
+def is_logged(request):
+    if request.user.is_authenticated():
+        motori = motorizado.Motorizado.objects.filter(id=request.user.id).first()
+        if motori:
+            return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d}'
+             % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id), content_type="application/json")
+        # end if
+    # end if
+    raise Http404
+# end def
+
+
+@csrf_exempt
+def auto_asignar(request):
+    identificador = request.POST.get('identificador', False)
+    return HttpResponse(identificador)
 # end def

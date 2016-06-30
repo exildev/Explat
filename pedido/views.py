@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.core.urlresolvers import reverse
+import re
 from django.views.generic import View, DeleteView
 from django.views import generic
 from . import forms
@@ -22,6 +23,7 @@ from exp.decorators import administrador_required, alistador_required, superviso
 from django.utils.decorators import method_decorator
 import json
 from socketIO_client import SocketIO, LoggingNamespace
+from supra.auths import methods, oauth
 
 
 class Despacho(TemplateView):
@@ -58,6 +60,8 @@ class AddPedidoAdmin(View):
         formP = forms.AddPedidoAdminApiForm(num_pedido=empresa.id)
         formP.fields["alistador"].queryset = mod_usuario.Empleado.objects.filter(
             cargo="ALISTADOR").filter(empresa=empresa)
+        formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+            empresa=empresa)
         formP.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
@@ -82,6 +86,9 @@ class AddPedidoAdmin(View):
                 form.motorizado = motorizado
                 form.empresa = empresa
                 form.save()
+                cursor = connection.cursor()
+                cursor.execute('select get_add_pedido_admin(%d)' % form.id)
+                row = cursor.fetchone()
                 return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': form.id}))
             # end if
         # end if
@@ -97,6 +104,8 @@ class AddPedidoAdmin(View):
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
             empleado__empresa=empresa)
+        formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+            empresa=empresa)
         info = {'formC': formC, 'formP': formP,
                 'motorizados': mod_motorizado.Motorizado.objects.filter(empleado__empresa=empresa),
                 'motorizadosE': mod_motorizado.Motorizado.objects.filter(empleado__empresa__username="express")}
@@ -115,6 +124,8 @@ class EditPedido(FormView):
             pedidoForm = forms.EditPedidoAdminApiForm(instance=pedido)
             pedidoForm.fields["alistador"].queryset = mod_usuario.Empleado.objects.filter(
                 cargo="ALISTADOR").filter(empresa=empresa)
+            pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+                empresa=empresa)
             pedidoForm.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
                 cargo="SUPERVISOR").filter(empresa=empresa)
             motorizado = mod_motorizado.Motorizado.objects.filter(
@@ -138,6 +149,8 @@ class EditPedido(FormView):
             f.save()
             return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': f.id}))
         # end if
+        pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+            empresa=empresa)
         return render(request, 'pedido/editPedido.html', {'pedidoForm': pedidoForm})
     # end def
 
@@ -197,6 +210,18 @@ class FinalizarPedido(View):
                     if total > 0:
                         models.Pedido.objects.filter(id=kwargs['pk']).update(
                             total=total, confirmado=True)
+                        cursor = connection.cursor()
+                        cursor.execute(
+                            'select get_add_pedido_admin(%d)' % pedido.id)
+                        row = cursor.fetchone()
+                        lista = json.loads(row[0])
+                        if lista:
+                            with SocketIO('127.0.0.1', 3000, LoggingNamespace) as socketIO:
+                                socketIO.emit('add_pedido_pl', {
+                                              'pedido': lista[0], 'tipo': 1})
+                                socketIO.wait(seconds=0)
+                            # end with
+                        # end if
                         return redirect(reverse('pedido:list_pedido'))
                     # end if
                 # end if
@@ -492,7 +517,6 @@ class UpSerPedido(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
-        print 'llego a el servicio'
         return super(UpSerPedido, self).dispatch(*args, **kwargs)
     # end def
 
@@ -537,6 +561,7 @@ class WsPedidoEmpresa(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
+        print "Esta llegando"
         return super(WsPedidoEmpresa, self).dispatch(*args, **kwargs)
     # end def
 
@@ -546,14 +571,16 @@ class WsPedidoEmpresa(View):
                        request.body.decode('utf-8'))
         row = cursor.fetchone()
         lista = json.loads(row[0])
-        if len(lista['pedidos']) > 0:
-            with SocketIO('127.0.0.1', 3000, LoggingNamespace) as socketIO:
-                socketIO.emit('add_pedido_ws', {
-                              'pedidos': lista['pedidos'], 'tipo': 2})
-                socketIO.wait(seconds=0)
-            # end with
+        if lista['respuesta']:
+            if len(lista['pedidos']) > 0:
+                with SocketIO('127.0.0.1', 3000, LoggingNamespace) as socketIO:
+                    socketIO.emit('add_pedido_ws', {
+                                  'pedidos': lista['pedidos'], 'tipo': 2})
+                    socketIO.wait(seconds=0)
+                # end with
+                lista.pop('pedidos')
+            # end if
         # end if
-        lista.pop('pedidos')
         return HttpResponse(json.dumps(lista), content_type="application/json")
     # end def
 # end class
@@ -567,3 +594,192 @@ class Rastreo(TemplateView):
         return super(Rastreo, self).dispatch(request, *args, **kwargs)
     # end def
 # end class
+
+
+class RecogerPWService(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(RecogerPWService, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            motori = mod_motorizado.Motorizado.objects.filter(
+                identifier=motorizado).first()
+            if motori:
+                if validNum(pedido) and validNum(motorizado):
+                    ped = models.PedidoWS.objects.filter(
+                        id=int(pedido)).first()
+                    if ped.motorizado.id == motori.empleado.id:
+                        if ped:
+                            models.PedidoWS.objects.filter(
+                                id=int(pedido), motorizado__id=motori.empleado.id).update(despachado=True)
+                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                        # end if
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
+class RecogerPPlataforma(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(RecogerPPlataforma, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            motori = mod_motorizado.Motorizado.objects.filter(
+                identifier=motorizado).first()
+            print 'di del motorizado  ', motori.id
+            if motori:
+                if validNum(pedido) and validNum(motorizado):
+                    ped = models.Pedido.objects.filter(id=int(pedido)).first()
+                    if ped:
+                        if ped.motorizado.id == motori.id:
+                            models.Pedido.objects.filter(
+                                id=int(pedido), motorizado__id=motori.id).update(despachado=True)
+                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                    # end if
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
+class AceptarPWService(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AceptarPWService, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        print request.POST
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            if validNum(pedido) and validNum(motorizado):
+                cursor = connection.cursor()
+                cursor.execute('select aceptar_pw_service(%s,\'%s\')' %
+                               (pedido, motorizado))
+                row = cursor.fetchone()
+                res = json.loads(row[0])
+                return HttpResponse(row, content_type='application/json', status=200 if res['r'] else 404)
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+    # end class
+
+
+class AceptarPPlataforma(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AceptarPPlataforma, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        motorizado = request.POST.get('motorizado', False)
+        pedido = request.POST.get('pedido', False)
+        if motorizado and pedido:
+            if validNum(motorizado) and validNum(pedido):
+                # mod_usuario.Empleado.objects.filter(ddsdsd=12)
+                pedid = models.Pedido.objects.filter(id=int(pedido)).values(
+                    'id', 'motorizado__motorizado__identifier', 'motorizado__id').first()
+                if pedid:
+                    motori = mod_motorizado.Motorizado.objects.filter(
+                        id=pedid['motorizado__id']).values('id', 'identifier').first()
+                    if motori:
+                        # if pedido.motorizado.motorizado.identifier ==
+                        # motorizado:
+                        if motori['identifier'] == motorizado:
+                            models.Pedido.objects.filter(
+                                id=int(pedido)).update(notificado=True)
+                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                    # end if
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+
+# end class
+
+
+class EntregarPWService(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(EntregarPWService, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            motori = mod_motorizado.Motorizado.objects.filter(
+                identifier=motorizado).first()
+            if motori:
+                if validNum(pedido) and validNum(motorizado):
+                    ped = models.PedidoWS.objects.filter(
+                        id=int(pedido)).first()
+                    if ped.motorizado.id == motori.empleado.id:
+                        if ped:
+                            models.PedidoWS.objects.filter(
+                                id=int(pedido), motorizado__id=motori.empleado.id).update(entregado=True)
+                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                        # end if
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
+class EntregarPPlataforma(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(EntregarPPlataforma, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            motori = mod_motorizado.Motorizado.objects.filter(
+                identifier=motorizado).first()
+            print 'di del motorizado  ', motori.id
+            if motori:
+                if validNum(pedido) and validNum(motorizado):
+                    ped = models.Pedido.objects.filter(id=int(pedido)).first()
+                    if ped:
+                        if ped.motorizado.id == motori.id:
+                            models.Pedido.objects.filter(
+                                id=int(pedido), motorizado__id=motori.id).update(entregado=True)
+                            return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                    # end if
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
+def validNum(cad):
+    return re.match('^\d+$', cad)

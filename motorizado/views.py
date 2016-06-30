@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponse, 
 from django.shortcuts import render
 from exp.decorators import *
 from usuario import models as usuario
+from pedido import models as mod_pedido
 from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 import models
@@ -66,6 +67,7 @@ def add_motorizado(request):
             return render(request, 'motorizado/addMotorizado.html', {'formSoat': formSoat, 'formTecno': formTecno, 'formMoto': formMoto, 'formMotorizado': formMotorizado})
         else:
             return render(request, 'motorizado/addMotorizado.html', {'error': 'No hay empleados disponibles para asignarles una moto'})
+
 
 @csrf_exempt
 def searchMotorizado(request):
@@ -237,6 +239,7 @@ def DeleteMoto(request, pk):
 
 
 class SearchMotorizadoPed(View):
+
     def get(self, request):
         length = request.GET.get('length', '0')
         columnas = ['nombre', 'descripcion']
@@ -256,7 +259,8 @@ class SearchMotorizadoPed(View):
 class ListarRastreo(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
-    list_display = ['nombre', 'apellido', 'identificador', 'placa', 'pk','direccion']
+    list_display = ['nombre', 'apellido',
+                    'identificador', 'placa', 'pk', 'direccion']
     search_fields = ['empleado__first_name', 'empleado__last_name',
                      'licencia', 'identifier', 'moto__placa']
     list_filter = ['empleado__first_name', 'empleado__last_name',

@@ -303,29 +303,38 @@ class DeleteTienda(View):
     # end def
 # end def
 
-#methods.append(oauth.SupraOAuth)
+# methods.append(oauth.SupraOAuth)
+
+
 class Login(supra.SupraSession):
     # body = True
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         obj = super(Login, self).dispatch(request, *args, **kwargs)
         if request.user.is_authenticated():
-            motori = motorizado.Motorizado.objects.filter(id=request.user.id).first()
+            motori = motorizado.Motorizado.objects.filter(
+                empleado__id=request.user.id).first()
             if motori:
                 return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d}'
-                 % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id), content_type="application/json")
+                                    % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id), content_type="application/json")
             # end if
         # end if
         return obj
     # end def
 
     def login(self, request, cleaned_data):
-        identificador = request.POST.get('username','')
-        motori = motorizado.Motorizado.objects.filter(identifier=identificador).first()
-        cleaned_data={'password': cleaned_data['password']}
+        identificador = request.POST.get('username', '')
+        print identificador
+        motori = motorizado.Motorizado.objects.filter(
+            identifier=identificador).first()
+        cleaned_data = {'password': cleaned_data['password']}
+        print motori
         if motori:
             cleaned_data['username'] = motori.empleado.username
+        else:
+            return HttpResponse('{"respuesta":false}', content_type='application/json', status=404)
         # end if
+        print cleaned_data
         return super(Login, self).login(request, cleaned_data)
     # end if
 # end class
@@ -333,10 +342,11 @@ class Login(supra.SupraSession):
 
 def is_logged(request):
     if request.user.is_authenticated():
-        motori = motorizado.Motorizado.objects.filter(empleado__id=request.user.id).first()
+        motori = motorizado.Motorizado.objects.filter(
+            empleado__id=request.user.id).first()
         if motori:
             return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d}'
-             % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id), content_type="application/json")
+                                % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id), content_type="application/json")
         # end if
     # end if
     raise Http404

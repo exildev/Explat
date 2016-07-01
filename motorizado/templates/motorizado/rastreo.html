@@ -33,7 +33,10 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="empresa" values="{% if empresa %} {{ empresa }} {% else %} nada {% endif%}">
+
+<input type="hidden" id="empresa" value="{% if empresa %} {{ empresa }} {% else %} nada {% endif%}">
+<input type="hidden" id="token" value="{{ token }}">
+{% csrf_token %}
 {% endblock %}
 
 {% block addjs %}
@@ -44,4 +47,17 @@
 <script type="text/javascript" src="{{ STATIC_URL }}api/js/md5.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkEwq_DBXFsYc2BzYZ3TNsWHn19kxZ2HM&callback=initMap" async defer></script>
 <link rel="stylesheet" href="{{STATIC_URL}}css/rastreo.css">
+<script type="text/javascript" src="{{ STATIC_URL }}api/js/listar_motorizado_rastreo.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}api/js/md5.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}api/js/jquery.qrcode.js"></script>
+<script type="text/javascript">
+  var socket = io('http://192.168.0.109:4000');
+  function enviarMOtorizado(){
+    console.log("esta en el socket");
+    console.log($('#token').val());
+      socket.emit('select-motorizado',{'token':$('#token').val(),'motorizado':'359291054481645'});
+  }
+
+</script>
 {% endblock %}

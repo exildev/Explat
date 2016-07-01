@@ -82,3 +82,16 @@ urlpatterns += [
     url(r'^entregar/pplataforma/$', views.EntregarPPlataforma.as_view(), name='entregar_pplataforma'),
     url(r'^entregar/pws/$', views.EntregarPWService.as_view(), name='entregar_wservice'),
 ]
+
+
+# Gestion de entrega de pedido
+urlpatterns += [
+    url(r'confirmar/pplataforma/$', views.ConfirmacionPedido.as_view(), name='confirmar_pplataforma'),
+    url(r'^confirmar/pws/$', views.ConfirmacionPedidoWS.as_view(), name='confirmar_wservice'),
+]
+
+
+# Gestion Auto Asignar Pedido
+urlpatterns += [
+    url(r'autoasignar/$', views.AutoAsignar.as_view(), name='autoasignar'),
+]

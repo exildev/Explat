@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+import django
 from exp.decorators import *
 from usuario import models as usuario
 from pedido import models as mod_pedido
 from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
+from django.views.generic import TemplateView
 import models
 import forms
 from supra import views as supra
@@ -64,7 +66,8 @@ def add_motorizado(request):
                 formMotorizado.fields["empleado"].queryset = empleadosC = models.Empleado.objects.filter(
                     cargo='MOTORIZADO').filter(empresa=empresa, motorizado__empleado__isnull=True)
 
-            return render(request, 'motorizado/addMotorizado.html', {'formSoat': formSoat, 'formTecno': formTecno, 'formMoto': formMoto, 'formMotorizado': formMotorizado})
+            return render(request, 'motorizado/addMotorizado.html',
+            {'formSoat': formSoat, 'formTecno': formTecno, 'formMoto': formMoto, 'formMotorizado': formMotorizado})
         else:
             return render(request, 'motorizado/addMotorizado.html', {'error': 'No hay empleados disponibles para asignarles una moto'})
 
@@ -259,8 +262,8 @@ class SearchMotorizadoPed(View):
 class ListarRastreo(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
-    list_display = ['nombre', 'apellido',
-                    'identificador', 'placa', 'pk', 'direccion']
+    list_display = ['get_nombre',
+                    'identificador', 'placa', ('direccion', 'json'),'num_pedido']
     search_fields = ['empleado__first_name', 'empleado__last_name',
                      'licencia', 'identifier', 'moto__placa']
     list_filter = ['empleado__first_name', 'empleado__last_name',
@@ -268,10 +271,52 @@ class ListarRastreo(supra.SupraListView):
     paginate_by = 10
 
     class Renderer:
-        nombre = 'empleado__first_name'
-        apellido = 'empleado__last_name'
         identificador = 'identifier'
         placa = 'moto__placa'
         direccion = 'empleado__direccion'
     # end class
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(ListarRastreo, self).dispatch(request, *args, **kwargs)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(ListarRastreo, self).get_queryset()
+        print queryset.query
+        sql = """
+            select (
+                select COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (
+                		select replace(t.direccion,'"','') as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id
+                		union
+                		select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id)) as t
+                	) p
+                ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
+       """
+        sql2 = """
+           select (
+            	select count(t.direccion) as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id
+            	union
+            	select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id)) as t
+            ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
+        """
+        obj = queryset.extra(select={'direccion': sql,'num_pedido':sql2})
+        print obj.query
+        return obj.exclude(num_pedido__gte=0)
+    # end def
+
+    def get_nombre(self, obj, row):
+        return 'jajajjaa'
+    # end def
+# end class
+
+
+class Rastreo(TemplateView):
+    template_name='motorizado/rastreo.html'
+
+    @method_decorator(administrador_required)
+    @method_decorator(supervisor_required)
+    def dispatch(self, request, *args, **kwargs):
+        empresa = models.Empresa.objects.filter(empleado__id=request.user.id).first()
+        return render(request, 'motorizado/rastreo.html',{'empresa': empresa.id if empresa else 0, 'token': django.middleware.csrf.get_token(request)})
+    # end def
 # end class

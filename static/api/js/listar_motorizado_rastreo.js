@@ -41,7 +41,9 @@ function enviarPedido() {
             "nombre": "mirlan",
             "apellidos": "Reyes Polo",
             "identificacion": "45454545454",
-            "dirreccion": "dsdsdsdsddsdsdsdsdssds"
+            "direccion": "dsdsdsdsddsdsdsdsdssds",
+            "celular":"3103636365",
+            "fijo":"6654544"
         },
         "tienda": {
             "identificador": "3"
@@ -63,7 +65,9 @@ function enviarPedido() {
             "nombre": "mirlan",
             "apellidos": "Reyes Polo",
             "identificacion": "45454545454",
-            "dirreccion": "dsdsdsdsddsdsdsdsdssds"
+            "direccion": "dsdsdsdsddsdsdsdsdssds",
+            "celular":"3103636365",
+            "fijo":"6654544"
         },
         "tienda": {
             "identificador": "3"

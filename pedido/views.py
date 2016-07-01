@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.core.urlresolvers import reverse
+from supra import views as supra
 import re
 from django.views.generic import View, DeleteView
 from django.views import generic
@@ -215,10 +216,11 @@ class FinalizarPedido(View):
                             'select get_add_pedido_admin(%d)' % pedido.id)
                         row = cursor.fetchone()
                         lista = json.loads(row[0])
+                        print lista
                         if lista:
                             with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
                                 socketIO.emit('asignar-pedido', {
-                                              'pedido': lista[0], 'tipo': 1})
+                                              'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
                                 socketIO.wait(seconds=0)
                             # end with
                         # end if
@@ -561,7 +563,6 @@ class WsPedidoEmpresa(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
-        print "Esta llegando"
         return super(WsPedidoEmpresa, self).dispatch(*args, **kwargs)
     # end def
 
@@ -575,7 +576,7 @@ class WsPedidoEmpresa(View):
             if len(lista['pedidos']) > 0:
                 with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
                     socketIO.emit('add-pedido', {
-                                  'pedidos': lista['pedidos'], 'tipo': 2})
+                                  'pedidos': lista['pedidos'], 'tipo': 2, 'retraso': lista['retardo']})
                     socketIO.wait(seconds=0)
                 # end with
                 lista.pop('pedidos')
@@ -597,6 +598,7 @@ class Rastreo(TemplateView):
 
 
 class RecogerPWService(View):
+
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(RecogerPWService, self).dispatch(*args, **kwargs)
@@ -625,6 +627,7 @@ class RecogerPWService(View):
 
 
 class RecogerPPlataforma(View):
+
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(RecogerPPlataforma, self).dispatch(*args, **kwargs)
@@ -638,7 +641,8 @@ class RecogerPPlataforma(View):
                 identifier=motorizado).first()
             if motori:
                 if validNum(pedido) and validNum(motorizado):
-                    ped = models.Pedido.objects.filter(id=int(pedido), motorizado__id=motori.empleado.id).first()
+                    ped = models.Pedido.objects.filter(
+                        id=int(pedido), motorizado__id=motori.empleado.id).first()
                     if ped:
                         models.Pedido.objects.filter(
                             id=int(pedido), motorizado__id=motori.empleado.id).update(despachado=True)
@@ -656,8 +660,12 @@ class AceptarPWService(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
+        print 'llego a aceptar'
         return super(AceptarPWService, self).dispatch(*args, **kwargs)
     # end def
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse('jajjajaja', content_type='application/json')
 
     def post(self, request, *args, **kwargs):
         print request.POST
@@ -712,16 +720,18 @@ class EntregarPWService(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
+        print 'llego a el service'
         return super(EntregarPWService, self).dispatch(*args, **kwargs)
     # end def
 
     def post(self, request, *args, **kwargs):
+        print 'entro a el post'
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
             if validNum(pedido) and validNum(motorizado):
                 ped = models.PedidoWS.objects.filter(
-                    id=int(pedido),motorizado__motorizado__identifier=motorizado).values(
+                    id=int(pedido), motorizado__motorizado__identifier=motorizado).values(
                         'id', 'motorizado__motorizado__identifier', 'motorizado__id').first()
                 if ped:
                     models.PedidoWS.objects.filter(
@@ -747,7 +757,8 @@ class EntregarPPlataforma(View):
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
             if validNum(pedido) and validNum(motorizado):
-                ped = models.Pedido.objects.filter(id=int(pedido), motorizado__motorizado__identifier=motorizado).first()
+                ped = models.Pedido.objects.filter(
+                    id=int(pedido), motorizado__motorizado__identifier=motorizado).first()
                 if ped:
                     models.Pedido.objects.filter(
                         id=int(pedido)).update(entregado=True)
@@ -756,6 +767,60 @@ class EntregarPPlataforma(View):
             # end if
         # end if
         return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
+class ConfirmacionPedido(supra.SupraFormView):
+
+    model = models.ConfirmarPedido
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        motorizado = request.POST.get('motorizado', '')
+        pedido = request.POST.get('pedido', 0)
+        pedido = models.Pedido.objects.filter(
+            motorizado__motorizado__identifier=motorizado).first()
+        if pedido:
+            return super(ConfirmacionPedido, self).dispatch(request, *args, **kwargs)
+        # end if
+        return HttpResponse('{"motorizado":["Este campo es obligatorio"]}')
+    # end def
+# end class
+
+
+class ConfirmacionPedidoWS(supra.SupraFormView):
+
+    model = models.ConfirmarPedidoWs
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        motorizado = request.POST.get('motorizado', '')
+        pedido = request.POST.get('pedido', 0)
+        pedido = models.Pedido.objects.filter(
+            motorizado__motorizado__identifier=motorizado).first()
+        if pedido:
+            return super(ConfirmacionPedidoWS, self).dispatch(request, *args, **kwargs)
+        # end if
+        return HttpResponse('{"motorizado":["Este campo es obligatorio"]}')
+    # end def
+# end class
+
+
+class AutoAsignar(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AutoAsignar, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        motorizado = request.POST.get('motorizado_json', '[]')
+        tienda = request.POST.get('tienda', '0')
+        cursor = connection.cursor()
+        cursor.execute('select auto_asignar(%s,\'%s\')' % (tienda, motorizado))
+        row = cursor.fetchone()
+        return HttpResponse(row[0], content_type="application/json")
     # end def
 # end class
 

@@ -151,6 +151,7 @@ class PedidoWS(models.Model):
         return self.cliente
     # end if
 
+
 class TimeWS(models.Model):
     creado = models.DateTimeField()
     confirmado = models.DateTimeField(null=True)
@@ -173,6 +174,38 @@ class Punto(models.Model):
         return '%d - %d' % (self.latitud, self.longitud)
     # end def
 
+# end class
+
+
+class ConfirmarPedido(models.Model):
+    pedido = models.ForeignKey(Pedido)
+    fecha = models.DateTimeField(auto_now=True)
+    imagen = models.ImageField()
+
+    class Meta:
+        verbose_name = "Confirmacion Pedido"
+        verbose_name_plural = "Confirmaciones Pedidos"
+    # end def
+
+    def __str__(self):
+        return str(self.pedido.num_pedido)
+    # end def
+# end class
+
+
+class ConfirmarPedidoWs(models.Model):
+    pedido = models.ForeignKey(PedidoWS)
+    fecha = models.DateTimeField(auto_now=True)
+    imagen = models.ImageField()
+
+    class Meta:
+        verbose_name = "Confirmacion PedidoWS"
+        verbose_name_plural = "Confirmaciones PedidoWS"
+    # end def
+
+    def __str__(self):
+        return str(self.pedido.num_pedido)
+    # end def
 # end class
 
 

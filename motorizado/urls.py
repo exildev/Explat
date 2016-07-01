@@ -17,7 +17,7 @@ urlpatterns = [
 
 # Gestion de despacho
 urlpatterns += [
-    url(r'^rastreo/$', TemplateView.as_view(template_name='motorizado/rastreo.html'), name='rastreo_motorizado'),
+    url(r'^rastreo/$', views.Rastreo.as_view(), name='rastreo_motorizado'),
 ]
 
 # Gestion de Moto

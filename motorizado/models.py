@@ -67,6 +67,12 @@ class Motorizado(models.Model):
     class Meta:
         verbose_name = "Motorizado"
         verbose_name_plural = "Motorizados"
+    # end if
 
     def __str__(self):
         return str(self.empleado)
+    # end if
+
+    def __unicode__(self):
+        return self.empleado.first_name
+    # end if

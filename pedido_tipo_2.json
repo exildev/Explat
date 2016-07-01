@@ -10,7 +10,10 @@
                 apellidos: 'Reyes Polo',
                 nombre: 'mirlan',
                 dirreccion: 'dsdsdsdsddsdsdsdsdssds',
-                identificacion: '45454545454'
+                identificacion: '45454545454',
+                direccion:'dsdsdsdsddsdsdsdsdssds',
+                celular:'3103636365',
+                fijo:'6654544'
             },
             descripcion: [{
                 nombre: 'jajaja',
@@ -45,7 +48,10 @@
                 apellidos: 'Reyes Polo',
                 nombre: 'mirlan',
                 dirreccion: 'dsdsdsdsddsdsdsdsdssds',
-                identificacion: '45454545454'
+                identificacion:'45454545454',
+                direccion:'dsdsdsdsddsdsdsdsdssds',
+                celular:'3103636365',
+                fijo:'6654544'
             },
             descripcion: [{
                 nombre: 'jajaja',

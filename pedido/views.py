@@ -216,7 +216,6 @@ class FinalizarPedido(View):
                             'select get_add_pedido_admin(%d)' % pedido.id)
                         row = cursor.fetchone()
                         lista = json.loads(row[0])
-                        print lista
                         if lista:
                             with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
                                 socketIO.emit('asignar-pedido', {

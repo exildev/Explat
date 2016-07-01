@@ -67,7 +67,7 @@ def add_motorizado(request):
                     cargo='MOTORIZADO').filter(empresa=empresa, motorizado__empleado__isnull=True)
 
             return render(request, 'motorizado/addMotorizado.html',
-            {'formSoat': formSoat, 'formTecno': formTecno, 'formMoto': formMoto, 'formMotorizado': formMotorizado})
+                          {'formSoat': formSoat, 'formTecno': formTecno, 'formMoto': formMoto, 'formMotorizado': formMotorizado})
         else:
             return render(request, 'motorizado/addMotorizado.html', {'error': 'No hay empleados disponibles para asignarles una moto'})
 
@@ -262,8 +262,8 @@ class SearchMotorizadoPed(View):
 class ListarRastreo(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
-    list_display = ['get_nombre',
-                    'identificador', 'placa', ('direccion', 'json'),'num_pedido']
+    list_display = ['nombre',
+                    'identificador', 'placa', ('direccion', 'json'), 'num_pedido', 'tipo']
     search_fields = ['empleado__first_name', 'empleado__last_name',
                      'licencia', 'identifier', 'moto__placa']
     list_filter = ['empleado__first_name', 'empleado__last_name',
@@ -299,24 +299,25 @@ class ListarRastreo(supra.SupraListView):
             	select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id)) as t
             ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
         """
-        obj = queryset.extra(select={'direccion': sql,'num_pedido':sql2})
+        obj = queryset.extra(select={'direccion': sql, 'num_pedido': sql2})
         print obj.query
-        return obj.exclude(num_pedido__gte=0)
+        return obj.exclude()
     # end def
 
-    def get_nombre(self, obj, row):
-        return 'jajajjaa'
+    def nombre(self, obj, row):
+        return '%s %s' % (obj.empleado.first_name, obj.empleado.last_name)
     # end def
 # end class
 
 
 class Rastreo(TemplateView):
-    template_name='motorizado/rastreo.html'
+    template_name = 'motorizado/rastreo.html'
 
     @method_decorator(administrador_required)
     @method_decorator(supervisor_required)
     def dispatch(self, request, *args, **kwargs):
-        empresa = models.Empresa.objects.filter(empleado__id=request.user.id).first()
-        return render(request, 'motorizado/rastreo.html',{'empresa': empresa.id if empresa else 0, 'token': django.middleware.csrf.get_token(request)})
+        empresa = models.Empresa.objects.filter(
+            empleado__id=request.user.id).first()
+        return render(request, 'motorizado/rastreo.html', {'empresa': empresa.id if empresa else 0, 'token': django.middleware.csrf.get_token(request)})
     # end def
 # end class

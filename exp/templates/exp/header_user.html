@@ -1,5 +1,5 @@
-{ load moto_notifications %}
-{ has_exprired "check" as has_exprired_soat_tecno %}
+<!-- { load moto_notifications %}
+{ has_exprired "check" as has_exprired_soat_tecno %} -->
 
 <div class="one column row">
   <div class="column">
@@ -16,7 +16,6 @@
           </div>
         </div>
       </div>
-
       <a href="{ url 'domicilios:notificaciones_moto' %}"class="ui green right icon item"><i class="express-notificacion large icon {% if has_exprired_soat_tecno %} red {% endif %} "></i></a>
       <a href="{ url 'domicilios:info_empleado' request.user.id %}"class="ui green icon item"><i class="express-perfil large icon"></i></a>
       <a href="{% url 'usuario:user-logout' %}" class="green icon item"><i class="express-salir large icon"></i></a>

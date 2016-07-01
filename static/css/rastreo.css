@@ -1,20 +1,33 @@
-.c {
-    width: 100px;
-    height: 500px;
-    border-style: solid;
-    border-width: 2px;
+.mapa-content {
+    width: 100%;
+    border-radius: 3px;
+    border: solid 1px #ccc;
+    background-color: #fff;
+}
+.mapa-content, .map, .lista {
+    min-height: 600px;
 }
 .lista {
-    width: 200px;
+    width: 250px;
+    border-right: 1px solid #ccc;
+    height: 100%;
 }
 .mapa {
-    width: 900px;
+    text-align: inherit;
+    width: calc(100% - 250px);
 }
-input[type=text] {
-    width: 180px;
+.load {
+    display: none;
+    margin-top: 8px;
+    width: 28px;
+    height: 28px;
+}
+input[type=search] {
+    width: 100%;
     box-sizing: border-box;
-    border: 2px solid black;
-    border-radius: 4px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    border-radius: 2px;
     font-size: 16px;
     background-color: white;
     background-image: url('/static/img/searchicon.png');
@@ -24,22 +37,87 @@ input[type=text] {
     -webkit-transition: width 0.4s ease-in-out;
     transition: width 0.4s ease-in-out;
 }
-input[type=text]:focus {
-    width: 100%;
+input[type=search]:focus {
+    outline: none;
 }
 div.c.lista {
-    padding-left: -6px;
-    padding-right: 0px;
+    padding: 0;
 }
 .contenedor {
-    height: 90%;
-    overflow-y: scroll;
+    height: 100%;
+    height: calc(100% - 44px);
+    overflow-y: auto;
 }
-ul {
+.contenedor ul {
     margin: 0;
     padding: 0;
-    display: block;
     list-style-type: none;
+}
+.contenedor > ul{
+    padding-top: 8px;
+}
+.contenedor> ul> li {
+    padding-left: 16px;
+    padding-right: 16px;
+    /*border-bottom: 1px solid #ccc;*/
+    text-align: left;
+    width: 100%;
+    height: 76px;
+    display:flex;
+    align-items:center;
+    transition: all .7s;
+}
+.contenedor > ul> li:hover {
+    background-color: #eee !important;
+}
+
+.contenedor> ul> li.sc {
+    background: #FFEDD2;
+}
+.contenedor> ul> li.it {
+    background: #E6FFC8;
+}
+.contenedor .item{
+    width: 100%;
+}
+
+.contenedor .item > span{
+    display: block;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.contenedor .item > span.prim{
+    font-weight: bold;
+}
+
+.contenedor .item > span.prim > i{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+}
+.contenedor .item > span.prim > i::before{
+    content: ' - ';
+}
+.contenedor .item > span.scun.p::after{
+    content: ' Pedido(s)';
+}
+
+.contenedor .item > span.scun{
+    color: #777;
+    font-size: 14px;
+}
+
+.contenedor .item > input[type=radio]{
+    display: none;
+}
+.contenedor .item > ul {
+    color: #666;
+}
+.contenedor .item > ul > li{
+    font-size: 14px;
 }
 .fondo_noti {
     background-color: red;

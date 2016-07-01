@@ -1,12 +1,21 @@
+window.mtajax = null;
+window.explat = {};
 $(document).on('ready', function() {
-    cargarMotorizados(null, 1, false);
+    window.explat.cargarMotorizados(null, 1, false);
     $('#search').on('keyup', function() {
         cargarMotorizados($(this).val(), 1, false);
     });
 });
-
-function cargarMotorizados(q, pag, sub) {
-    $.ajax({
+window.explat.cargarMotorizados = function(q, pag, sub, rq) {
+    var l = $('.lis_emp');
+    if (!sub){
+        l.html("");
+        if(window.mtajax && window.mtajax.readyState != 4){
+            window.mtajax.abort();
+        }
+    }
+    $('.load').show();
+    window.mtajax = $.ajax({
         url: '/motorizado/ws/list/rastreo/',
         type: 'get',
         dataType: 'json',
@@ -23,34 +32,32 @@ function cargarMotorizados(q, pag, sub) {
             }
         }
     }).done(function(data) {
+        $('.load').hide();
         var list = data.object_list;
         var next = data.next;
         if(list.length > 0){
-            console.log(list);
-            var l = $('.lis_emp');
-            if (!sub){
-                l.html("");
-            }
             for (var key = 0; key < list.length; key++) {
                 var val = list[key];
                 l.append(
-                    "<li>" +
-                    "<span>" + val.placa + "</span>" +
-                    "<ul>" +
-                    "<li>" + val.nombre + "</li>" +
-                    "<li>" + val.apellido + "</li>" +
-                    "<li>" + val.identificador + "</li>" +
-                    "<input type=\"radio\" name=\"selec\">" +
-                    "</ul>" +
+                    "<li class>" +
+                    "<div class='item'>" +
+                    "<span class='prim'>" + val.placa + " <i>" + val.nombre + "</i></span>" +
+                    "<span class='scun p'>5</span>" +
+                    "<span class='scun'>" + val.apellido + "</span>" +
+                    "<input type='radio' name='motorizado' datam='1''>" +
+                    "</div>" +
                     "</li>"
                 );
             }
+        }else{
+            l.html("");
+            l.append('<li class="vacio"><span>No se encontraron resultados.</span></li>');
         }
         if(next){
-            cargarMotorizados(q, next, true);
+            window.explatcargarMotorizados(q, next, true);
         }
     });
-}
+};
 
 function enviarPedido() {
     var res = {
@@ -91,7 +98,7 @@ function enviarPedido() {
         }],
         "total_pedido": 50000,
         "tipo_pago": 1
-    }]};
+    };
     $.ajax({
         url: '/pedidos/emp/ws/pedido/',
         type: 'POST',
@@ -103,4 +110,12 @@ function enviarPedido() {
     });
 }
 
-function
+function initMap() {
+  // Create a map object and specify the DOM element for display.
+  var map = new google.maps.Map($('.mapa').get(0), {
+    center: {lat: 5.8329743, lng: -74.13289},
+    // scrollwheel: false,
+    zoom: 6,
+    styles: [{"elementType":"geometry","stylers":[{"hue":"#ff4400"},{"saturation":-68},{"lightness":-4},{"gamma":0.72}]},{"featureType":"road","elementType":"labels.icon"},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#0077ff"},{"gamma":3.1}]},{"featureType":"water","stylers":[{"hue":"#00ccff"},{"gamma":0.44},{"saturation":-33}]},{"featureType":"poi.park","stylers":[{"hue":"#44ff00"},{"saturation":-23}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"hue":"#007fff"},{"gamma":0.77},{"saturation":65},{"lightness":99}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"gamma":0.11},{"weight":5.6},{"saturation":99},{"hue":"#0091ff"},{"lightness":-86}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"lightness":-48},{"hue":"#ff5e00"},{"gamma":1.2},{"saturation":-23}]},{"featureType":"transit","elementType":"labels.text.stroke","stylers":[{"saturation":-64},{"hue":"#ff9100"},{"lightness":16},{"gamma":0.47},{"weight":2.7}]}]
+  });
+}

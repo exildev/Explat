@@ -1,20 +1,20 @@
 window.mtajax = null;
 window.explat = {};
 $(document).on('ready', function() {
-    window.explat.cargarMotorizados(null, 1, false);
+    explat.cargarMotorizados(null, 1, false);
     $('#search').on('keyup', function() {
-        cargarMotorizados($(this).val(), 1, false);
+        explat.cargarMotorizados($(this).val(), 1, false);
     });
 });
 window.explat.cargarMotorizados = function(q, pag, sub, rq) {
     var l = $('.lis_emp');
     if (!sub){
+        $('.load').show();
         l.html("");
         if(window.mtajax && window.mtajax.readyState != 4){
             window.mtajax.abort();
         }
     }
-    $('.load').show();
     window.mtajax = $.ajax({
         url: '/motorizado/ws/list/rastreo/',
         type: 'get',
@@ -34,7 +34,6 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
     }).done(function(data) {
         $('.load').hide();
         var list = data.object_list;
-        var next = data.next;
         if(list.length > 0){
             for (var key = 0; key < list.length; key++) {
                 var val = list[key];
@@ -53,8 +52,8 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
             l.html("");
             l.append('<li class="vacio"><span>No se encontraron resultados.</span></li>');
         }
-        if(next){
-            window.explatcargarMotorizados(q, next, true);
+        if(data.next){
+            explat.cargarMotorizados(q, data.next, true);
         }
     });
 };

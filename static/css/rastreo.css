@@ -5,7 +5,7 @@
     background-color: #fff;
 }
 .mapa-content, .map, .lista {
-    min-height: 600px;
+    height: 600px;
 }
 .lista {
     width: 250px;

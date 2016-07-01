@@ -29,7 +29,9 @@
                     <ul class="lis_emp"></ul>
                 </div>
             </div>
-            <div class="c mapa"></div>
+            <div class="c mapa">
+                  <iframe src="http://192.168.0.109:4000/?empresa={{ empresa }}&token={{ token }}" frameborder="0"></iframe>
+            </div>
         </div>
     </div>
 </div>
@@ -45,7 +47,7 @@
 <script type="text/javascript" src="{{ STATIC_URL }}api/js/json2.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}api/js/listar_motorizado_rastreo.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}api/js/md5.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkEwq_DBXFsYc2BzYZ3TNsWHn19kxZ2HM&callback=initMap" async defer></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkEwq_DBXFsYc2BzYZ3TNsWHn19kxZ2HM&callback=initMap" async defer></script> -->
 <link rel="stylesheet" href="{{STATIC_URL}}css/rastreo.css">
 <script type="text/javascript" src="{{ STATIC_URL }}api/js/listar_motorizado_rastreo.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}api/js/md5.js"></script>

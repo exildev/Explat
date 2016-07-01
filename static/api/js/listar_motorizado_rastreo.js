@@ -37,13 +37,18 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
         if(list.length > 0){
             for (var key = 0; key < list.length; key++) {
                 var val = list[key];
+                var dir = '';
+                for(var key2 in val.direccion){
+                  var aux = val.direccion[key2];
+                  dir += aux.direccion + (key2 == val.direccion.length?'':', ');
+                }
                 l.append(
-                    "<li class>" +
+                    "<li class="+(val.tipo==1?'it':'sc')+">" +
                     "<div class='item'>" +
                     "<span class='prim'>" + val.placa + " <i>" + val.nombre + "</i></span>" +
-                    "<span class='scun p'>5</span>" +
-                    "<span class='scun'>" + val.apellido + "</span>" +
-                    "<input type='radio' name='motorizado' datam='1''>" +
+                    "<span class='scun p'>"+val.num_pedido+"</span>" +
+                    "<span class='scun'>" + dir + "</span>" +
+                    "<input type='radio' name='motorizado' datam='"+val.identificador+"''>" +
                     "</div>" +
                     "</li>"
                 );
@@ -120,10 +125,8 @@ function enviarPedido() {
 }
 
 function initMap() {
-  // Create a map object and specify the DOM element for display.
   var map = new google.maps.Map($('.mapa').get(0), {
     center: {lat: 5.8329743, lng: -74.13289},
-    // scrollwheel: false,
     zoom: 6,
     styles: [{"elementType":"geometry","stylers":[{"hue":"#ff4400"},{"saturation":-68},{"lightness":-4},{"gamma":0.72}]},{"featureType":"road","elementType":"labels.icon"},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#0077ff"},{"gamma":3.1}]},{"featureType":"water","stylers":[{"hue":"#00ccff"},{"gamma":0.44},{"saturation":-33}]},{"featureType":"poi.park","stylers":[{"hue":"#44ff00"},{"saturation":-23}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"hue":"#007fff"},{"gamma":0.77},{"saturation":65},{"lightness":99}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"gamma":0.11},{"weight":5.6},{"saturation":99},{"hue":"#0091ff"},{"lightness":-86}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"lightness":-48},{"hue":"#ff5e00"},{"gamma":1.2},{"saturation":-23}]},{"featureType":"transit","elementType":"labels.text.stroke","stylers":[{"saturation":-64},{"hue":"#ff9100"},{"lightness":16},{"gamma":0.47},{"weight":2.7}]}]
   });

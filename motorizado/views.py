@@ -286,22 +286,22 @@ class ListarRastreo(supra.SupraListView):
         sql = """
             select (
                 select COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (
-                		select replace(t.direccion,'"','') as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id
+                		select replace(t.direccion,'"','') as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id and entregado=false
                 		union
-                		select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id)) as t
+                		select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id and p.entregado=false)) as t
                 	) p
                 ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
        """
         sql2 = """
            select (
-            	select count(t.direccion) as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id
+            	select count(t.direccion) as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id and entregado=false
             	union
-            	select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id)) as t
+            	select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id and p.entregado=false)) as t
             ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
         """
         obj = queryset.extra(select={'direccion': sql, 'num_pedido': sql2})
-        print obj.query
-        return obj.exclude()
+        empresa = usuario.Empresa.objects.filter(empleado__id=self.request.user.id).first()
+        return obj.filter(empleado__empresa=empresa)
     # end def
 
     def nombre(self, obj, row):
@@ -313,11 +313,10 @@ class ListarRastreo(supra.SupraListView):
 class Rastreo(TemplateView):
     template_name = 'motorizado/rastreo.html'
 
-    @method_decorator(administrador_required)
-    @method_decorator(supervisor_required)
     def dispatch(self, request, *args, **kwargs):
         empresa = models.Empresa.objects.filter(
             empleado__id=request.user.id).first()
-        return render(request, 'motorizado/rastreo.html', {'empresa': empresa.id if empresa else 0, 'token': django.middleware.csrf.get_token(request)})
+        ctx = {'empresa': empresa.id if empresa else 0, 'token': django.middleware.csrf.get_token(request)}
+        return render(request, 'motorizado/rastreo.html', ctx)
     # end def
 # end class

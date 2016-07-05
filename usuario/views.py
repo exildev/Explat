@@ -17,6 +17,15 @@ from django.views.generic import View
 from django.views import generic
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.views import login, logout
+from django.views.generic import TemplateView
+
+
+class IndexCliente(TemplateView):
+
+    def dispatch(self, request, *args, **kwargs):
+        return render(request, 'usuario/index_cliente.html')
+    # end def
+# end class
 
 
 def custom_login(request, **kwargs):
@@ -198,7 +207,9 @@ class PassChangeEmpleado(UpdateView):
             form.save()
             mensaje = {'tipo': 'success',
                        'texto': "Se a editado la contraseña un empleado correctamente"}
-            return render(request, 'usuario/passChangeEmpleado.html', {'form': forms.PassChangeEmpleadoForm(), 'empleado': kwargs['pk'], 'mensaje': mensaje})
+            ctx = {'form': forms.PassChangeEmpleadoForm(), 'empleado': kwargs[
+                'pk'], 'mensaje': mensaje}
+            return render(request, 'usuario/passChangeEmpleado.html', ctx)
         # end def
         return render(request, 'usuario/passChangeEmpleado.html', {'form': form, 'empleado': kwargs['pk'], 'mensaje': mensaje})
     # end def
@@ -307,7 +318,7 @@ class DeleteTienda(View):
 
 
 class Login(supra.SupraSession):
-    # body = True
+
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         obj = super(Login, self).dispatch(request, *args, **kwargs)
@@ -315,26 +326,25 @@ class Login(supra.SupraSession):
             motori = motorizado.Motorizado.objects.filter(
                 empleado__id=request.user.id).first()
             if motori:
-                return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d}'
-                                    % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id), content_type="application/json")
-            # end if
+                return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d,"ciudad":%d}'
+                                    % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id, motori.empleado.ciudad.id),
+                                    content_type="application/json")
+    # end if
+
         # end if
         return obj
     # end def
 
     def login(self, request, cleaned_data):
         identificador = request.POST.get('username', '')
-        print identificador
         motori = motorizado.Motorizado.objects.filter(
             identifier=identificador).first()
         cleaned_data = {'password': cleaned_data['password']}
-        print motori
         if motori:
             cleaned_data['username'] = motori.empleado.username
         else:
             return HttpResponse('{"respuesta":false}', content_type='application/json', status=404)
         # end if
-        print cleaned_data
         return super(Login, self).login(request, cleaned_data)
     # end if
 # end class
@@ -345,8 +355,9 @@ def is_logged(request):
         motori = motorizado.Motorizado.objects.filter(
             empleado__id=request.user.id).first()
         if motori:
-            return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d}'
-                                % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id), content_type="application/json")
+            return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d,"ciudad":%d}'
+                                % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id, motori.empleado.ciudad.id),
+                                content_type="application/json")
         # end if
     # end if
     raise Http404

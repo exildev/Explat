@@ -2,7 +2,9 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
+from exp.decorators import supervisor_required, administrador_required
 from django.views.generic import View
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
 from usuario import models as mod_usuario
 from io import BytesIO
@@ -16,6 +18,7 @@ from reportlab.lib import colors
 import json as simplejson
 from datetime import date
 import csv
+from django.views.generic import TemplateView
 
 
 class Pedido(View):
@@ -35,6 +38,12 @@ class Pedido(View):
         return HttpResponse(row[0], content_type="application/json")
     # end def
 # end class
+
+
+class Reporte(TemplateView):
+    def dispatch(self, request, *args, **kwargs):
+        return render(request, 'reporte/index.html')
+    # end def
 
 
 class Empleados(FormView):

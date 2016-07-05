@@ -36,7 +36,7 @@ urlpatterns += [
 
 # Gestion Asignacion Motorizado a Pedido
 urlpatterns += [
-    url(r'^asignar/motorizado/$', TemplateView.as_view(template_name='pedido/asignarMotorizado.html'), name='asignar_motorizado_pedido'),
+    url(r'^asignar/motorizado/$', views.AsignarMotorizado.as_view(), name='asignar_motorizado_pedido'),
     url(r'^asignar/motorizado/search/$', views.TablaPedidosAsignar.as_view(), name='tabla_asignar_motorizado_pedido'),
     url(r'^asignar/motorizado/pedido/(?P<pedido_id>\d+)/$', views.AsignarPedidoMotorizado.as_view(), name='motorizado_asignar_pedido'),
     url(r'^asignar/motorizado/close/(?P<pedido_id>\d+)/$', views.CAMotorizado.as_view(), name='motorizado_cerrar_asignar_pedido'),

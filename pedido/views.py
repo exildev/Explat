@@ -20,7 +20,7 @@ from easy_pdf.views import PDFTemplateView
 from django.template.loader import get_template
 from django.core.exceptions import PermissionDenied
 from django.views.generic import TemplateView
-from exp.decorators import administrador_required, alistador_required, supervisor_required
+from exp.decorators import administrador_required, alistador_required, supervisor_required, motorizado_required
 from django.utils.decorators import method_decorator
 import json
 from socketIO_client import SocketIO, LoggingNamespace
@@ -30,8 +30,6 @@ from supra.auths import methods, oauth
 class Despacho(TemplateView):
     template_name = 'pedido/despacharpedido.html'
 
-    @method_decorator(administrador_required)
-    @method_decorator(supervisor_required)
     def dispatch(self, request, *args, **kwargs):
         return super(Despacho, self).dispatch(request, *args, **kwargs)
     # end def
@@ -423,6 +421,11 @@ class FacturaPedido(PDFTemplateView):
 
 class MisPedidos(View):
 
+    @method_decorator(motorizado_required)
+    @method_decorator(alistador_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(self.__class__, self).dispatch(request, *args, **kwargs)
+
     def get(self, request):
         empleado = get_object_or_404(mod_usuario.Empleado, pk=request.user.id)
         if empleado:
@@ -477,6 +480,11 @@ class TablaPedidosAsignar(View):
 
 
 class AsignarPedidoMotorizado(View):
+
+    @method_decorator(alistador_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(self.__class__, self).dispatch(request, *args, **kwargs)
+    # end def
 
     def get(self, request, *args, **kwargs):
         empresa = mod_usuario.Empresa.objects.filter(
@@ -566,6 +574,7 @@ class WsPedidoEmpresa(View):
     # end def
 
     def post(self, request, *args, **kwargs):
+        print "llego a el servicio y no se exploto"
         cursor = connection.cursor()
         cursor.execute('select ws_add_pedido_service(\'%s\'::json)' %
                        request.body.decode('utf-8'))
@@ -581,6 +590,7 @@ class WsPedidoEmpresa(View):
                 lista.pop('pedidos')
             # end if
         # end if
+        print lista
         return HttpResponse(json.dumps(lista), content_type="application/json")
     # end def
 # end class
@@ -820,6 +830,14 @@ class AutoAsignar(View):
         cursor.execute('select auto_asignar(%s,\'%s\')' % (tienda, motorizado))
         row = cursor.fetchone()
         return HttpResponse(row[0], content_type="application/json")
+    # end def
+# end class
+
+
+class AsignarMotorizado(View):
+    @method_decorator(alistador_required)
+    def dispatch(self, request, *args, **kwargs):
+        return render(request, 'pedido/asignarMotorizado.html')
     # end def
 # end class
 

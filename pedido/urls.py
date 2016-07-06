@@ -94,13 +94,19 @@ urlpatterns += [
 # Gestion de cancelar de pedido
 urlpatterns += [
     url(r'cancelar/pplataforma/$', views.CancelarPPlataforma.as_view(), name='cancelar_pplataforma'),
-    url(r'^cancelar/pws/$', views.CancelarPedidoWS.as_view(), name='cancelar_wservice'),
+    url(r'^cancelar/pws/$', views.CancelarPWService.as_view(), name='cancelar_wservice'),
 ]
 
 
 # Gestion de reactivar de pedido
 urlpatterns += [
     url(r'reactivar/pplataforma/$', views.ReactivarPPlataforma.as_view(), name='reactivar_pplataforma'),
+]
+
+
+# Gestion de Configuracion de tiempos
+urlpatterns += [
+    url(r'configracion/$', views.ConfiguracionTiempo.as_view(), name='configurar_pplataforma'),
 ]
 
 

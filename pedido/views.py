@@ -859,7 +859,7 @@ class CancelarPPlataforma(View):
                     id=int(pedido), motorizado__motorizado__identifier=motorizado).first()
                 if ped:
                     models.Pedido.objects.filter(
-                        id=int(pedido)).update(estado=False)
+                        id=int(pedido)).update(activado=False)
                     return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
                 # end if
             # end if
@@ -868,6 +868,33 @@ class CancelarPPlataforma(View):
     # end def
 # end class
 
+
+class CancelarPWService(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(CancelarPWService, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        print 'entro a el post'
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            if validNum(pedido) and validNum(motorizado):
+                ped = models.PedidoWS.objects.filter(
+                    id=int(pedido), motorizado__motorizado__identifier=motorizado).values(
+                        'id', 'motorizado__motorizado__identifier', 'motorizado__id').first()
+                if ped:
+                    models.PedidoWS.objects.filter(
+                        id=int(pedido)).update(activado=False)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
 
 
 class ConfiguracionTiempo(View):
@@ -891,6 +918,32 @@ class ConfiguracionTiempo(View):
         # end if
         return render(request, 'pedido/addconfiguracion.html', {'pk': 0})
     # end def
+
+
+class ReactivarPPlataforma(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ReactivarPPlataforma, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        if pedido:
+            if validNum(pedido):
+                ped = models.Pedido.objects.filter(
+                    id=int(pedido)).first()
+                if ped:
+                    models.Pedido.objects.filter(
+                        id=int(pedido)).update(activado=True)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
 
 def validNum(cad):
     return re.match('^\d+$', cad)

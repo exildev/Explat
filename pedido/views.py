@@ -139,6 +139,7 @@ class EditPedido(FormView):
 
     def post(self, request, *args, **kwargs):
         pedido = get_object_or_404(models.Pedido, id=kwargs['pk'])
+        motor_ant = pedido.motorizado.id
         empresa = mod_usuario.Empresa.objects.filter(
             empleado__id=request.user.id).first()
         pedidoForm = forms.EditPedidoAdminApiForm(
@@ -147,10 +148,36 @@ class EditPedido(FormView):
             f = pedidoForm.save(commit=False)
             f.empresa = empresa
             f.save()
+            motor_sig = f.motorizado.id
+            if motor_ant != motor_sig:
+                cursor = connection.cursor()
+                cursor.execute(
+                    'select get_add_pedido_admin(%d)' % pedido.id)
+                row = cursor.fetchone()
+                lista = json.loads(row[0])
+                if lista:
+                    with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                        socketIO.emit('modificar-motorizado-pedido', {
+                            'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso'], 'mot_anterior': motor_ant, 'mot_siguiente': motor_sig})
+                        socketIO.wait(seconds=0)
+                    # end with
+                # end if
+            # end if
             return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': f.id}))
         # end if
         pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
             empresa=empresa)
+
+        pedidoForm.fields["alistador"].queryset = mod_usuario.Empleado.objects.filter(
+            cargo="ALISTADOR").filter(empresa=empresa)
+        pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+            empresa=empresa)
+        pedidoForm.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
+            cargo="SUPERVISOR").filter(empresa=empresa)
+        motorizado = mod_motorizado.Motorizado.objects.filter(
+            empleado__empresa=empresa).values_list('id', flat=True)
+        pedidoForm.fields["motorizado"].queryset = mod_usuario.Empleado.objects.filter(
+            cargo="MOTORIZADO").filter(empresa=empresa, motorizado__id__in=motorizado)
         return render(request, 'pedido/editPedido.html', {'pedidoForm': pedidoForm})
     # end def
 
@@ -216,11 +243,19 @@ class FinalizarPedido(View):
                         row = cursor.fetchone()
                         lista = json.loads(row[0])
                         if lista:
-                            with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
-                                socketIO.emit('asignar-pedido', {
-                                              'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
-                                socketIO.wait(seconds=0)
-                            # end with
+                            if not pedido.confirmado:
+                                with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                                    socketIO.emit('asignar-pedido', {
+                                                  'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
+                                    socketIO.wait(seconds=0)
+                                # end with
+                            else:
+                                with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                                    socketIO.emit('modificar-pedido', {
+                                                  'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
+                                    socketIO.wait(seconds=0)
+                                # end with
+                            # end if
                         # end if
                         return redirect(reverse('pedido:list_pedido'))
                     # end if
@@ -836,6 +871,7 @@ class AutoAsignar(View):
 
 
 class AsignarMotorizado(View):
+
     @method_decorator(alistador_required)
     def dispatch(self, request, *args, **kwargs):
         return render(request, 'pedido/asignarMotorizado.html')
@@ -905,18 +941,37 @@ class ConfiguracionTiempo(View):
     # end def
 
     def post(self, request, *args, **kwargs):
-        empresa =mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
-        if kwargs['pk'] == 0:
-
+        empresa = mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
+        id = request.POST.get('id', False)
+        if validNum(id):
+            configuracion = get_object_or_404(models.ConfiguracionTiempo, pk=int(id))
+            form = forms.addconfiguracion(request.POST, instance=configuracion)
+            if form.is_valid():
+                addconfi = form.save(commit=False)
+                addconfi.empresa=mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
+                addconfi.save()
+                return redirect(reverse('pedido:configurar_pplataforma'))
+            # end if
+            return render(request, 'pedido/addconfiguracion.html', {'pk': configuracion.id, 'form': form})
         else:
+            form = forms.addconfiguracion(request.POST)
+            if form.is_valid():
+                addconfi = form.save(commit=False)
+                addconfi.empresa=mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
+                addconfi.save()
+                return redirect(reverse('pedido:configurar_pplataforma'))
+            # end if
+            return render(request, 'pedido/addconfiguracion.html', {'pk': 0, 'form': form})
         # end if
     # end def
 
     def get(self, request, *args, **kwargs):
-        configuracion = models.Confirmacion.models.filter(empresa__empleado__id=request.user.id).first()
-        if configuracion :
+        configuracion = models.Confirmacion.models.filter(
+            empresa__empleado__id=request.user.id).first()
+        if configuracion:
+            return render(request, 'pedido/addconfiguracion.html', {'pk': configuracion.id, 'form': forms.addconfiguracion(instance=configuracion)})
         # end if
-        return render(request, 'pedido/addconfiguracion.html', {'pk': 0})
+        return render(request, 'pedido/addconfiguracion.html', {'pk': 0, 'form': forms.addconfiguracion()})
     # end def
 
 

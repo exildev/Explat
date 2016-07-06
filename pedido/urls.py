@@ -106,7 +106,7 @@ urlpatterns += [
 
 # Gestion de Configuracion de tiempos
 urlpatterns += [
-    url(r'configracion/$', views.ConfiguracionTiempo.as_view(), name='configurar_pplataforma'),
+    url(r'configuracion/$', views.ConfiguracionTiempo.as_view(), name='configurar_pplataforma'),
 ]
 
 

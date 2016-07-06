@@ -98,6 +98,12 @@ urlpatterns += [
 ]
 
 
+# Gestion de reactivar de pedido
+urlpatterns += [
+    url(r'reactivar/pplataforma/$', views.ReactivarPPlataforma.as_view(), name='reactivar_pplataforma'),
+]
+
+
 # Gestion Auto Asignar Pedido
 urlpatterns += [
     url(r'autoasignar/$', views.AutoAsignar.as_view(), name='autoasignar'),

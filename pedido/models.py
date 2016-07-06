@@ -233,7 +233,7 @@ class ConfiguracionTiempo(models.Model):
                                MinValueValidator(0), MaxValueValidator(100)])
     distancia = models.FloatField(verbose_name="Distancia de pedido (Mts)", validators=[
                                   MinValueValidator(0), MaxValueValidator(100)])
-    primer = models.IntegerField(verbose_name="Primer corte de quincena")
+    primero = models.IntegerField(verbose_name="Primer corte de quincena")
     segundo = models.IntegerField(verbose_name="Segundo corte de quincena")
 
     def __unicode__(self):

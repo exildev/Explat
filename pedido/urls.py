@@ -91,6 +91,13 @@ urlpatterns += [
 ]
 
 
+# Gestion de cancelar de pedido
+urlpatterns += [
+    url(r'cancelar/pplataforma/$', views.CancelarPPlataforma.as_view(), name='cancelar_pplataforma'),
+    url(r'^cancelar/pws/$', views.CancelarPedidoWS.as_view(), name='cancelar_wservice'),
+]
+
+
 # Gestion Auto Asignar Pedido
 urlpatterns += [
     url(r'autoasignar/$', views.AutoAsignar.as_view(), name='autoasignar'),

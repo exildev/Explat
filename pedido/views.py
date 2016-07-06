@@ -705,7 +705,6 @@ class AceptarPWService(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
-        print 'llego a aceptar'
         return super(AceptarPWService, self).dispatch(*args, **kwargs)
     # end def
 
@@ -713,7 +712,6 @@ class AceptarPWService(View):
         return HttpResponse('jajjajaja', content_type='application/json')
 
     def post(self, request, *args, **kwargs):
-        print request.POST
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
@@ -936,42 +934,43 @@ class CancelarPWService(View):
 class ConfiguracionTiempo(View):
 
     @method_decorator(login_required)
+    @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(ConfiguracionTiempo, self).dispatch(*args, **kwargs)
     # end def
 
     def post(self, request, *args, **kwargs):
-        empresa = mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
+        empresa = mod_usuario.Empresa.objects.filter(empleado__id=request.user.id).first()
         id = request.POST.get('id', False)
         if validNum(id):
             configuracion = get_object_or_404(models.ConfiguracionTiempo, pk=int(id))
-            form = forms.addconfiguracion(request.POST, instance=configuracion)
+            form = forms.AddConfiguracion(request.POST, instance=configuracion)
             if form.is_valid():
                 addconfi = form.save(commit=False)
-                addconfi.empresa=mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
+                addconfi.empresa = mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
                 addconfi.save()
                 return redirect(reverse('pedido:configurar_pplataforma'))
             # end if
-            return render(request, 'pedido/addconfiguracion.html', {'pk': configuracion.id, 'form': form})
+            return render(request, 'pedido/addConfiguracion.html', {'pk': configuracion.id, 'form': form})
         else:
-            form = forms.addconfiguracion(request.POST)
+            form = forms.AddConfiguracion(request.POST)
             if form.is_valid():
                 addconfi = form.save(commit=False)
-                addconfi.empresa=mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
+                addconfi.empresa = mod_usuario.Empresa.objects.filter(empleado__id=request.user.id).first()
                 addconfi.save()
-                return redirect(reverse('pedido:configurar_pplataforma'))
+                return render(request, 'pedido/addConfiguracion.html', {'pk': addconfi.id, 'form': form})
             # end if
-            return render(request, 'pedido/addconfiguracion.html', {'pk': 0, 'form': form})
+            return render(request, 'pedido/addConfiguracion.html', {'pk': 0, 'form': form})
         # end if
     # end def
 
     def get(self, request, *args, **kwargs):
-        configuracion = models.Confirmacion.models.filter(
+        configuracion = models.ConfiguracionTiempo.objects.filter(
             empresa__empleado__id=request.user.id).first()
         if configuracion:
-            return render(request, 'pedido/addconfiguracion.html', {'pk': configuracion.id, 'form': forms.addconfiguracion(instance=configuracion)})
+            return render(request, 'pedido/addConfiguracion.html', {'pk': configuracion.id, 'form': forms.AddConfiguracion(instance=configuracion)})
         # end if
-        return render(request, 'pedido/addconfiguracion.html', {'pk': 0, 'form': forms.addconfiguracion()})
+        return render(request, 'pedido/addConfiguracion.html', {'pk': 0, 'form': forms.AddConfiguracion()})
     # end def
 
 

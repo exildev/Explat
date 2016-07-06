@@ -15,6 +15,8 @@ begin
 		update pedido_time set despachado = now() where pedido_id= old.id;
 	elsif new.notificado  and old.notificado=false then 
 		update pedido_time set notificado = now() where pedido_id= old.id;
+	elsif new.activado=false and old.activado then
+		update pedido_pedido set entregado=false, despachado=false, notificado=false where id = old.id;
 	end if;
 	return new;
 end;

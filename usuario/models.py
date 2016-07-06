@@ -68,6 +68,7 @@ class Tienda(models.Model):
         max_length=10, verbose_name="Telefono Celular", null=True, blank=True)
     latitud = models.FloatField()
     longitud = models.FloatField()
+    url = models.URLField()
     status = models.BooleanField(default=True)
 
     def __str__(self):

@@ -56,6 +56,8 @@ class Pedido(models.Model):
     confirmado = models.BooleanField(default=False)
     alistado = models.BooleanField(default=False)
     notificado = models.BooleanField(default=False)
+    activado = models.BooleanField(default=True)
+    reactivacion = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Pedido"
@@ -139,6 +141,7 @@ class PedidoWS(models.Model):
     confirmado = models.BooleanField(default=False)
     alistado = models.BooleanField(default=False)
     tienda = models.ForeignKey(Tienda)
+    estado = models.BooleanField(default=True)
     detalle = models.CharField(max_length=10000, null=True, blank=True)
     items = models.CharField(max_length=2000,  blank=True,  null=True)
 
@@ -230,8 +233,8 @@ class ConfiguracionTiempo(models.Model):
                                MinValueValidator(0), MaxValueValidator(100)])
     distancia = models.FloatField(verbose_name="Distancia de pedido (Mts)", validators=[
                                   MinValueValidator(0), MaxValueValidator(100)])
-    primer = models.IntegerField(verbose_name="")
-    segundo = models.IntegerField()
+    primer = models.IntegerField(verbose_name="Primer corte de quincena")
+    segundo = models.IntegerField(verbose_name="Segundo corte de quincena")
 
     def __unicode__(self):
         return 'Tiempo de plataforma %d' % self.retraso

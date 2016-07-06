@@ -5,6 +5,9 @@ $(document).on('ready', function() {
     $('#search').on('keyup', function() {
         explat.cargarMotorizados($(this).val(), 1, false);
     });
+    $('.dir').click(function(e) {
+        console.log('ok');
+    });
 });
 window.explat.cargarMotorizados = function(q, pag, sub, rq) {
     var l = $('.lis_emp');
@@ -47,7 +50,7 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
                     "<div class='item'>" +
                     "<span class='prim'>" + val.placa + " <i>" + val.nombre + "</i></span>" +
                     "<span class='scun p'>"+val.num_pedido+"</span>" +
-                    "<span class='scun'>" + dir + "</span>" +
+                    "<span class='scun dir'>" + dir + "</span>" +
                     "<input type='radio' name='motorizado' datam='"+val.identificador+"''>" +
                     "</div>" +
                     "</li>"

@@ -15,15 +15,7 @@
 </div>
 <div class="one column row">
   <div class="center aligned column">
-    {% if request.session.cargo == 'ADMINISTRADOR' %}
-    <div class="ui vertical compact labeled icon inverted huge teal menu">
-      <a href="{ url 'domicilios:api_add_pedido' %}" class="item">
-        <h3><i class="add to cart huge icon"></i></h3>
-        Nuevo Pedido
-      </a>
-    </div>
-    {% endif %}
-    {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo != 'ADMINISTRADOR' %}
+    {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR' %}
     <div class="ui vertical compact labeled icon inverted huge teal menu">
       <a href="{% url 'pedido:add_admin_pedido' %}" class="item">
         <h3><i class="add to cart huge icon"></i></h3>
@@ -31,7 +23,7 @@
       </a>
     </div>
     {% endif %}
-    {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR' or equest.session.cargo != 'ADMINISTRADOR'  %}
+    {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR' %}
     <div class="ui vertical compact labeled icon inverted teal huge menu">
       <a href="{% url 'pedido:list_pedido' %}"class="item">
         <h3><i class="express-listar huge icon"></i></h3>
@@ -39,7 +31,7 @@
       </a>
     </div>
     {% endif %}
-    {% if request.session.cargo == 'ADMINISTRADOR' or equest.session.cargo != 'ADMINISTRADOR'  %}
+    {% if request.session.cargo == 'ADMINISTRADOR' %}
     <div class="ui vertical compact labeled icon inverted teal huge menu">
       <a href="{% url 'pedido:add_item' %}"class="item">
         <h3><i class="cubes huge icon"></i></h3>
@@ -47,7 +39,7 @@
       </a>
     </div>
     {% endif %}
-    {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR' or equest.session.cargo != 'ADMINISTRADOR'  %}
+    {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR' %}
     <div class="ui vertical compact labeled icon inverted teal huge menu">
       <a href="{% url 'pedido:list_item' %}"class="item">
         <h3><i class="express-listar huge icon"></i></h3>
@@ -55,7 +47,7 @@
       </a>
     </div>
     {% endif %}
-    {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR' or equest.session.cargo != 'ADMINISTRADOR'  %}
+    {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR' %}
     <div class="ui vertical compact labeled icon inverted huge teal menu">
       <a href="{% url 'pedido:despachar_pedido' %}" class="item">
         <h3><i class="add to cart huge icon"></i></h3>
@@ -69,6 +61,14 @@
         Mis Pedidos
       </a>
     </div>
+    {% if request.session.cargo == 'SUPERVISOR' or request.session.cargo == 'ADMINISTRADOR' %}
+      <div class="ui vertical compact labeled icon inverted teal huge menu">
+        <a href="{% url 'pedido:configurar_pplataforma' %}" class="item">
+          <h3><i class="file text outline huge icon"></i></h3>
+          Configuracion
+        </a>
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

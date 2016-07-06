@@ -16,6 +16,7 @@ def administrador_required(view_func):
             return redirect_to_login(next=request.get_full_path(), login_url=settings.LOGIN_URL)
         # end if
         empleado1 = Empleado.objects.filter(id=user.id).first()
+        print "Entro en esta jajajaj"
         if empleado1:
             if empleado1.cargo == 'ADMINISTRADOR':
                 return view_func(request, *args, **kwargs)
@@ -30,13 +31,17 @@ def supervisor_required(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
         user = request.user
+        print "Es un alistador"
         if not user.is_authenticated():
             return redirect_to_login(next=request.get_full_path(), login_url=settings.LOGIN_URL)
         # end if
         empleado = Empleado.objects.filter(pk=user.id).first()
+        print empleado.cargo
         if empleado.cargo != 'ADMINISTRADOR' and empleado.cargo != 'SUPERVISOR':
+            print "entro"
             raise PermissionDenied
         # end if
+        print "paso"
         return view_func(request, *args, **kwargs)
     # end def
     return wrapper

@@ -172,20 +172,26 @@ class PassChangeEmpleadoForm(forms.ModelForm):
 # end class
 
 
+class URLInput(forms.TextInput):
+    input_type = 'url'
+
+
 class AddTienda(forms.ModelForm):
     class Meta:
         model = models.Tienda
-        fields = ('nit', 'nombre', 'referencia', 'direccion', 'fijo', 'celular', 'latitud', 'longitud', )
+        fields = ('nit', 'nombre', 'referencia', 'direccion','ciudad', 'url','fijo', 'celular', 'latitud', 'longitud', )
         exclude = ()
         widgets = {
             'nit': forms.TextInput(attrs={'placeholder': 'Nit'}),
             'nombre': forms.TextInput(attrs={'placeholder': 'Nombre'}),
             'referencia': forms.TextInput(attrs={'placeholder': 'Nombre de referencia'}),
             'direccion': forms.TextInput(attrs={'placeholder': 'Dirección'}),
+            'ciudad': forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
+            'url': URLInput(attrs={'placeholder': 'Url'}),
             'fijo': forms.TextInput(attrs={'placeholder': 'Telefono Fijo'}),
             'celular': forms.TextInput(attrs={'placeholder': 'Celular'}),
-            'latitud': forms.TextInput(attrs={'placeholder': 'Latitud', 'type': 'number', 'step': '0.1'}),
-            'longitud': forms.TextInput(attrs={'placeholder': 'Longitud', 'type': 'number', 'step': '0.1'}),
+            'latitud': forms.NumberInput(attrs={'placeholder': 'Latitud'}),
+            'longitud': forms.NumberInput(attrs={'placeholder': 'Longitud'}),
         }
     # end class
 

@@ -3,7 +3,7 @@
 CREATE OR REPLACE FUNCTION update_tiempo_pedido()
   RETURNS trigger AS
 $BODY$
-declare
+declare  
 begin
 	if new.confirmado and old.confirmado=false then
 		update pedido_time set confirmado = now() where pedido_id= old.id;
@@ -15,6 +15,10 @@ begin
 		update pedido_time set despachado = now() where pedido_id= old.id;
 	elsif new.notificado  and old.notificado=false then 
 		update pedido_time set notificado = now() where pedido_id= old.id;
+	elsif new.activado=false and old.activado then
+		update pedido_pedido set entregado=false, despachado=false, notificado=false, reactivacion=false where id = old.id;
+	elsif new.activado=true and old.activado = false then
+		update pedido_pedido set reactivacion=True where id = old.id;	
 	end if;
 	return new;
 end;

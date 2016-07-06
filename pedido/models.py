@@ -56,6 +56,8 @@ class Pedido(models.Model):
     confirmado = models.BooleanField(default=False)
     alistado = models.BooleanField(default=False)
     notificado = models.BooleanField(default=False)
+    activado = models.BooleanField(default=True)
+    reactivacion = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Pedido"
@@ -139,6 +141,7 @@ class PedidoWS(models.Model):
     confirmado = models.BooleanField(default=False)
     alistado = models.BooleanField(default=False)
     tienda = models.ForeignKey(Tienda)
+    activado = models.BooleanField(default=True)
     detalle = models.CharField(max_length=10000, null=True, blank=True)
     items = models.CharField(max_length=2000,  blank=True,  null=True)
 
@@ -221,18 +224,23 @@ class Seguimiento(models.Model):
 
 
 class ConfiguracionTiempo(models.Model):
+    empresa = models.ForeignKey(Empresa)
     retraso = models.FloatField(verbose_name="Retraso de Motorizado (Min)", validators=[
                                 MinValueValidator(0), MaxValueValidator(100)])
     pedido = models.FloatField(verbose_name="Asignacion de Pedido (Min)", validators=[
                                MinValueValidator(0), MaxValueValidator(100)])
+    gps = models.FloatField(verbose_name="Gps de Motorizado (Min)", validators=[
+                               MinValueValidator(0), MaxValueValidator(100)])
     distancia = models.FloatField(verbose_name="Distancia de pedido (Mts)", validators=[
                                   MinValueValidator(0), MaxValueValidator(100)])
+    primero = models.IntegerField(verbose_name="Primer corte de quincena")
+    segundo = models.IntegerField(verbose_name="Segundo corte de quincena")
 
     def __unicode__(self):
-        return 'Tiempo retraso %d' % self.retraso
+        return 'Tiempo de plataforma %d' % self.retraso
     # end def
 
     def __str__(self):
-        return 'Tiempo retraso %d' % self.retraso
+        return 'Tiempos de plataforma %d' % self.retraso
     # end def
 # end class

@@ -26,7 +26,7 @@ urlpatterns += [
 
 # Gestion de Clientes
 urlpatterns += [
-    url(r'^cliente/$', login_required(TemplateView.as_view(template_name='usuario/index_cliente.html')), name='index_cliente'),
+    url(r'^cliente/$', views.IndexCliente.as_view(), name='index_cliente'),
     url(r'^cliente/add/$', views.ClienteAdd.as_view(), name='add_cliente'),
     url(r'^cliente/list/$', TemplateView.as_view(template_name='usuario/clienteSearch.html'), name='list_cliente'),
     url(r'^cliente/search/$', views.searchCliente, name='search_cliente'),

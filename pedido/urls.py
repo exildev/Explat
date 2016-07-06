@@ -36,7 +36,7 @@ urlpatterns += [
 
 # Gestion Asignacion Motorizado a Pedido
 urlpatterns += [
-    url(r'^asignar/motorizado/$', TemplateView.as_view(template_name='pedido/asignarMotorizado.html'), name='asignar_motorizado_pedido'),
+    url(r'^asignar/motorizado/$', views.AsignarMotorizado.as_view(), name='asignar_motorizado_pedido'),
     url(r'^asignar/motorizado/search/$', views.TablaPedidosAsignar.as_view(), name='tabla_asignar_motorizado_pedido'),
     url(r'^asignar/motorizado/pedido/(?P<pedido_id>\d+)/$', views.AsignarPedidoMotorizado.as_view(), name='motorizado_asignar_pedido'),
     url(r'^asignar/motorizado/close/(?P<pedido_id>\d+)/$', views.CAMotorizado.as_view(), name='motorizado_cerrar_asignar_pedido'),
@@ -88,6 +88,25 @@ urlpatterns += [
 urlpatterns += [
     url(r'confirmar/pplataforma/$', views.ConfirmacionPedido.as_view(), name='confirmar_pplataforma'),
     url(r'^confirmar/pws/$', views.ConfirmacionPedidoWS.as_view(), name='confirmar_wservice'),
+]
+
+
+# Gestion de cancelar de pedido
+urlpatterns += [
+    url(r'cancelar/pplataforma/$', views.CancelarPPlataforma.as_view(), name='cancelar_pplataforma'),
+    url(r'^cancelar/pws/$', views.CancelarPWService.as_view(), name='cancelar_wservice'),
+]
+
+
+# Gestion de reactivar de pedido
+urlpatterns += [
+    url(r'reactivar/pplataforma/$', views.ReactivarPPlataforma.as_view(), name='reactivar_pplataforma'),
+]
+
+
+# Gestion de Configuracion de tiempos
+urlpatterns += [
+    url(r'configuracion/$', views.ConfiguracionTiempo.as_view(), name='configurar_pplataforma'),
 ]
 
 

@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.core.urlresolvers import reverse
 from supra import views as supra
+from django.contrib.auth.decorators import login_required
 import re
 from django.views.generic import View, DeleteView
 from django.views import generic
@@ -20,7 +21,7 @@ from easy_pdf.views import PDFTemplateView
 from django.template.loader import get_template
 from django.core.exceptions import PermissionDenied
 from django.views.generic import TemplateView
-from exp.decorators import administrador_required, alistador_required, supervisor_required
+from exp.decorators import administrador_required, alistador_required, supervisor_required, motorizado_required
 from django.utils.decorators import method_decorator
 import json
 from socketIO_client import SocketIO, LoggingNamespace
@@ -30,8 +31,6 @@ from supra.auths import methods, oauth
 class Despacho(TemplateView):
     template_name = 'pedido/despacharpedido.html'
 
-    @method_decorator(administrador_required)
-    @method_decorator(supervisor_required)
     def dispatch(self, request, *args, **kwargs):
         return super(Despacho, self).dispatch(request, *args, **kwargs)
     # end def
@@ -140,6 +139,7 @@ class EditPedido(FormView):
 
     def post(self, request, *args, **kwargs):
         pedido = get_object_or_404(models.Pedido, id=kwargs['pk'])
+        motor_ant = pedido.motorizado.id
         empresa = mod_usuario.Empresa.objects.filter(
             empleado__id=request.user.id).first()
         pedidoForm = forms.EditPedidoAdminApiForm(
@@ -148,10 +148,36 @@ class EditPedido(FormView):
             f = pedidoForm.save(commit=False)
             f.empresa = empresa
             f.save()
+            motor_sig = f.motorizado.id
+            if motor_ant != motor_sig:
+                cursor = connection.cursor()
+                cursor.execute(
+                    'select get_add_pedido_admin(%d)' % pedido.id)
+                row = cursor.fetchone()
+                lista = json.loads(row[0])
+                if lista:
+                    with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                        socketIO.emit('modificar-motorizado-pedido', {
+                            'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso'], 'mot_anterior': motor_ant, 'mot_siguiente': motor_sig})
+                        socketIO.wait(seconds=0)
+                    # end with
+                # end if
+            # end if
             return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': f.id}))
         # end if
         pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
             empresa=empresa)
+
+        pedidoForm.fields["alistador"].queryset = mod_usuario.Empleado.objects.filter(
+            cargo="ALISTADOR").filter(empresa=empresa)
+        pedidoForm.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
+            empresa=empresa)
+        pedidoForm.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
+            cargo="SUPERVISOR").filter(empresa=empresa)
+        motorizado = mod_motorizado.Motorizado.objects.filter(
+            empleado__empresa=empresa).values_list('id', flat=True)
+        pedidoForm.fields["motorizado"].queryset = mod_usuario.Empleado.objects.filter(
+            cargo="MOTORIZADO").filter(empresa=empresa, motorizado__id__in=motorizado)
         return render(request, 'pedido/editPedido.html', {'pedidoForm': pedidoForm})
     # end def
 
@@ -217,11 +243,19 @@ class FinalizarPedido(View):
                         row = cursor.fetchone()
                         lista = json.loads(row[0])
                         if lista:
-                            with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
-                                socketIO.emit('asignar-pedido', {
-                                              'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
-                                socketIO.wait(seconds=0)
-                            # end with
+                            if not pedido.confirmado:
+                                with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                                    socketIO.emit('asignar-pedido', {
+                                                  'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
+                                    socketIO.wait(seconds=0)
+                                # end with
+                            else:
+                                with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                                    socketIO.emit('modificar-pedido', {
+                                                  'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
+                                    socketIO.wait(seconds=0)
+                                # end with
+                            # end if
                         # end if
                         return redirect(reverse('pedido:list_pedido'))
                     # end if
@@ -423,6 +457,11 @@ class FacturaPedido(PDFTemplateView):
 
 class MisPedidos(View):
 
+    @method_decorator(motorizado_required)
+    @method_decorator(alistador_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(self.__class__, self).dispatch(request, *args, **kwargs)
+
     def get(self, request):
         empleado = get_object_or_404(mod_usuario.Empleado, pk=request.user.id)
         if empleado:
@@ -477,6 +516,11 @@ class TablaPedidosAsignar(View):
 
 
 class AsignarPedidoMotorizado(View):
+
+    @method_decorator(alistador_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(self.__class__, self).dispatch(request, *args, **kwargs)
+    # end def
 
     def get(self, request, *args, **kwargs):
         empresa = mod_usuario.Empresa.objects.filter(
@@ -566,6 +610,7 @@ class WsPedidoEmpresa(View):
     # end def
 
     def post(self, request, *args, **kwargs):
+        print "llego a el servicio y no se exploto"
         cursor = connection.cursor()
         cursor.execute('select ws_add_pedido_service(\'%s\'::json)' %
                        request.body.decode('utf-8'))
@@ -581,6 +626,7 @@ class WsPedidoEmpresa(View):
                 lista.pop('pedidos')
             # end if
         # end if
+        print lista
         return HttpResponse(json.dumps(lista), content_type="application/json")
     # end def
 # end class
@@ -659,7 +705,6 @@ class AceptarPWService(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
-        print 'llego a aceptar'
         return super(AceptarPWService, self).dispatch(*args, **kwargs)
     # end def
 
@@ -667,7 +712,6 @@ class AceptarPWService(View):
         return HttpResponse('jajjajaja', content_type='application/json')
 
     def post(self, request, *args, **kwargs):
-        print request.POST
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
@@ -820,6 +864,137 @@ class AutoAsignar(View):
         cursor.execute('select auto_asignar(%s,\'%s\')' % (tienda, motorizado))
         row = cursor.fetchone()
         return HttpResponse(row[0], content_type="application/json")
+    # end def
+# end class
+
+
+class AsignarMotorizado(View):
+
+    @method_decorator(alistador_required)
+    def dispatch(self, request, *args, **kwargs):
+        return render(request, 'pedido/asignarMotorizado.html')
+    # end def
+# end class
+
+
+class CancelarPPlataforma(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(CancelarPPlataforma, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            if validNum(pedido) and validNum(motorizado):
+                ped = models.Pedido.objects.filter(
+                    id=int(pedido), motorizado__motorizado__identifier=motorizado).first()
+                if ped:
+                    models.Pedido.objects.filter(
+                        id=int(pedido)).update(activado=False)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
+class CancelarPWService(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(CancelarPWService, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        print 'entro a el post'
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            if validNum(pedido) and validNum(motorizado):
+                ped = models.PedidoWS.objects.filter(
+                    id=int(pedido), motorizado__motorizado__identifier=motorizado).values(
+                        'id', 'motorizado__motorizado__identifier', 'motorizado__id').first()
+                if ped:
+                    models.PedidoWS.objects.filter(
+                        id=int(pedido)).update(activado=False)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
+class ConfiguracionTiempo(View):
+
+    @method_decorator(login_required)
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ConfiguracionTiempo, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        empresa = mod_usuario.Empresa.objects.filter(empleado__id=request.user.id).first()
+        id = request.POST.get('id', False)
+        if validNum(id):
+            configuracion = get_object_or_404(models.ConfiguracionTiempo, pk=int(id))
+            form = forms.AddConfiguracion(request.POST, instance=configuracion)
+            if form.is_valid():
+                addconfi = form.save(commit=False)
+                addconfi.empresa = mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
+                addconfi.save()
+                return redirect(reverse('pedido:configurar_pplataforma'))
+            # end if
+            return render(request, 'pedido/addConfiguracion.html', {'pk': configuracion.id, 'form': form})
+        else:
+            form = forms.AddConfiguracion(request.POST)
+            if form.is_valid():
+                addconfi = form.save(commit=False)
+                addconfi.empresa = mod_usuario.Empresa.objects.filter(empleado__id=request.user.id).first()
+                addconfi.save()
+                return render(request, 'pedido/addConfiguracion.html', {'pk': addconfi.id, 'form': form})
+            # end if
+            return render(request, 'pedido/addConfiguracion.html', {'pk': 0, 'form': form})
+        # end if
+    # end def
+
+    def get(self, request, *args, **kwargs):
+        configuracion = models.ConfiguracionTiempo.objects.filter(
+            empresa__empleado__id=request.user.id).first()
+        if configuracion:
+            return render(request, 'pedido/addConfiguracion.html', {'pk': configuracion.id, 'form': forms.AddConfiguracion(instance=configuracion)})
+        # end if
+        return render(request, 'pedido/addConfiguracion.html', {'pk': 0, 'form': forms.AddConfiguracion()})
+    # end def
+
+
+class ReactivarPPlataforma(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ReactivarPPlataforma, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        if pedido:
+            if validNum(pedido):
+                ped = models.Pedido.objects.filter(
+                    id=int(pedido)).first()
+                if ped:
+                    models.Pedido.objects.filter(
+                        id=int(pedido)).update(activado=True)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
     # end def
 # end class
 

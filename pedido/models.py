@@ -141,7 +141,7 @@ class PedidoWS(models.Model):
     confirmado = models.BooleanField(default=False)
     alistado = models.BooleanField(default=False)
     tienda = models.ForeignKey(Tienda)
-    estado = models.BooleanField(default=True)
+    activado = models.BooleanField(default=True)
     detalle = models.CharField(max_length=10000, null=True, blank=True)
     items = models.CharField(max_length=2000,  blank=True,  null=True)
 

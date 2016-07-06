@@ -221,18 +221,23 @@ class Seguimiento(models.Model):
 
 
 class ConfiguracionTiempo(models.Model):
+    empresa = models.ForeignKey(Empresa)
     retraso = models.FloatField(verbose_name="Retraso de Motorizado (Min)", validators=[
                                 MinValueValidator(0), MaxValueValidator(100)])
     pedido = models.FloatField(verbose_name="Asignacion de Pedido (Min)", validators=[
                                MinValueValidator(0), MaxValueValidator(100)])
+    gps = models.FloatField(verbose_name="Gps de Motorizado (Min)", validators=[
+                               MinValueValidator(0), MaxValueValidator(100)])
     distancia = models.FloatField(verbose_name="Distancia de pedido (Mts)", validators=[
                                   MinValueValidator(0), MaxValueValidator(100)])
+    primer = models.IntegerField(verbose_name="")
+    segundo = models.IntegerField()
 
     def __unicode__(self):
-        return 'Tiempo retraso %d' % self.retraso
+        return 'Tiempo de plataforma %d' % self.retraso
     # end def
 
     def __str__(self):
-        return 'Tiempo retraso %d' % self.retraso
+        return 'Tiempos de plataforma %d' % self.retraso
     # end def
 # end class

@@ -120,7 +120,7 @@ class EditPedidoAdminApiForm(forms.ModelForm):
         #self.fields['tienda'].queryset = usuario.Tienda.objects.filter(empresa__id=empresa)
 
 
-class Cofiguracion(forms.ModelForm):
+class AddConfiguracion(forms.ModelForm):
     class Meta:
         model = models.ConfiguracionTiempo
         fields = ('retraso', 'pedido', 'distancia', 'gps', 'primero', 'segundo',)

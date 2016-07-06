@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.core.urlresolvers import reverse
 from supra import views as supra
+from django.contrib.auth.decorators import login_required
 import re
 from django.views.generic import View, DeleteView
 from django.views import generic
@@ -841,6 +842,55 @@ class AsignarMotorizado(View):
     # end def
 # end class
 
+
+class CancelarPPlataforma(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(CancelarPPlataforma, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        motorizado = request.POST.get('motorizado', False)
+        if pedido and motorizado:
+            if validNum(pedido) and validNum(motorizado):
+                ped = models.Pedido.objects.filter(
+                    id=int(pedido), motorizado__motorizado__identifier=motorizado).first()
+                if ped:
+                    models.Pedido.objects.filter(
+                        id=int(pedido)).update(estado=False)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                # end if
+            # end if
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
+
+class ConfiguracionTiempo(View):
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ConfiguracionTiempo, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        empresa =mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
+        if kwargs['pk'] == 0:
+
+        else:
+        # end if
+    # end def
+
+    def get(self, request, *args, **kwargs):
+        configuracion = models.Confirmacion.models.filter(empresa__empleado__id=request.user.id).first()
+        if configuracion :
+        # end if
+        return render(request, 'pedido/addconfiguracion.html', {'pk': 0})
+    # end def
 
 def validNum(cad):
     return re.match('^\d+$', cad)

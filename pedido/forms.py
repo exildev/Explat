@@ -129,7 +129,7 @@ class Cofiguracion(forms.ModelForm):
             'retraso': forms.NumberInput(attrs={'placeholder': 'Tiempo retraso del motorizado'}),
             'pedido': forms.NumberInput(attrs={'placeholder': 'Tiempo de retraso del pedido'}),
             'distancia': forms.NumberInput(attrs={'placeholder': 'Distancia para asignacion de pedido'}),
-            'gps': forms.TextInput(attrs={'placeholder': 'Tiempo de envío de Gps'}),
+            'gps': forms.NumberInput(attrs={'placeholder': 'Tiempo de envío de Gps'}),
             'primero': forms.NumberInput(attrs={'class': 'Primer corte de quincena'}),
             'segungo': forms.NumberInput(attrs={'placeholder': 'Segungo corte de quincena'}),
         }

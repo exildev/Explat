@@ -118,4 +118,21 @@ class EditPedidoAdminApiForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EditPedidoAdminApiForm, self).__init__(*args, **kwargs)
         #self.fields['tienda'].queryset = usuario.Tienda.objects.filter(empresa__id=empresa)
-        print
+
+
+class Cofiguracion(forms.ModelForm):
+    class Meta:
+        model = models.ConfiguracionTiempo
+        fields = ('retraso', 'pedido', 'distancia', 'gps', 'primero', 'segundo',)
+        exclude = ('empresa',)
+        widgets = {
+            'retraso': forms.NumberInput(attrs={'placeholder': 'Tiempo retraso del motorizado'}),
+            'pedido': forms.NumberInput(attrs={'placeholder': 'Tiempo de retraso del pedido'}),
+            'distancia': forms.NumberInput(attrs={'placeholder': 'Distancia para asignacion de pedido'}),
+            'gps': forms.TextInput(attrs={'placeholder': 'Tiempo de envío de Gps'}),
+            'primero': forms.NumberInput(attrs={'class': 'Primer corte de quincena'}),
+            'segungo': forms.NumberInput(attrs={'placeholder': 'Segungo corte de quincena'}),
+        }
+    # end class
+
+# end class

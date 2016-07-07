@@ -43,9 +43,10 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
                 var ul = $('<ul></ul>');
                 for (var key2 in val.direccion) {
                     var aux = val.direccion[key2];
-                    ul.append('<li><div class="item"><span class="prim">'+aux.direccion+'</span></div></li>'),
+                    ul.append('<li><div class="item"><span class="prim">'+aux.direccion+'</span></div></li>');
                     dir += aux.direccion + (key2 == val.direccion.length ? '' : ', ');
                 }
+
                 var aux = $(
                     "<li class=" + (val.tipo == 1 ? 'it' : 'sc') + ">" +
                     "<div class='item'>" +
@@ -56,7 +57,7 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
                     "</div>" +
                     "</li>"
                 );
-                var aux2 = $('<div class="ov"><div class="overlay"><div></div>')
+                var aux2 = $('<div class="ov"><div class="overlay"><div></div>');
                 aux2.find('.overlay').append(ul);
                 aux.find('.dir').append(aux2);
                 l.append(aux);

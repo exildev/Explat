@@ -183,7 +183,7 @@ class Punto(models.Model):
 class ConfirmarPedido(models.Model):
     pedido = models.ForeignKey(Pedido)
     fecha = models.DateTimeField(auto_now=True)
-    imagen = models.ImageField()
+    imagen = models.ImageField(upload_to='confirmarpedido/')
 
     class Meta:
         verbose_name = "Confirmacion Pedido"
@@ -199,7 +199,7 @@ class ConfirmarPedido(models.Model):
 class ConfirmarPedidoWs(models.Model):
     pedido = models.ForeignKey(PedidoWS)
     fecha = models.DateTimeField(auto_now=True)
-    imagen = models.ImageField()
+    imagen = models.ImageField(upload_to='confirmarpedidows/')
 
     class Meta:
         verbose_name = "Confirmacion PedidoWS"
@@ -242,5 +242,37 @@ class ConfiguracionTiempo(models.Model):
 
     def __str__(self):
         return 'Tiempos de plataforma %d' % self.retraso
+    # end def
+# end class
+
+
+class CancelarPedido(models.Model):
+    pedido = models.ForeignKey(Pedido)
+    fecha = models.DateTimeField(auto_now=True)
+    imagen = models.ImageField(upload_to='cancelarp/')
+
+    class Meta:
+        verbose_name = "Cancelar Pedido"
+        verbose_name_plural = "Cancelaciones de Pedidos"
+    # end def
+
+    def __str__(self):
+        return str(self.pedido.num_pedido)
+    # end def
+# end class
+
+
+class CancelarPedidoWs(models.Model):
+    pedido = models.ForeignKey(PedidoWS)
+    fecha = models.DateTimeField(auto_now=True)
+    imagen = models.ImageField(upload_to='cancelarpw/')
+
+    class Meta:
+        verbose_name = "Cancelar PedidoWS"
+        verbose_name_plural = "Cancelaciones de PedidoWS"
+    # end def
+
+    def __str__(self):
+        return str(self.pedido.num_pedido)
     # end def
 # end class

@@ -64,7 +64,7 @@ class EmpleadoAdd(View):
     # end def
 
     def post(self, request, *args, **kwargs):
-        form = forms.AddEmpleadoApiForm(request.POST)
+        form = forms.AddEmpleadoApiForm(request.POST, request.FILES)
         if form.is_valid():
             form = form.save(commit=False)
             form.empresa = models.Empresa.objects.filter(

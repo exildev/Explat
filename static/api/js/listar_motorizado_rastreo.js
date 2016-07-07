@@ -1,6 +1,7 @@
 window.mtajax = null;
 window.explat = {};
 
+
 $(document).on('ready', function() {
     explat.cargarMotorizados(null, 1, false);
     $('#search').on('keyup', function() {
@@ -64,6 +65,15 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
             $('.dir').click(function() {
                 window.ov = $(this).find('.ov');
                 ov.toggle();
+            });
+            $('input[type="radio"][name="motorizado"]').parents('li').on('click',function(){
+                var motorizado = $(this).find('input[type="radio"][name="motorizado"]').attr('datam');
+                var cantidad = $(this).find('span.scun.p').text();
+                var dir = $(this).find('span.scun.dir').text();
+                socket.emit('select-motorizado',{'token':$('#token').val(),'motorizado':motorizado,'direccion':dir,'cantidad_pedido':cantidad});
+                //alert($(this).find('input[type="radio"][name="motorizado"]').attr('datam'));
+                //alert($(this).find('span.scun.p').text());
+                //alert($(this).find('span.scun.dir').text());
             });
         } else {
             l.html("");

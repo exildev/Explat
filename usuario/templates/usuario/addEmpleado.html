@@ -1,109 +1,127 @@
-{% extends "exp/base_user.html" %}
-{% block title %}Añadir Empleado{% endblock %}
-{% block addcss_user %}
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/flora.datepick.css">
-{% endblock %}
-{% block content_user %}
+{% extends "exp/base_user.html" %} {% block title %}Añadir Empleado{% endblock %} {% block addcss_user %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/flora.datepick.css"> {% endblock %} {% block content_user %}
 <div class="one column row">
 
 	<div class="column">
 		<div class="ui labeled huge input">
-      <a href="{% url 'usuario:index' %}" class="ui teal icon huge button">
-        <i class="express-atras icon"></i>
-      </a>
-      <a class="ui olive label">Nuevo Empleado</a>
-    </div>
+			<a href="{% url 'usuario:index' %}" class="ui teal icon huge button">
+				<i class="express-atras icon"></i>
+			</a>
+			<a class="ui olive label">Nuevo Empleado</a>
+		</div>
 	</div>
 	{% if mensaje %}
-  		<div class="ui center aligned container row">
-    		<div class="ui {{ mensaje.tipo }} message">
-    			<div class=" content">
-        			<div class="header">
-          				{{ mensaje.texto }}
-        			</div>
-		        </div>
-    		</div>
-  		</div>
-  	{% endif %}
+	<div class="ui center aligned container row">
+		<div class="ui {{ mensaje.tipo }} message">
+			<div class=" content">
+				<div class="header">
+					{{ mensaje.texto }}
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
 </div>
 <div class="ui container grid" style="margin-bottom:50px;">
-  <div class="center aligned column">
-		<form method="POST" action="{% url 'usuario:add_empleado' %}"  class="ui form">
+	<div class="center aligned column">
+		<form method="POST" action="{% url 'usuario:add_empleado' %}" class="ui form" enctype="multipart/form-data">
 			{% csrf_token %}
 			<h2 class="ui teal header">&nbsp;</h2>
-	    <div class="four fields">
-	      <div class="field {% if form.first_name.errors %}error{% endif %}">
-	        {{ form.first_name }}
-	      </div>
-	      <div class="field {% if form.last_name.errors %}error{% endif %}">
-	        {{ form.last_name }}
-	      </div>
+			<div class="four fields">
+				<div class="field {% if form.first_name.errors %}error{% endif %}">
+					{{ form.first_name }}
+				</div>
+				<div class="field {% if form.last_name.errors %}error{% endif %}">
+					{{ form.last_name }}
+				</div>
 				<div class="field {% if form.tipo_id.errors %}error{% endif %}">
 					{{ form.tipo_id }}
 				</div>
 				<div class="field {% if form.identificacion.errors %}error{% endif %}">
 					{{ form.identificacion }}
 				</div>
-	    </div>
+			</div>
 
 			<h2 class="ui teal header"></h2>
 			<div class="three fields">
 				<div class="field {% if form.fecha_nacimiento.errors %}error{% endif %}">
-			    {{ form.fecha_nacimiento }}
-			  </div>
+					{{ form.fecha_nacimiento }}
+				</div>
 				<div class="field {% if form.telefono_celular.errors %}error{% endif %}">
-	        {{ form.telefono_celular }}
-	      </div>
-	      <div class="field {% if form.telefono_fijo.errors %}error{% endif %}">
-	        {{ form.telefono_fijo }}
-	      </div>
-	    </div>
+					{{ form.telefono_celular }}
+				</div>
+				<div class="field {% if form.telefono_fijo.errors %}error{% endif %}">
+					{{ form.telefono_fijo }}
+				</div>
+			</div>
 
 			<h2 class="ui teal header"></h2>
-	    <div class="three fields">
+			<div class="four fields">
 				<div class="field {% if form.cargo.errors %}error{% endif %}">
-	        {{ form.cargo }}
-	      </div>
+					{{ form.cargo }}
+				</div>
 				<div class="field {% if form.ciudad.errors %}error{% endif %}">
-	        {{ form.ciudad }}
-	      </div>
+					{{ form.ciudad }}
+				</div>
 				<div class="field {% if form.direccion.errors %}error{% endif %}">
 					{{ form.direccion }}
 				</div>
-	    </div>
+				<div class="field {% if form.foto.errors %}error{% endif %}">
+					{{ form.foto }}
+				</div>
+			</div>
 
 			<h2 class="ui teal header"></h2>
-	    <div class="three fields">
+			<div class="three fields">
 				<div class="field {% if form.username.errors %}error{% endif %}">
-	        {{ form.username }}
-	      </div>
-	      <div class="field {% if form.email.errors %}error{% endif %}">
-	        {{ form.email }}
-	      </div>
+					{{ form.username }}
+				</div>
+				<div class="field {% if form.email.errors %}error{% endif %}">
+					{{ form.email }}
+				</div>
 				<div class="field {% if form.password.errors %}error{% endif %}">
-	        {{ form.password }}
-	      </div>
-	    </div>
+					{{ form.password }}
+				</div>
+			</div>
 			<button type="submit" class="ui olive fluid large button">Registrar</button>
 
 		</form>
-  </div>
+	</div>
 </div>
-{% endblock %}
-
-{% block addjs %}
+{% endblock %} {% block addjs %}
 <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.plugin.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.datepick.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.datepick-es.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/browser.js"></script>
 <script type="text/javascript">
-	$(document).ready(function(){
+	$(document).ready(function() {
 		var b = new Browser();
-		if(b.name != "chrome"){
+		if (b.name != "chrome") {
 			$('#id_fecha_nacimiento').datepick();
 		}
+		$("#id_foto").change(function() {
 
+	       validar($(this));
+	   });
 
 	});
+	function validar(imagen) {
+
+		if(imagen.val().split('.').length <=1){
+			alert("Debe selecionar un archivo");
+			imagen.val("");
+		}
+		var ext = imagen.val().split('.')[1];
+		if (ext != "png" || exp != "jpg"){
+			alert("Debe selecionar una imagen, tipo ser png o jpg");
+			imagen.val("");
+		}
+	    if (imagen.val() !== "") {
+	       if (imagen[0].files[0].size / 1024 > 1024) {
+	           alert("la image no puede pesar mas de 1 mega");
+	           imagen.val("");
+	       }
+	   }
+	}
 </script>
 {% endblock %}

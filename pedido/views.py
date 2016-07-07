@@ -85,6 +85,7 @@ class AddPedidoAdmin(View):
                 form = formP.save(commit=False)
                 form.motorizado = motorizado
                 form.empresa = empresa
+                form.activado = True
                 form.save()
                 cursor = connection.cursor()
                 cursor.execute('select get_add_pedido_admin(%d)' % form.id)
@@ -139,7 +140,7 @@ class EditPedido(FormView):
 
     def post(self, request, *args, **kwargs):
         pedido = get_object_or_404(models.Pedido, id=kwargs['pk'])
-        motor_ant = pedido.motorizado.id
+        motor_ant = pedido.motorizado.motorizado.identifier
         empresa = mod_usuario.Empresa.objects.filter(
             empleado__id=request.user.id).first()
         pedidoForm = forms.EditPedidoAdminApiForm(
@@ -148,7 +149,8 @@ class EditPedido(FormView):
             f = pedidoForm.save(commit=False)
             f.empresa = empresa
             f.save()
-            motor_sig = f.motorizado.id
+            motor_sig = f.motorizado.motorizado.identifier
+            print motor_ant, motor_sig
             if motor_ant != motor_sig:
                 cursor = connection.cursor()
                 cursor.execute(
@@ -822,9 +824,9 @@ class ConfirmacionPedido(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         motorizado = request.POST.get('motorizado', '')
         pedido = request.POST.get('pedido', 0)
-        pedido = models.Pedido.objects.filter(
-            motorizado__motorizado__identifier=motorizado).first()
-        if pedido:
+        pedidov = models.Pedido.objects.filter(id=pedido, motorizado__motorizado__identifier=motorizado).first()
+        if pedidov:
+            models.Pedido.objects.filter(id=int(pedido)).update(entregado=True)
             return super(ConfirmacionPedido, self).dispatch(request, *args, **kwargs)
         # end if
         return HttpResponse('{"motorizado":["Este campo es obligatorio"]}')
@@ -840,9 +842,9 @@ class ConfirmacionPedidoWS(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         motorizado = request.POST.get('motorizado', '')
         pedido = request.POST.get('pedido', 0)
-        pedido = models.Pedido.objects.filter(
-            motorizado__motorizado__identifier=motorizado).first()
-        if pedido:
+        pedidov = models.PedidoWS.objects.filter(id=pedido, motorizado__motorizado__identifier=motorizado).first()
+        if pedidov:
+            models.PedidoWs.objects.filter(id=int(pedido)).update(entregado=True)
             return super(ConfirmacionPedidoWS, self).dispatch(request, *args, **kwargs)
         # end if
         return HttpResponse('{"motorizado":["Este campo es obligatorio"]}')
@@ -877,57 +879,39 @@ class AsignarMotorizado(View):
 # end class
 
 
-class CancelarPPlataforma(View):
+class CancelarPPlataforma(supra.SupraFormView):
+    model = models.CancelarPedido
 
     @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super(CancelarPPlataforma, self).dispatch(*args, **kwargs)
-    # end def
-
-    def post(self, request, *args, **kwargs):
-        pedido = request.POST.get('pedido', False)
-        motorizado = request.POST.get('motorizado', False)
-        if pedido and motorizado:
-            if validNum(pedido) and validNum(motorizado):
-                ped = models.Pedido.objects.filter(
-                    id=int(pedido), motorizado__motorizado__identifier=motorizado).first()
-                if ped:
-                    models.Pedido.objects.filter(
-                        id=int(pedido)).update(activado=False)
-                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
-                # end if
-            # end if
+    def dispatch(self, request, *args, **kwargs):
+        motorizado = request.POST.get('motorizado', '')
+        n_pedido = request.POST.get('pedido', 0)
+        pedido = models.Pedido.objects.filter(id=n_pedido, motorizado__motorizado__identifier=motorizado).first()
+        if pedido:
+            models.Pedido.objects.filter(id=int(n_pedido)).update(activado=False)
+            return super(CancelarPPlataforma, self).dispatch(request, *args, **kwargs)
         # end if
         return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
     # end def
+
 # end class
 
 
-class CancelarPWService(View):
+class CancelarPWService(supra.SupraFormView):
+    model = models.CancelarPedidoWs
 
     @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super(CancelarPWService, self).dispatch(*args, **kwargs)
-    # end def
-
-    def post(self, request, *args, **kwargs):
-        print 'entro a el post'
-        pedido = request.POST.get('pedido', False)
-        motorizado = request.POST.get('motorizado', False)
-        if pedido and motorizado:
-            if validNum(pedido) and validNum(motorizado):
-                ped = models.PedidoWS.objects.filter(
-                    id=int(pedido), motorizado__motorizado__identifier=motorizado).values(
-                        'id', 'motorizado__motorizado__identifier', 'motorizado__id').first()
-                if ped:
-                    models.PedidoWS.objects.filter(
-                        id=int(pedido)).update(activado=False)
-                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
-                # end if
-            # end if
+    def dispatch(self, request, *args, **kwargs):
+        motorizado = request.POST.get('motorizado', '')
+        n_pedido = request.POST.get('pedido', 0)
+        pedido = models.PedidoWS.objects.filter(id=n_pedido, motorizado__motorizado__identifier=motorizado).first()
+        if pedido:
+            models.PedidoWs.objects.filter(id=int(n_pedido)).update(activado=False)
+            return super(CancelarPWService, self).dispatch(request, *args, **kwargs)
         # end if
         return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
     # end def
+
 # end class
 
 

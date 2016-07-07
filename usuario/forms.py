@@ -18,7 +18,7 @@ class AddEmpleadoApiForm(forms.ModelForm):
     class Meta:
         model = models.Empleado
         fields = ('username', 'first_name', 'last_name', 'tipo_id', 'identificacion', 'cargo', 'fecha_nacimiento',
-                  'empresa', 'password', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad')
+                  'empresa', 'password', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad', 'foto',)
         exclude = ('empresa',)
         widgets = {
             "username": forms.TextInput(attrs={'placeholder': 'Nombre de Usuario'}),
@@ -31,36 +31,7 @@ class AddEmpleadoApiForm(forms.ModelForm):
             "ciudad": forms.Select(attrs={'class': 'ui search dropdown'}),
             "tipo_id": forms.Select(attrs={'class': 'ui dropdown'}),
             "cargo": forms.Select(attrs={'class': 'ui dropdown'}),
-            "fecha_nacimiento": forms.DateInput(format=('%Y-%m-%d'), attrs={'placeholder': 'Ingrese Fecha de Nacimiento 31/12/2015', 'type': 'date'}),
-            "password": forms.PasswordInput(attrs={'placeholder': 'Ingrese Contraseña'}),
-            "email": forms.EmailInput(attrs={'Placeholder': 'Email', 'required': True}),
-        }
-
-    def save(self, commit=True):
-        self.instance.password = make_password(self.instance.password)
-        return super(AddEmpleadoApiForm, self).save(commit)
-    # end def
-# end class
-
-
-class AddEmpleadoApiForm(forms.ModelForm):
-
-    class Meta:
-        model = models.Empleado
-        fields = ('username', 'first_name', 'last_name', 'tipo_id', 'identificacion', 'cargo', 'fecha_nacimiento',
-                  'empresa', 'password', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad')
-        exclude = ('empresa',)
-        widgets = {
-            "username": forms.TextInput(attrs={'placeholder': 'Nombre de Usuario'}),
-            "first_name": forms.TextInput(attrs={'placeholder': 'Nombres', 'required': True}),
-            "last_name": forms.TextInput(attrs={'placeholder': 'Apellidos', 'required': True}),
-            "identificacion": forms.TextInput(attrs={'placeholder': 'Numero de Identificación'}),
-            "telefono_fijo": forms.TextInput(attrs={'placeholder': 'Telefono Fijo'}),
-            "telefono_celular": forms.TextInput(attrs={'placeholder': 'Telefono Celular'}),
-            "direccion": forms.TextInput(attrs={'placeholder': 'Direccion'}),
-            "ciudad": forms.Select(attrs={'class': 'ui search dropdown'}),
-            "tipo_id": forms.Select(attrs={'class': 'ui dropdown'}),
-            "cargo": forms.Select(attrs={'class': 'ui dropdown'}),
+            "foto": forms.FileInput(),
             "fecha_nacimiento": forms.DateInput(format=('%Y-%m-%d'), attrs={'placeholder': 'Ingrese Fecha de Nacimiento 31/12/2015', 'type': 'date'}),
             "password": forms.PasswordInput(attrs={'placeholder': 'Ingrese Contraseña'}),
             "email": forms.EmailInput(attrs={'Placeholder': 'Email', 'required': True}),
@@ -78,7 +49,7 @@ class EditEmpleadoApiForm(forms.ModelForm):
     class Meta:
         model = models.Empleado
         fields = ('username', 'first_name', 'last_name', 'tipo_id', 'identificacion', 'cargo',
-                  'fecha_nacimiento', 'empresa', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad')
+                  'fecha_nacimiento', 'empresa', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad', 'foto', )
         exclude = ('empresa',)
         widgets = {
             "username": forms.TextInput(attrs={'placeholder': 'Nombre de Usuario'}),
@@ -91,6 +62,7 @@ class EditEmpleadoApiForm(forms.ModelForm):
             "ciudad": forms.Select(attrs={'class': 'ui search dropdown'}),
             "tipo_id": forms.Select(attrs={'class': 'ui dropdown'}),
             "cargo": forms.Select(attrs={'class': 'ui dropdown'}),
+            "foto":forms.FileInput(),
             "fecha_nacimiento": forms.DateInput(format=('%Y-%m-%d'), attrs={'placeholder': 'Ingrese Fecha de Nacimiento 31/12/2015', 'type': 'date'}),
             "email": forms.EmailInput(attrs={'Placeholder': 'Email', 'required': True}),
         }
@@ -124,7 +96,7 @@ class AddEmpleadoForm(forms.ModelForm):
     class Meta:
         model = models.Empleado
         fields = ('username', 'first_name', 'last_name', 'tipo_id', 'identificacion', 'cargo', 'fecha_nacimiento',
-                  'empresa', 'password', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad')
+                  'empresa', 'password', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad', 'foto',)
         widgets = {
             "username": forms.TextInput(attrs={'placeholder': 'Nombre de Usuario'}),
             "first_name": forms.TextInput(attrs={'placeholder': 'Nombres', 'required': True}),
@@ -135,6 +107,7 @@ class AddEmpleadoForm(forms.ModelForm):
             "direccion": forms.TextInput(attrs={'placeholder': 'Direccion'}),
             "ciudad": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
             "tipo_id": forms.Select(attrs={'class': 'ui dropdown'}),
+            "foto": forms.FileInput(),
             "cargo": forms.Select(attrs={'class': 'ui dropdown'}),
             "fecha_nacimiento": forms.DateInput(attrs={'placeholder': 'Ingrese Fecha de Nacimiento 31/12/2015', 'type': 'date'}),
             "empresa": forms.Select(attrs={'class': 'ui search dropdown'}),
@@ -143,11 +116,21 @@ class AddEmpleadoForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        print kwargs
-        # empresa = kwargs.pop('empresa', 0)
-        # self.instance.empresa = models.Empresa.objects.filter(id=1).first()
         super(AddEmpleadoForm, self).__init__(*args, **kwargs)
     # end def
+
+    def clean_foto(self):
+       imagen = self.cleaned_data.get('foto', False)
+       print imagen, "llego a ala foto"
+       if imagen:
+           if hasattr(imagen, '_size') and imagen._size > 1 * 1024 * 1024:
+               raise forms.ValidationError(
+                   "El tamaño de la imagen no puede ser superior a 1 mega")
+           # end if
+           return imagen
+       # end if
+
+   # end def
 
     def save(self, commit=True):
         self.instance.password = make_password(self.instance.password)

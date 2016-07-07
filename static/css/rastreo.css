@@ -54,15 +54,15 @@ div.c.lista {
     height: calc(100% - 44px);
     overflow-y: auto;
 }
-.contenedor ul {
+.contenedor ul, .overlay ul {
     margin: 0;
     padding: 0;
     list-style-type: none;
 }
-.contenedor> ul {
+.contenedor > ul, .overlay > ul {
     padding-top: 8px;
 }
-.contenedor> ul> li {
+.contenedor > ul > li, .overlay > ul > li {
     padding-left: 16px;
     padding-right: 16px;
     /*border-bottom: 1px solid #ccc;*/
@@ -73,7 +73,11 @@ div.c.lista {
     align-items: center;
     transition: all .7s;
 }
-.contenedor> ul> li:hover {
+.overlay > ul > li{
+    height: 38px;
+    border-bottom: 1px solid #ccc;
+}
+.contenedor> ul> li:hover, .overlay > ul > li:hover {
     background-color: #eee !important;
 }
 .contenedor> ul> li.sc {
@@ -82,41 +86,41 @@ div.c.lista {
 .contenedor> ul> li.it {
     background: #E6FFC8;
 }
-.contenedor .item {
+li .item {
     width: 100%;
 }
-.contenedor .item> span {
+li .item> span {
     display: block;
     font-size: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.contenedor .item> span.prim {
+li .item> span.prim {
     font-weight: bold;
 }
-.contenedor .item> span.prim> i {
+li .item> span.prim> i {
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
 }
-.contenedor .item> span.prim> i::before {
+li .item> span.prim> i::before {
     content: ' - ';
 }
-.contenedor .item> span.scun.p::after {
+li .item> span.scun.p::after {
     content: ' Pedido(s)';
 }
-.contenedor .item> span.scun {
+li .item> span.scun {
     color: #777;
     font-size: 14px;
 }
-.contenedor .item> input[type=radio] {
+li .item> input[type=radio] {
     display: none;
 }
-.contenedor .item> ul {
+li .item> ul {
     color: #666;
 }
-.contenedor .item> ul> li {
+li .item> ul> li {
     font-size: 14px;
 }
 .fondo_noti {
@@ -131,11 +135,7 @@ div.c.lista {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #000;
-    /*filter:alpha(opacity=50);
-    -moz-opacity:0.5;
-    -khtml-opacity: 0.5;
-    opacity: 0.5;*/
+    background-color: rgba(0, 0, 0, 0.3);
     z-index: 10000;
     display: flex;
     align-items: center;

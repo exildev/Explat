@@ -6,3 +6,7 @@ xhtml2pdf==0.0.5
 reportlab>=2.7,<3
 supra
 socketIO-client
+<<<<<<< HEAD
+=======
+psycopg2
+>>>>>>> 5be1e3ddf88deb52201dbab3eea85dfac8a3b6fb

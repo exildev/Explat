@@ -2,6 +2,7 @@
 from django import forms
 import models
 from usuario import models as usuario
+from django.core.exceptions import ValidationError
 
 
 class AddPedidoApiForm(forms.ModelForm):
@@ -56,7 +57,7 @@ class AddPedidoAdminApiForm(forms.ModelForm):
             'num_pedido': nom_pedido
         })
         super(AddPedidoAdminApiForm, self).__init__(*args, **kwargs)
-        #self.fields['tienda'].queryset = usuario.Tienda.objects.filter(empresa__id=empresa)
+
 
 class AddItemsApiForm(forms.ModelForm):
 
@@ -117,22 +118,38 @@ class EditPedidoAdminApiForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(EditPedidoAdminApiForm, self).__init__(*args, **kwargs)
-        #self.fields['tienda'].queryset = usuario.Tienda.objects.filter(empresa__id=empresa)
+    # end def
+# end class
 
 
 class AddConfiguracion(forms.ModelForm):
     class Meta:
         model = models.ConfiguracionTiempo
-        fields = ('retraso', 'pedido', 'distancia', 'gps', 'primero', 'segundo',)
+        fields = ('retraso', 'pedido', 'distancia',
+                  'gps', 'primero', 'segundo', 'empresa',)
         exclude = ('empresa',)
         widgets = {
             'retraso': forms.NumberInput(attrs={'placeholder': 'Tiempo retraso del motorizado'}),
             'pedido': forms.NumberInput(attrs={'placeholder': 'Tiempo de retraso del pedido'}),
             'distancia': forms.NumberInput(attrs={'placeholder': 'Distancia para asignacion de pedido'}),
             'gps': forms.NumberInput(attrs={'placeholder': 'Tiempo de envío de Gps'}),
-            'primero': forms.NumberInput(attrs={'class': 'Primer corte de quincena'}),
-            'segungo': forms.NumberInput(attrs={'placeholder': 'Segungo corte de quincena'}),
+            'primero': forms.NumberInput(attrs={'placeholder': 'Primer corte de quincena'}),
+            'segundo': forms.NumberInput(attrs={'placeholder': 'Segundo corte de quincena'}),
         }
     # end class
+
+    def clean(self):
+        print self
+        if self.primero > 31:
+            self._errors['primero'] = [u'Numero debe ser menor a 31']
+        # end if
+        if self.segundo > 31:
+            self._errors['segundo'] = [u'Numero debe ser menor a 31']
+        # end if
+        if self.primero > self.segundo:
+            self._errors['primero'] = [
+                u'Numero debe ser menor a el segundo valor']
+        # end if
+    # end def
 
 # end class

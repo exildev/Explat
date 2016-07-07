@@ -947,7 +947,7 @@ class ConfiguracionTiempo(View):
             form = forms.AddConfiguracion(request.POST, instance=configuracion)
             if form.is_valid():
                 addconfi = form.save(commit=False)
-                addconfi.empresa = mod_usuario.Empresa.models.filter(empleado__id=request.user.id).first()
+                addconfi.empresa = mod_usuario.Empresa.objects.filter(empleado__id=request.user.id).first()
                 addconfi.save()
                 return redirect(reverse('pedido:configurar_pplataforma'))
             # end if

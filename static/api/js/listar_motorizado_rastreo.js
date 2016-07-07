@@ -1,14 +1,13 @@
 window.mtajax = null;
 window.explat = {};
+
 $(document).on('ready', function() {
     explat.cargarMotorizados(null, 1, false);
     $('#search').on('keyup', function() {
         explat.cargarMotorizados($(this).val(), 1, false);
     });
-    $('.dir').click(function(e) {
-        console.log('ok');
-    });
 });
+
 window.explat.cargarMotorizados = function(q, pag, sub, rq) {
     var l = $('.lis_emp');
     if (!sub) {
@@ -41,11 +40,13 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
             for (var key = 0; key < list.length; key++) {
                 var val = list[key];
                 var dir = '';
+                var ul = $('<ul></ul>');
                 for (var key2 in val.direccion) {
                     var aux = val.direccion[key2];
+                    ul.append('<li><div class="item"><span class="prim">'+aux.direccion+'</span></div></li>'),
                     dir += aux.direccion + (key2 == val.direccion.length ? '' : ', ');
                 }
-                l.append(
+                var aux = $(
                     "<li class=" + (val.tipo == 1 ? 'it' : 'sc') + ">" +
                     "<div class='item'>" +
                     "<span class='prim'>" + val.placa + " <i>" + val.nombre + "</i></span>" +
@@ -55,7 +56,15 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
                     "</div>" +
                     "</li>"
                 );
+                var aux2 = $('<div class="ov"><div class="overlay"><div></div>')
+                aux2.find('.overlay').append(ul);
+                aux.find('.dir').append(aux2);
+                l.append(aux);
             }
+            $('.dir').click(function() {
+                window.ov = $(this).find('.ov');
+                ov.toggle();
+            });
         } else {
             l.html("");
             l.append('<li class="vacio"><span>No se encontraron resultados.</span></li>');
@@ -127,106 +136,5 @@ function enviarPedido() {
         success: function(data) {
             console.log(data);
         }
-    });
-}
-
-function initMap() {
-    var map = new google.maps.Map($('.mapa').get(0), {
-        center: {
-            lat: 5.8329743,
-            lng: -74.13289
-        },
-        zoom: 6,
-        styles: [{
-            "elementType": "geometry",
-            "stylers": [{
-                "hue": "#ff4400"
-            }, {
-                "saturation": -68
-            }, {
-                "lightness": -4
-            }, {
-                "gamma": 0.72
-            }]
-        }, {
-            "featureType": "road",
-            "elementType": "labels.icon"
-        }, {
-            "featureType": "landscape.man_made",
-            "elementType": "geometry",
-            "stylers": [{
-                "hue": "#0077ff"
-            }, {
-                "gamma": 3.1
-            }]
-        }, {
-            "featureType": "water",
-            "stylers": [{
-                "hue": "#00ccff"
-            }, {
-                "gamma": 0.44
-            }, {
-                "saturation": -33
-            }]
-        }, {
-            "featureType": "poi.park",
-            "stylers": [{
-                "hue": "#44ff00"
-            }, {
-                "saturation": -23
-            }]
-        }, {
-            "featureType": "water",
-            "elementType": "labels.text.fill",
-            "stylers": [{
-                "hue": "#007fff"
-            }, {
-                "gamma": 0.77
-            }, {
-                "saturation": 65
-            }, {
-                "lightness": 99
-            }]
-        }, {
-            "featureType": "water",
-            "elementType": "labels.text.stroke",
-            "stylers": [{
-                "gamma": 0.11
-            }, {
-                "weight": 5.6
-            }, {
-                "saturation": 99
-            }, {
-                "hue": "#0091ff"
-            }, {
-                "lightness": -86
-            }]
-        }, {
-            "featureType": "transit.line",
-            "elementType": "geometry",
-            "stylers": [{
-                "lightness": -48
-            }, {
-                "hue": "#ff5e00"
-            }, {
-                "gamma": 1.2
-            }, {
-                "saturation": -23
-            }]
-        }, {
-            "featureType": "transit",
-            "elementType": "labels.text.stroke",
-            "stylers": [{
-                "saturation": -64
-            }, {
-                "hue": "#ff9100"
-            }, {
-                "lightness": 16
-            }, {
-                "gamma": 0.47
-            }, {
-                "weight": 2.7
-            }]
-        }]
     });
 }

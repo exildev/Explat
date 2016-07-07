@@ -122,16 +122,32 @@ div.c.lista {
 .fondo_noti {
     background-color: red;
 }
-#overlay {
+.ov{
+    display: none;
+}
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: #000;
-    filter:alpha(opacity=50);
+    /*filter:alpha(opacity=50);
     -moz-opacity:0.5;
     -khtml-opacity: 0.5;
-    opacity: 0.5;
+    opacity: 0.5;*/
     z-index: 10000;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    justify-content: center;
+}
+
+.overlay > ul {
+    width: auto;
+    background: white;
+    max-height: 400px;
+    overflow: auto;
+    opacity: 1;
 }

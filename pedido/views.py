@@ -983,5 +983,29 @@ class ReactivarPPlataforma(View):
 # end class
 
 
+class WsPedidoCancelado(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(WsPedidoCancelado, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        if pedido:
+            if validNum(pedido):
+                pedido_ = models.Pedido.objects.filter(id=int(pedido)).first()
+                if pedido_:
+                    models.Pedido.objects.filter(
+                        id=int(pedido)).update(activado=False)
+                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                # end if
+            # end def
+        # end if
+        return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
+    # end def
+# end class
+
+
 def validNum(cad):
     return re.match('^\d+$', cad)

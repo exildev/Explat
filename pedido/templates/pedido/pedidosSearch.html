@@ -39,6 +39,7 @@
 							<th>Motorizado</th>
 							<th>Total</th>
 							<th>Entregado</th>
+							<th>Activo</th>
 							<th class="center aligned">Mas Info</th>
 						</tr>
 					</thead>
@@ -48,12 +49,16 @@
 		</div>
   </div>
 </div>
+<div id="cancelar" title="Cancelar Pedido"></div>
 {% endblock %}
 
 {% block addjs %}
 	<script src="{{ STATIC_URL }}api/js/jquery.js"></script>
 	<script src="{{ STATIC_URL }}api/js/jquery.min.js"></script>
 	<script src="{{ STATIC_URL }}api/js/dataTables.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script src="{{ STATIC_URL }}api/js/cancelar_pedido.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}api/js/tabla_ajax_pedidos.js"></script>
 	<script src="{{ STATIC_URL }}api/js/pedidoSearch.js" ></script>
 {% endblock %}

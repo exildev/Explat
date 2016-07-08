@@ -114,3 +114,8 @@ urlpatterns += [
 urlpatterns += [
     url(r'autoasignar/$', views.AutoAsignar.as_view(), name='autoasignar'),
 ]
+
+# Gestion Auto Asignar Pedido
+urlpatterns += [
+    url(r'ws/cancelado/$', views.WsPedidoCancelado.as_view(), name='wspedidocancelado'),
+]

@@ -286,17 +286,21 @@ class ListarRastreo(supra.SupraListView):
         sql = """
             select (
                 select COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (
-                		select replace(t.direccion,'"','') as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id and entregado=false
-                		union
-                		select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id and p.entregado=false)) as t
+                		select replace(t.direccion,'"','') as direccion,t.num_pedido
+                        from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion,
+                        case when num_pedido is null or length(num_pedido)=0 then 'pedido_Ws' else num_pedido end as num_pedido  from pedido_pedidows
+                        where motorizado_id=m.empleado_id and entregado=false and activado=true and despachado=true
+                        union
+                        select p.id, c.direccion as direccion,case when p.num_pedido is not null then p.num_pedido else 'pedido_plataforma' end as num_pedido
+                        from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and p.motorizado_id=m.empleado_id and p.entregado=false)) as t
                 	) p
                 ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
        """
         sql2 = """
            select (
-            	select count(t.direccion) as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id and entregado=false
+            	select count(t.direccion) as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id and entregado=false and activado=true and despachado=true
             	union
-            	select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id and p.entregado=false)) as t
+            	select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id and p.entregado=false and p.activado=true)) as t
             ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
         """
         obj = queryset.extra(select={'direccion': sql, 'num_pedido': sql2})
@@ -318,5 +322,20 @@ class Rastreo(TemplateView):
             empleado__id=request.user.id).first()
         ctx = {'empresa': empresa.id if empresa else 0, 'token': django.middleware.csrf.get_token(request)}
         return render(request, 'motorizado/rastreo.html', ctx)
+    # end def
+# end class
+
+
+class CantidadPedido(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        motorizado = request.POST.get('motorizado', False)
+        if motorizado:
+            cursor = connection.cursor()
+            cursor.execute('select cant_pedidos_motor_periodo(\'%s\')' %motorizado)
+            row = cursor.fetchone()
+            return HttpResponse('%s'%row[0], content_type='application/json', status=200)
+        # end if
+        return HttpResponse('0', content_type='application/json', status=200)
     # end def
 # end class

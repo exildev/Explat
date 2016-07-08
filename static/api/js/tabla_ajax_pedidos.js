@@ -29,13 +29,21 @@ function tablaPedidos(){
         },
         "drawCallback": function (row, data) {
            	//funciones a cargar luego de el llamado
-						$('.stop').on('click',function(even){
-							return false;
-						});
-						$('.imp').on('click',function(even){
-							var win = window.open($(this).attr('href'), '_blank');
-  						win.focus();
-						});
+			$('.stop').on('click',function(even){
+				return false;
+			});
+			$('.imp').on('click',function(even){
+				var win = window.open($(this).attr('href'), '_blank');
+					win.focus();
+			});
+			$('.desactivar').on('click',function(even){
+				var res_act = $(this).parent().find('input[type="hidden"]').val();
+				$(this).parent().find('input[type="radio"]').prop('checked',true);
+				if (res_act == "1"){
+					$('#cancelar').text("Esta seguro de cancelar el pedido "+$(this).parents('tr').find('td:first').text());
+					cancelar.dialog('open');
+				}
+			});
         },
         "columns": [
             {
@@ -66,7 +74,22 @@ function tablaPedidos(){
                 	}else{
                 		m="<i class=\"remove large red icon\"> </i>";
                 	}
-
+					m+="<input type=\"hidden\" name=\"estado\" value=\""+data+"\">" ;
+                	return m;
+				}
+            },
+            {
+            	"class":"center aligned",
+                "data": "activado",
+                "render": function ( data, type, full, meta ) {
+                	var m="";
+                	if (data == 1){
+                		m="<i class=\"checkmark large green icon desactivar\"></i>";
+                	}else{
+                		m="<i class=\"remove large red icon activar\"> </i>";
+                	}
+					m+="<input type=\"hidden\" name=\"activado\" value=\""+data+"\">";
+					m+="<input style=\"visibility: hidden;\" type=\"radio\" name=\"pedido\" value=\""+full.id+"\">";
                 	return m;
 				}
             },
@@ -76,7 +99,9 @@ function tablaPedidos(){
                 "render": function ( data, type, full, meta ) {
                 	var m="";
                 	m+="<a href=\"/pedidos/pedido/info/"+data+"/\" class=\"ui icon green\"><i class=\"unhide large green icon\"></i></a>";
-                	m+="<a href=\"/pedidos/pedido/edit/"+data+"/\" class=\"ui icon green\"><i class=\"edit large green icon\"></i></a>";
+					if (full.estado == 0){
+                		m+="<a href=\"/pedidos/pedido/edit/"+data+"/\" class=\"ui icon green\"><i class=\"edit large green icon\"></i></a>";
+					}
                 	m+="<a href=\"/pedidos/pedido/factura/"+data+"\" class=\"ui icon stop imp\"><i class=\"print large green icon\"></i></a>";
                 	return m;
 				}

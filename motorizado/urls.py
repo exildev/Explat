@@ -46,3 +46,10 @@ urlpatterns += [
     url(r'^ws/list/rastreo/$', views.ListarRastreo.as_view(), name='listar_rastreo'),
 
 ]
+
+
+# Gestion cantidad de periodos en el periodo actual de quincena
+urlpatterns += [
+    url(r'^get/pedidos/$', views.CantidadPedido.as_view(), name='num_pedidos'),
+
+]

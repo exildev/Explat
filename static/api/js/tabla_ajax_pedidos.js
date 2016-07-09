@@ -37,12 +37,21 @@ function tablaPedidos(){
 					win.focus();
 			});
 			$('.desactivar').on('click',function(even){
-				var res_act = $(this).parent().find('input[type="hidden"]').val();
+				var res_act = $(this).parents('tr').find('input[type="hidden"][name="estado"]').val();
+				console.log(res_act);
 				$(this).parent().find('input[type="radio"]').prop('checked',true);
-				if (res_act == "1"){
+				if (res_act == "0"){
 					$('#cancelar').text("Esta seguro de cancelar el pedido "+$(this).parents('tr').find('td:first').text());
 					cancelar.dialog('open');
+				}else{
+					$('#men').text("Este pedido "+$(this).parents('tr').find('td:first').text()+" fue entregado.");
+					mensaje.dialog('open');
 				}
+			});
+			$('.activar').on('click',function(even){
+				$('#activar').text('Desea reactivar el pedido '+$(this).parents('tr').find('td:first').text());
+				$(this).parent().find('input[type="radio"]').prop('checked',true);
+				activar.dialog('open');
 			});
         },
         "columns": [

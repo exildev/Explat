@@ -18,7 +18,7 @@ class AddEmpleadoApiForm(forms.ModelForm):
     class Meta:
         model = models.Empleado
         fields = ('username', 'first_name', 'last_name', 'tipo_id', 'identificacion', 'cargo', 'fecha_nacimiento',
-                  'empresa', 'password', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad', 'foto',)
+                  'empresa', 'password', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad', 'foto', 'tienda',)
         exclude = ('empresa',)
         widgets = {
             "username": forms.TextInput(attrs={'placeholder': 'Nombre de Usuario'}),
@@ -31,6 +31,7 @@ class AddEmpleadoApiForm(forms.ModelForm):
             "ciudad": forms.Select(attrs={'class': 'ui search dropdown'}),
             "tipo_id": forms.Select(attrs={'class': 'ui dropdown'}),
             "cargo": forms.Select(attrs={'class': 'ui dropdown'}),
+            "tienda": forms.Select(attrs={'class': 'ui dropdown'}),
             "foto": forms.FileInput(),
             "fecha_nacimiento": forms.DateInput(format=('%Y-%m-%d'), attrs={'placeholder': 'Ingrese Fecha de Nacimiento 31/12/2015', 'type': 'date'}),
             "password": forms.PasswordInput(attrs={'placeholder': 'Ingrese Contraseña'}),
@@ -49,7 +50,7 @@ class EditEmpleadoApiForm(forms.ModelForm):
     class Meta:
         model = models.Empleado
         fields = ('username', 'first_name', 'last_name', 'tipo_id', 'identificacion', 'cargo',
-                  'fecha_nacimiento', 'empresa', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad', 'foto', )
+                  'fecha_nacimiento', 'empresa', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad', 'foto', 'tienda',)
         exclude = ('empresa',)
         widgets = {
             "username": forms.TextInput(attrs={'placeholder': 'Nombre de Usuario'}),
@@ -60,6 +61,7 @@ class EditEmpleadoApiForm(forms.ModelForm):
             "telefono_celular": forms.TextInput(attrs={'placeholder': 'Telefono Celular'}),
             "direccion": forms.TextInput(attrs={'placeholder': 'Direccion'}),
             "ciudad": forms.Select(attrs={'class': 'ui search dropdown'}),
+            "tienda": forms.Select(attrs={'class': 'ui search dropdown'}),
             "tipo_id": forms.Select(attrs={'class': 'ui dropdown'}),
             "cargo": forms.Select(attrs={'class': 'ui dropdown'}),
             "foto":forms.FileInput(),
@@ -96,7 +98,7 @@ class AddEmpleadoForm(forms.ModelForm):
     class Meta:
         model = models.Empleado
         fields = ('username', 'first_name', 'last_name', 'tipo_id', 'identificacion', 'cargo', 'fecha_nacimiento',
-                  'empresa', 'password', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad', 'foto',)
+                  'empresa', 'password', 'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad', 'foto', 'tienda',)
         widgets = {
             "username": forms.TextInput(attrs={'placeholder': 'Nombre de Usuario'}),
             "first_name": forms.TextInput(attrs={'placeholder': 'Nombres', 'required': True}),
@@ -109,6 +111,7 @@ class AddEmpleadoForm(forms.ModelForm):
             "tipo_id": forms.Select(attrs={'class': 'ui dropdown'}),
             "foto": forms.FileInput(),
             "cargo": forms.Select(attrs={'class': 'ui dropdown'}),
+            "tienda": forms.Select(attrs={'class': 'ui dropdown'}),
             "fecha_nacimiento": forms.DateInput(attrs={'placeholder': 'Ingrese Fecha de Nacimiento 31/12/2015', 'type': 'date'}),
             "empresa": forms.Select(attrs={'class': 'ui search dropdown'}),
             "password": forms.PasswordInput(attrs={'placeholder': 'Ingrese Contraseña'}),

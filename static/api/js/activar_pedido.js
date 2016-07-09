@@ -1,8 +1,8 @@
-var dialogo, pedido, cancelar, mensaje;
+var activar;
 $(document).on('ready', function() {
     //$("#modal1").show();
 
-    cancelar = $("#cancelar").dialog({
+    activar = $("#activar").dialog({
         autoOpen: false,
         draggable: false,
         modal: true,
@@ -18,6 +18,7 @@ $(document).on('ready', function() {
         },
         buttons: {
             "Cancelar": function() {
+                $('input[name="pedido"]:checked').prop('checked',false);
                 $(this).dialog("close");
             },
             "Aceptar": function() {
@@ -25,34 +26,13 @@ $(document).on('ready', function() {
             }
         }
     });
-    mensaje = $("#men").dialog({
-        autoOpen: false,
-        draggable: false,
-        modal: true,
-        show: {
-            effect: "drop",
-            direction: "up",
-            duration: 500
-        },
-        hide: {
-            effect: "drop",
-            direction: "up",
-            duration: 500
-        },
-        buttons: {
-            "Ok": function() {
-                $(this).dialog("close");
-            }
-        }
-    });
 });
 
 function envio() {
     var id = $('input[name="pedido"]:checked').val();
-    console.log(id);
     if (id != undefined) {
         $.ajax({
-            url: '/pedidos/ws/cancelado/',
+            url: '/pedidos/ws/reactivar/',
             data: {
                 pedido: id
             },
@@ -78,7 +58,7 @@ function entrega() {
             type: 'post',
             success: function(response) {
                 window.table.column(1).search($('#search').val()).draw();
-                pedido.dialog("close");
+                activar.dialog("close");
             }
         });
     }

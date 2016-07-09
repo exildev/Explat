@@ -50,6 +50,8 @@
   </div>
 </div>
 <div id="cancelar" title="Cancelar Pedido"></div>
+<div id="men" title="Cancelar Pedido"></div>
+<div id="activar" title="Activar Pedido">
 {% endblock %}
 
 {% block addjs %}
@@ -59,6 +61,7 @@
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script src="{{ STATIC_URL }}api/js/cancelar_pedido.js"></script>
+	<script src="{{ STATIC_URL }}api/js/activar_pedido.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}api/js/tabla_ajax_pedidos.js"></script>
 	<script src="{{ STATIC_URL }}api/js/pedidoSearch.js" ></script>
 {% endblock %}

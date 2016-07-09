@@ -57,9 +57,11 @@ class EmpleadoAdd(View):
     # form_class = forms.AddEmpleadoApiForm
 
     def get(self, request, *args, **kwargs):
+        print 'esta llegando a esta'
         empresa = models.Empresa.objects.filter(
             empleado__id=request.user.id).first()
         form = forms.AddEmpleadoForm()
+        form.fields["tienda"].queryset = models.Tienda.objects.filter(empresa__empleado__id=request.user.id)
         return render(request, 'usuario/addEmpleado.html', {'form': form})
     # end def
 
@@ -77,6 +79,7 @@ class EmpleadoAdd(View):
                        'texto': "Se a registrado un empleado correctamente"}
             return render(request, 'usuario/index.html', {'mensaje': mensaje})
         # end if
+        form.fields["tienda"].queryset = models.Tienda.objects.filter(empresa__empleado__id=request.user.id)
         return render(request, 'usuario/addEmpleado.html', {'form': form})
     # end def
 # end class
@@ -128,8 +131,13 @@ def editEmpleado(request, empleado_id):
             mensaje = {'tipo': 'success',
                        'texto': "Se a editado un empleado correctamente"}
             return render(request, 'usuario/editEmpleado.html', {'mensaje': mensaje, 'form': form, 'empleado': empleado})
+        else:
+            form.fields["tienda"].queryset = models.Tienda.objects.filter(empresa__empleado__id=request.user.id)
+            return render(request, 'usuario/editEmpleado.html', { 'form': form, 'empleado': empleado})
+        # end if
     else:
         form = forms.EditEmpleadoApiForm(instance=empleado)
+        form.fields["tienda"].queryset = models.Tienda.objects.filter(empresa__empleado__id=request.user.id)
     return render(request, 'usuario/editEmpleado.html', {'form': form, 'empleado': empleado})
 # end def
 

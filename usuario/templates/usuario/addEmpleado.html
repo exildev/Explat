@@ -43,7 +43,7 @@
 			</div>
 
 			<h2 class="ui teal header"></h2>
-			<div class="three fields">
+			<div class="four fields">
 				<div class="field {% if form.fecha_nacimiento.errors %}error{% endif %}">
 					{{ form.fecha_nacimiento }}
 				</div>
@@ -52,6 +52,9 @@
 				</div>
 				<div class="field {% if form.telefono_fijo.errors %}error{% endif %}">
 					{{ form.telefono_fijo }}
+				</div>
+				<div class="field {% if form.tienda.errors %}error{% endif %}">
+					{{ form.tienda }}
 				</div>
 			</div>
 

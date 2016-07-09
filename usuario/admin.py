@@ -36,7 +36,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
         ('Informacion Personal', {'fields': ['username', 'first_name', 'last_name',
                                              'tipo_id', 'identificacion', 'cargo', 'fecha_nacimiento', 'empresa', 'is_active']}),
         ('Informacion de Contacto', {'fields': [
-         'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad']}),
+         'telefono_fijo', 'telefono_celular', 'email', 'direccion', 'ciudad','foto']}),
     ]
     list_display = ('first_name', 'last_name', 'cargo', 'empresa',)
 

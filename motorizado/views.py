@@ -259,6 +259,20 @@ class SearchMotorizadoPed(View):
     # end def
 
 
+class InfoMotorizado(supra.SupraListView):
+    model = models.Motorizado
+    search_key = 'q'
+    list_display = ['identificador', 'empleado__foto']
+    search_fields = ['identifier']
+    list_filter = ['identifier']
+    paginate_by = 1
+
+    class Renderer:
+        identificador = 'identifier'
+    # end class
+# end class
+
+
 class ListarRastreo(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
@@ -332,7 +346,7 @@ class CantidadPedido(View):
         motorizado = request.POST.get('motorizado', False)
         if motorizado:
             cursor = connection.cursor()
-            cursor.execute('select cant_pedidos_motor_periodo(\'%s\')' %motorizado)
+            cursor.execute('select cant_pedidos_motor_periodo(\'%s\')' % motorizado)
             row = cursor.fetchone()
             return HttpResponse('%s'%row[0], content_type='application/json', status=200)
         # end if

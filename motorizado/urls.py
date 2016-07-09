@@ -50,6 +50,12 @@ urlpatterns += [
 
 # Gestion cantidad de periodos en el periodo actual de quincena
 urlpatterns += [
+    url(r'^get/info/$', views.InfoMotorizado.as_view(), name='info_motorizado'),
+]
+
+
+# Gestion cantidad de periodos en el periodo actual de quincena
+urlpatterns += [
     url(r'^get/pedidos/$', views.CantidadPedido.as_view(), name='num_pedidos'),
 
 ]

@@ -262,13 +262,16 @@ class SearchMotorizadoPed(View):
 class InfoMotorizado(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
-    list_display = ['identificador', 'empleado__foto']
+    list_display = ['identificador', 'nombre', 'apellidos', 'foto']
     search_fields = ['identifier']
     list_filter = ['identifier']
     paginate_by = 1
 
     class Renderer:
         identificador = 'identifier'
+        nombre = 'empleado__first_name'
+        apellidos = 'empleado__last_name'
+        foto = 'empleado__foto'
     # end class
 # end class
 

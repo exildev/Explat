@@ -17,6 +17,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 import views
 from django.contrib.auth.decorators import login_required
+from django.conf.urls.static import static
+import settings
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -25,4 +27,4 @@ urlpatterns = [
     url(r'^pedidos/', include('pedido.urls', namespace='pedido')),
     url(r'^reporte/', include('reporte.urls', namespace='reporte')),
     url(r'^$', login_required(views.Index.as_view()), name='index'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -334,8 +334,9 @@ class Login(supra.SupraSession):
             motori = motorizado.Motorizado.objects.filter(
                 empleado__id=request.user.id).first()
             if motori:
-                return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d,"ciudad":%d}'
-                                    % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id, motori.empleado.ciudad.id),
+                return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d,"ciudad":%d,"tienda":%d}'
+                                    % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id,
+                                        motori.empleado.ciudad.id,motori.empleado.tienda.id),
                                     content_type="application/json")
     # end if
 
@@ -363,8 +364,9 @@ def is_logged(request):
         motori = motorizado.Motorizado.objects.filter(
             empleado__id=request.user.id).first()
         if motori:
-            return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d,"ciudad":%d}'
-                                % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id, motori.empleado.ciudad.id),
+            return HttpResponse('{ "nombre": "%s", "identificador": "%s","tipo": %d, "empresa": %d,"ciudad":%d,"tienda":%d}'
+                                % (motori.empleado.first_name, motori.identifier, motori.tipo, motori.empleado.empresa.id,
+                                    motori.empleado.ciudad.id,motori.empleado.tienda.id),
                                 content_type="application/json")
         # end if
     # end if

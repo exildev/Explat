@@ -96,10 +96,10 @@ class TablaInfoEmpleado(View):
         start = request.GET.get('start', 0)
         search = request.GET.get('search[value]', False)
         estado = request.GET.get('estado', 0)
-        tienda = request.GET.get('tienda',0)
+        tienda = request.GET.get('tienda', 0)
         cursor = connection.cursor()
-        m = 'select tabla_info_empleado(%s,\'%s\'::text,\'%s\'::text,%s::integer,%s::integer,\'%s\'::text,\'%s\'::text)' % (
-            request.user.id if request.user.id else 0, busqueda, order, start, length, id_ciudad, id_tra_tipo)
+        m = 'select tabla_info_empleado_actualizado(%s,\'%s\'::text,\'%s\'::text,%s::integer,%s::integer,\'%s\'::text,\'%s\'::text,%s::integer)' % (
+            request.user.id if request.user.id else 0, busqueda, order, start, length, id_ciudad, id_tra_tipo, tienda)
         cursor.execute(m)
         row = cursor.fetchone()
         return HttpResponse(row[0], content_type="application/json")

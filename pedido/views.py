@@ -243,22 +243,9 @@ class FinalizarPedido(View):
                         cursor.execute(
                             'select get_add_pedido_admin(%d)' % pedido.id)
                         row = cursor.fetchone()
+                        print row
                         lista = json.loads(row[0])
-                        if lista:
-                            if not pedido.confirmado:
-                                with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
-                                    socketIO.emit('asignar-pedido', {
-                                                  'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
-                                    socketIO.wait(seconds=0)
-                                # end with
-                            else:
-                                with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
-                                    socketIO.emit('modificar-pedido', {
-                                                  'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
-                                    socketIO.wait(seconds=0)
-                                # end with
-                            # end if
-                        # end if
+
                         return redirect(reverse('pedido:list_pedido'))
                     # end if
                 # end if

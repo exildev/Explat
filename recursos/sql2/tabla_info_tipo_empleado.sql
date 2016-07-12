@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION tabla_info_empleado(integer, text, text, integer, integer, text, text);
 
-CREATE OR REPLACE FUNCTION tabla_info_empleado_actualizado(id_des integer, search_ text, order_ text, start_ integer, length_ integer, id_ciudad text, tipo_empleado text)
+CREATE OR REPLACE FUNCTION tabla_info_empleado_actualizado(id_des integer, search_ text, order_ text, start_ integer, length_ integer, id_ciudad text, tipo_empleado text,id_tienda integer)
   RETURNS text AS
 $BODY$
 declare 
@@ -23,14 +23,16 @@ begin
 		SELECT COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (			
 			select e.cargo,u.first_name||' '||u.last_name as nom, e.usuario_ptr_id as id 
 			from usuario_empleado as e 
-			inner join auth_user as u on (e.usuario_ptr_id=u.id and u.is_active and e.empresa_id=id_emp and e.ciudad=id_ciudad ) 
+			inner join auth_user as u on (e.usuario_ptr_id=u.id and u.is_active and e.empresa_id=id_emp and e.ciudad_id=cast(id_ciudad as integer) 
+				and e.tienda_id in (select id from usuario_tienda as tien where tien.empresa_id=id_emp) ) 
 				  where e.cargo = any(tipo_emp::text[])  limit length_ offset start_
 		) p into l; 
 	else
 		SELECT COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (
 			select e.cargo,u.first_name||' '||u.last_name as nom, e.usuario_ptr_id as id 
 			from usuario_empleado as e 
-			inner join auth_user as u on (e.usuario_ptr_id=u.id and u.is_active and e.empresa_id=id_emp) 
+			inner join auth_user as u on (e.usuario_ptr_id=u.id and u.is_active and e.empresa_id=id_emp
+				and e.tienda_id in (case when id_tienda != 0 then id_tienda else (select unnest(id) from usuario_tienda where empresa_id=id_emp) end)) 
 				  where e.cargo = any(tipo_emp::text[]) limit length_ offset start_
 		) p into l;
 	end if;
@@ -41,3 +43,5 @@ $BODY$
   COST 100;
 ALTER FUNCTION tabla_info_empleado(integer, text, text, integer, integer, text, text)
   OWNER TO postgres;
+
+  select * from usuario_empleado where tienda_id in (select id from usuario_tienda where empresa_id=1)

@@ -1019,11 +1019,18 @@ class WsPedidoReactivar(View):
                 pedido_ = models.Pedido.objects.filter(id=int(pedido)).first()
                 if pedido_:
                     cursor = connection.cursor()
-                    cursor.execute('select reactivar_pedido(%s::integer)'%pedido)
+                    cursor.execute('select reactivar_pedido(%s::integer)' % pedido)
                     row = cursor.fetchone()
                     lista = json.dumps(row[0])
                     print lista
-                    return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                    if lista:
+                        with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                            socketIO.emit('asignar-pedido', {
+                                          'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
+                            socketIO.wait(seconds=0)
+                        # end with
+                        return HttpResponse('[{"status":true}]', content_type='application/json', status=200)
+                    # end if
                 # end if
             # end def
         # end if

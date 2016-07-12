@@ -19,7 +19,7 @@ urlpatterns += [
 
 # Generacion de informes de empleados
 urlpatterns += [
-    url(r'^tiempos/empleados/$', TemplateView.as_view(template_name='reporte/tipoempleado.html'), name='tiempos_empleado_reporte'),
+    url(r'^tiempos/empleados/$', views.TiempoEmpleado.as_view(), name='tiempos_empleado_reporte'),
     url(r'^tabla/info/empleados/$', views.TablaInfoEmpleado.as_view(), name='info_tabla_empleados_reporte'),
     url(r'^excel/$', views.Excel.as_view(), name='excel_reporte'),
     url(r'^pdf/$', views.Pdf.as_view(), name='pdf_reporte'),

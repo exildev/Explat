@@ -16,7 +16,6 @@ class Ciudad(models.Model):
 # end class
 
 
-
 class Usuario(User):
     TIPO_ID = (
         ("", "Tipo de identificación"),
@@ -139,3 +138,16 @@ class Empleado(Usuario):
         #
         super(Empleado, self).save(*args, **kwargs)
     # end def
+
+
+class Opcion(models.Model):
+    ciudad = models.ForeignKey(Ciudad)
+
+    def __unicode__(self):
+        return self.ciudad.nombre
+    # end def
+
+    def __str__(self):
+        return self.ciudad.nombre
+    # end def
+# end class

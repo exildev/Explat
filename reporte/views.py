@@ -19,6 +19,8 @@ import json as simplejson
 from datetime import date
 import csv
 from django.views.generic import TemplateView
+import forms
+from usuario import models as mod_usuario
 
 
 class Pedido(View):
@@ -44,6 +46,7 @@ class Reporte(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         return render(request, 'reporte/index.html')
     # end def
+# end class
 
 
 class Empleados(FormView):
@@ -233,5 +236,14 @@ class Excel(View):
         # end if
         return response
 
+    # end def
+# end class
+
+
+class TiempoEmpleado(TemplateView):
+    def dispatch(self, request, *args, **kwargs):
+        ciudad = forms.CiudadForm()
+        ciudad.fields['ciudad'].queryset = mod_usuario.Ciudad.objects.filter(empresa__empleado__id=request.user.id, status=True)
+        return render(request, 'reporte/tipoempleado.html', {'form': ciudad})
     # end def
 # end class

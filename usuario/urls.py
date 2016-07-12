@@ -48,6 +48,12 @@ urlpatterns += [
 
 # Gestion servicios de autenticacion
 urlpatterns += [
+    url(r'tiendas/ws/', views.Store.as_view(),name='get_tiendas'),
+]
+
+
+# Gestion servicios de autenticacion
+urlpatterns += [
     url(r'session/', views.Login.as_view(),name='ws_loguin'),
     url(r'logged/', views.is_logged, name="is_logged"),
 ]

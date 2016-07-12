@@ -133,7 +133,7 @@ def editEmpleado(request, empleado_id):
             return render(request, 'usuario/editEmpleado.html', {'mensaje': mensaje, 'form': form, 'empleado': empleado})
         else:
             form.fields["tienda"].queryset = models.Tienda.objects.filter(empresa__empleado__id=request.user.id)
-            return render(request, 'usuario/editEmpleado.html', { 'form': form, 'empleado': empleado})
+            return render(request, 'usuario/editEmpleado.html', {'form': form, 'empleado': empleado})
         # end if
     else:
         form = forms.EditEmpleadoApiForm(instance=empleado)

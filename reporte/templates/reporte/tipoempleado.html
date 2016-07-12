@@ -22,7 +22,7 @@
     		width: 42px;
 		}
 
-		#tipo,#id_ciudad{
+		#tipo,#id_ciudad,#tienda{
 			height: 42px;
 		}
 
@@ -55,13 +55,18 @@
 		<form method="POST" action="" class="ui form">
 			{% csrf_token %}
 			<h2 class="ui teal header restar">Descripción Búsqueda</h2>
-	   		<div class="seven fields">
+	   		<div class="nine fields">
 	   			<div class="">
 					{{ form.ciudad }}
 				</div>
+				<div>
+					<select id="tienda" class="" name="" disabled>
+						<option value="0">Tienda</option>
+					</select>
+				</div>
 				<div class="">
 					<select name="" id="tipo">
-						<option value="">Seleccione elTipo Empleado</option>
+						<option value="">Tipo de empleado</option>
 						<option value="MOTORIZADO">Motorizado</option>
 						<option value="ALISTADOR">Alistador</option>
 						<option value="SUPERVISOR">Supervisor</option>
@@ -77,11 +82,12 @@
 				<div class="">
 					<input id="fin" maxlength="50" name="tipo" placeholder="Fecha de Fin" type="date">
 				</div>
+				<div><span>Estado</span></div>
 				<div class="">
-					<input id="id_busq" maxlength="50" name="tipo" value="Buscar" type="button" class="ui olive fluid large button consulta" >
+					<input type="checkbox" name="envio" value="envio" checked>
 				</div>
 				<div class="">
-					<input type="checkbox" name="envio" value="envio" />
+					<input id="id_busq" maxlength="50" name="tipo" value="Buscar" type="button" class="ui olive fluid large button consulta" >
 				</div>
 		    </div>
 		</form>

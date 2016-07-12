@@ -244,7 +244,7 @@ class FinalizarPedido(View):
                             'select get_add_pedido_admin(%d)' % pedido.id)
                         row = cursor.fetchone()
                         print row
-                        lista = json.loads(row[0])
+                        lista = False#json.loads(row[0])
                         if lista:
                             if not pedido.confirmado:
                                 with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:

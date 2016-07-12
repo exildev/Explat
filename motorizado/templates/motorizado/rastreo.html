@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="c mapa">
-                  <iframe src="http://192.168.0.109:4000/?empresa={{ empresa }}&token={{ token }}" frameborder="0"></iframe>
+                  <iframe src="http://104.236.33.228:4000/?empresa={{ empresa }}&token={{ token }}" frameborder="0"></iframe>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}api/js/jquery.qrcode.js"></script>
 <script type="text/javascript">
-  var socket = io('http://192.168.0.109:4000');
+  var socket = io('http://104.236.33.228:4000');
   function enviarMOtorizado(){
     console.log("esta en el socket");
     console.log($('#token').val());

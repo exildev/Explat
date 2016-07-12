@@ -64,7 +64,7 @@ class EditEmpleadoApiForm(forms.ModelForm):
             "tienda": forms.Select(attrs={'class': 'ui search dropdown'}),
             "tipo_id": forms.Select(attrs={'class': 'ui dropdown'}),
             "cargo": forms.Select(attrs={'class': 'ui dropdown'}),
-            "foto":forms.FileInput(),
+            "foto": forms.FileInput(),
             "fecha_nacimiento": forms.DateInput(format=('%Y-%m-%d'), attrs={'placeholder': 'Ingrese Fecha de Nacimiento 31/12/2015', 'type': 'date'}),
             "email": forms.EmailInput(attrs={'Placeholder': 'Email', 'required': True}),
         }

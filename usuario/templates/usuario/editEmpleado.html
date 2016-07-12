@@ -23,7 +23,7 @@
 </div>
 <div class="ui container grid" style="margin-bottom:50px;">
 	<div class="center aligned column">
-		<form method="POST" class="ui form">
+		<form method="POST" class="ui form" enctype="multipart/form-data">
 			{% csrf_token %}
 			<h2 class="ui teal header">&nbsp;</h2>
 			<div class="four fields">
@@ -67,6 +67,9 @@
 				</div>
 				<div class="field {% if form.direccion.errors %}error{% endif %}">
 					{{ form.direccion }}
+				</div>
+				<div class="field {% if form.direccion.errors %}error{% endif %}">
+					{{ form.foto }}
 				</div>
 			</div>
 

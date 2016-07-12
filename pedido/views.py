@@ -158,7 +158,7 @@ class EditPedido(FormView):
                 row = cursor.fetchone()
                 lista = json.loads(row[0])
                 if lista:
-                    with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                    with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
                         socketIO.emit('modificar-motorizado-pedido', {
                             'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso'], 'mot_anterior': motor_ant, 'mot_siguiente': motor_sig})
                         socketIO.wait(seconds=0)
@@ -243,9 +243,28 @@ class FinalizarPedido(View):
                         cursor.execute(
                             'select get_add_pedido_admin(%d)' % pedido.id)
                         row = cursor.fetchone()
+<<<<<<< HEAD
                         print row
                         lista = json.loads(row[0])
 
+=======
+                        lista = row[0]
+                        if lista:
+                            if not pedido.confirmado:
+                                with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
+                                    socketIO.emit('asignar-pedido', {
+                                                  'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
+                                    socketIO.wait(seconds=0)
+                                # end with
+                            else:
+                                with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
+                                    socketIO.emit('modificar-pedido', {
+                                                  'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
+                                    socketIO.wait(seconds=0)
+                                # end with
+                            # end if
+                        # end if
+>>>>>>> deploy
                         return redirect(reverse('pedido:list_pedido'))
                     # end if
                 # end if
@@ -607,7 +626,7 @@ class WsPedidoEmpresa(View):
         lista = json.loads(row[0])
         if lista['respuesta']:
             if len(lista['pedidos']) > 0:
-                with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
                     socketIO.emit('add-pedido', {
                                   'pedidos': lista['pedidos'], 'tipo': 2, 'retraso': lista['retardo']})
                     socketIO.wait(seconds=0)
@@ -1011,7 +1030,7 @@ class WsPedidoReactivar(View):
                     lista = json.dumps(row[0])
                     print lista
                     if lista:
-                        with SocketIO('192.168.0.109', 4000, LoggingNamespace) as socketIO:
+                        with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
                             socketIO.emit('asignar-pedido', {
                                           'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
                             socketIO.wait(seconds=0)

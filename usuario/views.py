@@ -377,3 +377,19 @@ def auto_asignar(request):
     identificador = request.POST.get('identificador', False)
     return HttpResponse(identificador)
 # end def
+
+
+class Store(supra.SupraListView):
+    model = models.Tienda
+    search_key = 'q'
+    list_display = ['empresa__first_name', 'nombre', 'id']
+    search_fields = ['ciudad__id']
+    list_filter = ['ciudad__id']
+    paginate_by = 1000
+
+    def get_queryset(self):
+        queryset = super(Store, self).get_queryset()
+        empresa = models.Empresa.objects.filter(empleado__id=self.request.user.id).first()
+        return queryset.filter(empleado__empresa=empresa).distinct('id')
+    # end def
+# end class

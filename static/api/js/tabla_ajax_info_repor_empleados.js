@@ -25,7 +25,9 @@ function tablaPedidos(){
         "serverSide": true,
         "ajax": {
             "url": "/reporte/tabla/info/empleados/",
-            "data":{ciudad:$('#id_ciudad').val(),id_emp_tipo:$('#tipo').val(),inicio:$('#inicio').val(),fin:$('#fin').val()}
+            "data":{ciudad:$('#id_ciudad').val(),id_emp_tipo:$('#tipo').val(),
+					inicio:$('#inicio').val(),fin:$('#fin').val(),tienda:$('#tienda').val(),
+					estado:$('#envio:checked').val() != undefined?1:0}
         },
         "drawCallback": function (row, data) {
            	//funciones a cargar luego de el llamado

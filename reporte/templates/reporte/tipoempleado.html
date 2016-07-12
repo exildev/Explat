@@ -60,8 +60,8 @@
 					{{ form.ciudad }}
 				</div>
 				<div>
-					<select id="tienda" class="" name="" disabled>
-						<option value="0">Tienda</option>
+					<select id="tienda">
+						<option value="0" selected>Tienda</option>
 					</select>
 				</div>
 				<div class="">
@@ -84,7 +84,7 @@
 				</div>
 				<div><span>Estado</span></div>
 				<div class="">
-					<input type="checkbox" name="envio" value="envio" checked>
+					<input type="checkbox" id="envio" name="envio" value="envio" checked>
 				</div>
 				<div class="">
 					<input id="id_busq" maxlength="50" name="tipo" value="Buscar" type="button" class="ui olive fluid large button consulta" >
@@ -127,6 +127,7 @@
 	<script src="{{ STATIC_URL }}api/js/jquery.js"></script>
 	<script src="{{ STATIC_URL }}api/js/jquery.min.js"></script>
 	<script src="{{ STATIC_URL }}api/js/dataTables.js"></script>
+	<script src="{{ STATIC_URL }}api/js/tipo_empleado.js"></script>
 	<script src="{{ STATIC_URL }}api/js/tabla_ajax_info_repor_empleados.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.plugin.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.datepick.js"></script>

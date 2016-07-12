@@ -138,7 +138,6 @@ function enviarPedido() {
             "tipo_pago": 1
         }]
     };
-    console.log(res);
     $.ajax({
         url: '/pedidos/emp/ws/pedido/',
         type: 'POST',

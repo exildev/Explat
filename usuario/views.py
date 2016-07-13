@@ -122,7 +122,7 @@ def infoEmpleado(request, empleado_id):
 def editEmpleado(request, empleado_id):
     empleado = get_object_or_404(models.Empleado, pk=empleado_id)
     if request.method == 'POST':
-        form = forms.EditEmpleadoApiForm(request.POST, instance=empleado)
+        form = forms.EditEmpleadoApiForm(request.POST, request.FILES, instance=empleado)
         if form.is_valid():
             f = form.save(commit=False)
             f.empresa = models.Empresa.objects.filter(

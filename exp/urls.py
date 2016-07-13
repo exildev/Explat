@@ -27,5 +27,4 @@ urlpatterns = [
     url(r'^pedidos/', include('pedido.urls', namespace='pedido')),
     url(r'^reporte/', include('reporte.urls', namespace='reporte')),
     url(r'^$', login_required(views.Index.as_view()), name='index'),
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

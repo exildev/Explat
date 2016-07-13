@@ -40,7 +40,7 @@ function envio() {
             type: 'post',
             success: function(response) {
                 window.table.column(1).search($('#search').val()).draw();
-                cancelar.dialog("close");
+                activar.dialog("close");
             }
         });
     }

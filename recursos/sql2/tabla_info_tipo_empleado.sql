@@ -24,7 +24,7 @@ begin
 			select e.cargo,u.first_name||' '||u.last_name as nom, e.usuario_ptr_id as id 
 			from usuario_empleado as e 
 			inner join auth_user as u on (e.usuario_ptr_id=u.id and u.is_active and e.empresa_id=id_emp and e.ciudad_id=cast(id_ciudad as integer) 
-				and e.tienda_id in (select id from usuario_tienda as tien where tien.empresa_id=id_emp) ) 
+				and (e.tienda_id in (select id from usuario_tienda as tien where tien.empresa_id=case when id_tienda = 0 then id_emp else id_tienda end) or e.tienda_id=case when id_tienda!=0 then id_tienda else 0 end )) 
 				  where e.cargo = any(tipo_emp::text[])  limit length_ offset start_
 		) p into l; 
 	else
@@ -32,7 +32,7 @@ begin
 			select e.cargo,u.first_name||' '||u.last_name as nom, e.usuario_ptr_id as id 
 			from usuario_empleado as e 
 			inner join auth_user as u on (e.usuario_ptr_id=u.id and u.is_active and e.empresa_id=id_emp
-				and e.tienda_id in (case when id_tienda != 0 then id_tienda else (select unnest(id) from usuario_tienda where empresa_id=id_emp) end)) 
+				and (e.tienda_id in (select id from usuario_tienda as tien where tien.empresa_id=case when id_tienda = 0 then id_emp else id_tienda end) or e.tienda_id=case when id_tienda!=0 then id_tienda else 0 end ) ) 
 				  where e.cargo = any(tipo_emp::text[]) limit length_ offset start_
 		) p into l;
 	end if;

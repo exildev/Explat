@@ -659,7 +659,7 @@ class RecogerPWService(View):
             motori = mod_motorizado.Motorizado.objects.filter(
                 identifier=motorizado).first()
             if motori:
-                if validNum(pedido) and validNum(motorizado):
+                if validNum(pedido) and motorizado:
                     ped = models.PedidoWS.objects.filter(
                         id=int(pedido), motorizado__id=motori.empleado.id).first()
                     if ped:
@@ -688,7 +688,7 @@ class RecogerPPlataforma(View):
             motori = mod_motorizado.Motorizado.objects.filter(
                 identifier=motorizado).first()
             if motori:
-                if validNum(pedido) and validNum(motorizado):
+                if validNum(pedido) and motorizado:
                     ped = models.Pedido.objects.filter(
                         id=int(pedido), motorizado__id=motori.empleado.id).first()
                     if ped:
@@ -718,7 +718,8 @@ class AceptarPWService(View):
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
-            if validNum(pedido) and validNum(motorizado):
+            print 'paso 1'
+            if validNum(pedido) and motorizado:
                 cursor = connection.cursor()
                 cursor.execute('select aceptar_pw_service(%s,\'%s\')' %
                                (pedido, motorizado))
@@ -743,7 +744,7 @@ class AceptarPPlataforma(View):
         motorizado = request.POST.get('motorizado', False)
         pedido = request.POST.get('pedido', False)
         if motorizado and pedido:
-            if validNum(motorizado) and validNum(pedido):
+            if motorizado and validNum(pedido):
                 # mod_usuario.Empleado.objects.filter(ddsdsd=12)
                 pedid = models.Pedido.objects.filter(id=int(pedido)).values(
                     'id', 'motorizado__motorizado__identifier', 'motorizado__id').first()
@@ -775,7 +776,7 @@ class EntregarPWService(View):
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
-            if validNum(pedido) and validNum(motorizado):
+            if validNum(pedido) and motorizado:
                 ped = models.PedidoWS.objects.filter(
                     id=int(pedido), motorizado__motorizado__identifier=motorizado).values(
                         'id', 'motorizado__motorizado__identifier', 'motorizado__id').first()
@@ -802,7 +803,7 @@ class EntregarPPlataforma(View):
         pedido = request.POST.get('pedido', False)
         motorizado = request.POST.get('motorizado', False)
         if pedido and motorizado:
-            if validNum(pedido) and validNum(motorizado):
+            if validNum(pedido) and motorizado:
                 ped = models.Pedido.objects.filter(
                     id=int(pedido), motorizado__motorizado__identifier=motorizado).first()
                 if ped:

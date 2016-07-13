@@ -131,5 +131,5 @@ select pws.id,case when pws.num_pedido is null or length(pws.num_pedido) =0 then
 select * from pedido_pedido
 select * from usuario_tienda
 
-select aceptar_pw_service
-select * from pedido_pedidows
+select aceptar_pw_service(343,'778d2d83f54a9ccb')
+select * from pedido_pedidows where id=342

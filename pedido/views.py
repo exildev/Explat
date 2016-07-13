@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 import re
 from django.views.generic import View, DeleteView
 from django.views import generic
-from . import forms
-from . import models
+import forms
+import models
 from motorizado import models as mod_motorizado
 from usuario import forms as form_usuario
 from usuario import models as mod_usuario

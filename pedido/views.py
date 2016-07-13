@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 import re
 from django.views.generic import View, DeleteView
 from django.views import generic
-import forms
-import models
+from . import forms
+from . import models
 from motorizado import models as mod_motorizado
 from usuario import forms as form_usuario
 from usuario import models as mod_usuario
@@ -846,7 +846,7 @@ class ConfirmacionPedidoWS(supra.SupraFormView):
         pedido = request.POST.get('pedido', 0)
         pedidov = models.PedidoWS.objects.filter(id=pedido, motorizado__motorizado__identifier=motorizado).first()
         if pedidov:
-            models.PedidoWs.objects.filter(id=int(pedido)).update(entregado=True)
+            models.PedidoWS.objects.filter(id=int(pedido)).update(entregado=True)
             return super(ConfirmacionPedidoWS, self).dispatch(request, *args, **kwargs)
         # end if
         return HttpResponse('{"motorizado":["Este campo es obligatorio"]}')

@@ -1038,5 +1038,26 @@ class WsPedidoReactivar(View):
         return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
     # end def
 
+
+class WsInfoPedido(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(WsInfoPedido, self).dispatch(*args, **kwargs)
+    # end def
+
+    def post(self, request, *args, **kwargs):
+        pedido = request.POST.get('pedido', False)
+        if pedido:
+            cursor = connection.cursor()
+            cursor.execute('select alistar,despacho,entrega,cliente from pedidos_tiempos_actualizada where nump=\'%s\'' % pedido)
+            row = cursor.fetchone()
+            if row:
+                return HttpResponse('{"r":true,"alistar":"%s","despacho":"%s","entrega":"%s","cliente":"%s"}' % (row[0], row[1], row[2], row[3]), content_type="application/json")
+            # end if
+        # end if
+        return HttpResponse('{"r":false}', content_type="application/json")
+    # end def
+# end class
+
 def validNum(cad):
     return re.match('^\d+$', cad)

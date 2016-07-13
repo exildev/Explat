@@ -37,9 +37,9 @@ function tablaPedidos(){
                 if (ini.val() .length > 0 && fin.val().length>0){
                     if(ini.val() < fin.val()){
                         if($(this).hasClass('excel')){
-                            window.location.href = "/reporte/excel/?id="+$(this).parent().find('input[type="hidden"]').val()+"&ini="+$('#inicio').val()+"&fin="+$('#inicio').val();
+                            window.location.href = "/reporte/excel/?id="+$(this).parent().find('input[type="hidden"]').val()+"&ini="+$('#inicio').val()+"&fin="+$('#fin').val()+"&estado="+$('#envio:checked').val();
                         }else if($(this).hasClass('pdf')){
-                            window.location.href = "/reporte/pdf/?id="+$(this).parent().find('input[type="hidden"]').val()+"&ini="+$('#inicio').val()+"&fin="+$('#inicio').val();
+                            window.location.href = "/reporte/pdf/?id="+$(this).parent().find('input[type="hidden"]').val()+"&ini="+$('#inicio').val()+"&fin="+$('#fin').val()+"&estado="+$('#envio:checked').val();
                         }
                     }else{
                         $('#men span').text("La fecha de fin en el intervalo debe ser mayor.");

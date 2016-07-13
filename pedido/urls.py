@@ -86,37 +86,43 @@ urlpatterns += [
 
 # Gestion de entrega de pedido
 urlpatterns += [
-    url(r'confirmar/pplataforma/$', views.ConfirmacionPedido.as_view(), name='confirmar_pplataforma'),
+    url(r'^confirmar/pplataforma/$', views.ConfirmacionPedido.as_view(), name='confirmar_pplataforma'),
     url(r'^confirmar/pws/$', views.ConfirmacionPedidoWS.as_view(), name='confirmar_wservice'),
 ]
 
 
 # Gestion de cancelar de pedido
 urlpatterns += [
-    url(r'cancelar/pplataforma/$', views.CancelarPPlataforma.as_view(), name='cancelar_pplataforma'),
+    url(r'^cancelar/pplataforma/$', views.CancelarPPlataforma.as_view(), name='cancelar_pplataforma'),
     url(r'^cancelar/pws/$', views.CancelarPWService.as_view(), name='cancelar_wservice'),
 ]
 
 
 # Gestion de reactivar de pedido
 urlpatterns += [
-    url(r'reactivar/pplataforma/$', views.ReactivarPPlataforma.as_view(), name='reactivar_pplataforma'),
+    url(r'^reactivar/pplataforma/$', views.ReactivarPPlataforma.as_view(), name='reactivar_pplataforma'),
 ]
 
 
 # Gestion de Configuracion de tiempos
 urlpatterns += [
-    url(r'configuracion/$', views.ConfiguracionTiempo.as_view(), name='configurar_pplataforma'),
+    url(r'^configuracion/$', views.ConfiguracionTiempo.as_view(), name='configurar_pplataforma'),
 ]
 
 
 # Gestion Auto Asignar Pedido
 urlpatterns += [
-    url(r'autoasignar/$', views.AutoAsignar.as_view(), name='autoasignar'),
+    url(r'^autoasignar/$', views.AutoAsignar.as_view(), name='autoasignar'),
 ]
 
 # Gestion Auto Asignar Pedido
 urlpatterns += [
-    url(r'ws/cancelado/$', views.WsPedidoCancelado.as_view(), name='wspedidocancelado'),
-    url(r'ws/reactivar/$', views.WsPedidoReactivar.as_view(), name='wspedidoreactivar'),
+    url(r'^ws/cancelado/$', views.WsPedidoCancelado.as_view(), name='wspedidocancelado'),
+    url(r'^ws/reactivar/$', views.WsPedidoReactivar.as_view(), name='wspedidoreactivar'),
+]
+
+# Gestion de Consulta de pedido
+urlpatterns += [
+    url(r'^info/pedido/cliente/$', TemplateView.as_view(template_name='pedido/pedidoinfo.html'), name='wspedidocancelado'),
+    url(r'^ws/info/pedido/$', views.WsInfoPedido.as_view(), name='ws_info_pedido'),
 ]

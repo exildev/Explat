@@ -115,14 +115,17 @@ class Pdf(View):
         c = canvas.Canvas(buffer, pagesize=A4)
         # return (array_to_json(array_agg(row_to_json(row(b,res)))));
         # Header
+        print request.GET
         id_emp = request.GET.get('id', '0')
-        ini = request.GET.get('inicio', '2015-01-01')
+        ini = request.GET.get('ini', '2015-01-01')
         fin = request.GET.get('fin', '%s-%s-%s' %
                               (date.today().year, date.today().month, date.today().day))
+        estado = request.GET.get('estado', False)
         # CURSOR DE LA INFO EMPLEADO
         cursor = connection.cursor()
-        cursor.execute(
-            'select get_info_empleados_report(%s,\'%s\',\'%s\')' % (id_emp, ini, fin))
+        consulta = 'select get_info_empleados_report_act(%s,\'%s\',\'%s\',%s)' % (id_emp, ini, fin,'true' if estado else 'false')
+        print consulta
+        cursor.execute(consulta)
         #cursor.execute('select get_info_empleados_report(18,\'2016-05-04\',\'2016-05-04\')')
         row = cursor.fetchone()
         res = simplejson.loads('%s' % row[0])
@@ -205,10 +208,12 @@ class Excel(View):
         ini = request.GET.get('inicio', '2015-01-01')
         fin = request.GET.get('fin', '%s-%s-%s' %
                               (date.today().year, date.today().month, date.today().day))
+        estado = request.GET.get('estado', False)
         # CURSOR DE LA INFO EMPLEADO
         cursor = connection.cursor()
         cursor.execute(
-            'select get_info_empleados_report(%s,\'%s\',\'%s\')' % (id_emp, ini, fin))
+                    'select get_info_empleados_report_act(%s,\'%s\',\'%s\',%s)' % (id_emp, ini, fin,'true' if estado else 'false'))
+
         row = cursor.fetchone()
         res = simplejson.loads('%s' % row[0])
         # Create the HttpResponse object with the appropriate CSV header.

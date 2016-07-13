@@ -45,8 +45,8 @@ function tablaClientes(){
 						"data": "id2",
 						"render": function ( data, type, full, meta ) {
 		                    var m="";
-		                    m+="<a href=\"/usuario/cliente/details/"+data+"/\" class=\"ui icon green \"><i class=\"unhide large green icon\"></i></a>";
-		                    m+="<a href=\"/usuario/cliente/edit/"+data+"/\" class=\"ui icon green \"><i class=\"express-editar large green icon\"></i></a>";
+		                    m+="<a href=\"/usuario/cliente/details/"+data+"/\" class=\"ui icon green \"><i class=\"material-icons green\">remove_red_eye</i></a>";
+		                    m+="<a href=\"/usuario/cliente/edit/"+data+"/\" class=\"ui icon green \"><i class=\"material-icons green\">mode_edit</i></a>";
 		                    return m;
 		                }
 		            }

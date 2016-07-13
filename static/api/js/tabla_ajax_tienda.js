@@ -53,13 +53,13 @@ function tablaTienda(){
 		                "data": "celular"
 		            },
 		            {
-		            	"className":"left aligned",
+		            	"className":"right aligned",
 		                "data": "id",
 		                "render": function ( data, type, full, meta ) {
 		                	var m="";
-		                	m="<a href=\"/usuario/tienda/details/"+data+"/\" class=\"ui icon green\"><i class=\"unhide large green icon\"></i></a>";
-		                	m+="<a href=\"/usuario/tienda/edit/"+data+"/\" class=\"ui icon green \"><i class=\"express-editar large green icon\"></i></a>";
-		                	m+="<a id=\"eliminar\" href=\"/usuario/tienda/delete/"+data+"/\" class=\"ui icon green stop delete\"><i class=\"trash outline large red icon\"></i></a>";
+		                	m="<a href=\"/usuario/tienda/details/"+data+"/\" class=\"ui icon green\"><i class=\"material-icons green\">remove_red_eye</i></a>";
+		                	m+="<a href=\"/usuario/tienda/edit/"+data+"/\" class=\"ui icon green \"><i class=\"material-icons green\">mode_edit</i></a>";
+		                	m+="<a id=\"eliminar\" href=\"/usuario/tienda/delete/"+data+"/\" class=\"ui icon green stop delete\"><i class=\"material-icons red\">delete_forever</i></a>";
 		                	return m;
 						}
 		            }

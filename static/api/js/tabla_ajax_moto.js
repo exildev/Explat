@@ -54,9 +54,9 @@ function tablaMotorizado(){
 		                "data": "id",
 		                "render": function ( data, type, full, meta ) {
 		                	var m="";
-		                	m="<a href=\"/motorizado/moto/details/"+data+"/\" class=\"ui icon green\"><i class=\"unhide large green icon\"></i></a>";
-		                	m+="<a href=\"/motorizado/moto/edit/"+data+"/\" class=\"ui icon green \"><i class=\"express-editar large green icon\"></i></a>";
-		                	m+="<a id=\"eliminar\" href=\"/motorizado/moto/delete/"+data+"/\" class=\"ui icon green\"><i class=\"trash outline large red icon\"></i></a>";
+		                	m="<a href=\"/motorizado/moto/details/"+data+"/\" class=\"ui icon green\"><i class=\"material-icons green\">remove_red_eye</i></a>";
+		                	m+="<a href=\"/motorizado/moto/edit/"+data+"/\" class=\"ui icon green \"><i class=\"material-icons green\">mode_edit</i></a>";
+		                	m+="<a id=\"eliminar\" href=\"/motorizado/moto/delete/"+data+"/\" class=\"ui icon green\"><i class=\"material-icons red\">delete_forever</i></a>";
 		                	return m;
 						}
 		            }

@@ -45,9 +45,7 @@ function tablaPedidos(){
                 "data": "id",
                 "render": function ( data, type, full, meta ) {
                 	var m="";
-                	m="<a href=\"/pedidos/item/edit/"+data+"/\" class=\"ui edit green\"><i class=\"edit large green icon\"></i></a>";
-
-
+                	m="<a href=\"/pedidos/item/edit/"+data+"/\" class=\"ui edit green\"><i class=\"material-icons green\">mode_edit</i></a>";
                 	return m;
 				}
             }

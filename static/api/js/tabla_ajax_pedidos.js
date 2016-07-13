@@ -92,13 +92,15 @@ function tablaPedidos(){
                 "data": "activado",
                 "render": function ( data, type, full, meta ) {
                 	var m="";
-                	if (data == 1){
-                		m="<i class=\"material-icons desactivar green\">done</i>";
-                	}else{
-                		m="<i class=\"material-icons red activar\">clear</i>";
-                	}
-					m+="<input type=\"hidden\" name=\"activado\" value=\""+data+"\">";
-					m+="<input style=\"visibility: hidden;\" type=\"radio\" name=\"pedido\" value=\""+full.id+"\">";
+					if (full.activacion==0){
+	                	if (data == 1){
+	                		m="<i class=\"material-icons desactivar green\">done</i>";
+	                	}else{
+	                		m="<i class=\"material-icons red activar\">clear</i>";
+	                	}
+						m+="<input type=\"hidden\" name=\"activado\" value=\""+data+"\">";
+						m+="<input style=\"visibility: hidden;\" type=\"radio\" name=\"pedido\" value=\""+full.id+"\">";
+					}
                 	return m;
 				}
             },

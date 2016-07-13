@@ -108,22 +108,22 @@
 	   });
 	});
 	function validar(imagen) {
-
 		if(imagen.val().split('.').length <=1){
 			alert("Debe selecionar un archivo");
 			imagen.val("");
 		}
 		var ext = imagen.val().split('.')[1];
-		if (ext != "png" || exp != "jpg"){
+		if (ext == "png" || ext == "jpg"){
+		    if (imagen.val() !== "") {
+		       if (imagen[0].files[0].size / 1024 > 1024) {
+		           alert("la image no puede pesar mas de 1 mega");
+		           imagen.val("");
+		       }
+		   }
+		}else{
 			alert("Debe selecionar una imagen, tipo ser png o jpg");
 			imagen.val("");
 		}
-	    if (imagen.val() !== "") {
-	       if (imagen[0].files[0].size / 1024 > 1024) {
-	           alert("la image no puede pesar mas de 1 mega");
-	           imagen.val("");
-	       }
-	   }
 	}
 </script>
 {% endblock %}

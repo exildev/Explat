@@ -56,7 +56,7 @@ function tablaMotos(){
 		                "data": "id_emp",
 		                "render": function ( data, type, full, meta ) {
 		                	var m="";
-		                	m="<a href=\"/motorizado/motorizado/edit/"+data+"/\" class=\"ui icon green\"><i class=\"express-editar large green icon\"></i></a>";
+		                	m="<a href=\"/motorizado/motorizado/edit/"+data+"/\" class=\"ui icon green\"><i class=\"material-icons green\">mode_edit</i></a>";
 		                	return m;
 						}
 		            }

@@ -54,9 +54,9 @@ function tablaEmpleado(){
 		                "data": "usuario_ptr_id",
 		                "render": function ( data, type, full, meta ) {
 		                	var m="";
-		                	m="<a href=\"/usuario/empleado/details/"+data+"/\" class=\"ui icon green\"><i class=\"unhide large green icon\"></i></a>";
-		                	m+="<a href=\"/usuario/empleado/edit/"+data+"/\" class=\"ui icon green\"><i class=\"express-editar large green icon\"></i></a>";
-		                	m+="<a href=\"/usuario/empleado/update/states/"+data+"/\" class=\"ui icon red\"><i class=\"express-denegado large red icon\"></i></a>";
+		                	m="<a href=\"/usuario/empleado/details/"+data+"/\" class=\"ui icon green\"><i class=\"material-icons green\">visibility</i></a>";
+		                	m+="<a href=\"/usuario/empleado/edit/"+data+"/\" class=\"ui icon green\"><i class=\"material-icons green\">mode_edit</i></a>";
+		                	m+="<a href=\"/usuario/empleado/update/states/"+data+"/\" class=\"ui icon red\"><i class=\"material-icons red\">delete_forever</i></a>";
 		                	return m;
 						}
 		            }

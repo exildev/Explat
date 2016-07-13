@@ -1026,7 +1026,7 @@ class WsPedidoReactivar(View):
                     if lista:
                         with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
                             socketIO.emit('asignar-pedido', {
-                                          'pedido': lista[0]['f3'], 'tipo': 1, 'retraso': lista[0]['f3'][0]['retraso']})
+                                          'pedido': lista[0]['f3'][0], 'tipo': 1, 'retraso': lista[0]['f3'][0]['retraso']})
                             socketIO.wait(seconds=0)
                         # end with
                         return HttpResponse('[{"status":true}]', content_type='application/json', status=200)

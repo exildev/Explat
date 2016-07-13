@@ -7,7 +7,7 @@
       {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR'%}
       <div class="ui vertical compact labeled icon inverted huge teal menu">
         <a href="{% url 'usuario:index_cliente' %}" class="item">
-          <h3><i class="express-clientes huge icon"></i></h3>
+          <h3><i class="material-icons huge">perm_identity</i></h3>
           Clientes
         </a>
       </div>
@@ -15,7 +15,7 @@
       {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR'%}
       <div class="ui vertical compact labeled icon inverted huge teal menu">
         <a href="{% url 'usuario:index_tienda' %}" class="item">
-          <h3><i class="express-clientes huge icon"></i></h3>
+          <h3><i class="material-icons huge">store</i></h3>
           Tiendas
         </a>
       </div>
@@ -23,7 +23,7 @@
       {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR'%}
       <div class="ui vertical compact labeled icon inverted teal huge menu">
         <a href="{% url 'motorizado:index_moto' %}"class="item">
-          <h3><i class="express-motos huge icon"></i></h3>
+          <h3><i class="material-icons huge">motorcycle</i></h3>
           Motos
         </a>
       </div>
@@ -31,7 +31,7 @@
       {% if request.session.cargo == 'ADMINISTRADOR' %}
       <div class="ui vertical compact labeled icon inverted teal huge menu">
         <a href="{% url 'usuario:index' %}" class="item">
-          <h3><i class="express-empleados huge icon"></i></h3>
+          <h3><i class="material-icons huge">work</i></h3>
           Empleados
         </a>
       </div>
@@ -39,7 +39,7 @@
       {% if request.session.cargo == 'SUPERVISOR' or request.session.cargo == 'ADMINISTRADOR' %}
       <div class="ui vertical compact labeled icon inverted teal huge menu">
         <a href="{% url 'pedido:index_pedido' %}" class="item">
-          <h3><i class="cart huge icon"></i></h3>
+          <h3><i class="material-icons huge">shopping_cart</i></h3>
           Pedidos
         </a>
       </div>
@@ -47,7 +47,7 @@
       {% if request.session.cargo == 'ALISTADOR' or request.session.cargo == 'MOTORIZADO'  %}
       <div class="ui vertical compact labeled icon inverted teal huge menu">
       <a href="{% url 'pedido:mis_pedido' %}"class="item">
-        <h3><i class="ticket huge icon"></i></h3>
+        <h3><i class="material-icons huge">shopping_cart</i></h3>
         Mis Pedidos
       </a>
     </div>
@@ -55,7 +55,7 @@
       {% if request.session.cargo == 'ALISTADOR' %}
       <div class="ui vertical compact labeled icon inverted teal huge menu">
         <a href="{% url 'pedido:asignar_motorizado_pedido' %}" class="item">
-          <h3><i class="location arrow huge icon"></i></h3>
+          <h3><i class="material-icons huge">add_shopping_cart</i></h3>
           Asignar Pedidos
         </a>
       </div>
@@ -63,7 +63,7 @@
       {% if request.session.cargo == 'SUPERVISOR' or request.session.cargo == 'ADMINISTRADOR' %}
         <div class="ui vertical compact labeled icon inverted teal huge menu">
           <a href="{% url 'motorizado:rastreo_motorizado' %}" class="item">
-            <h3><i class="marker huge icon"></i></h3>
+            <h3><i class="material-icons huge">map</i></h3>
             Rastreo
           </a>
         </div>
@@ -71,7 +71,7 @@
       {% if request.session.cargo == 'SUPERVISOR' or request.session.cargo == 'ADMINISTRADOR' %}
         <div class="ui vertical compact labeled icon inverted teal huge menu">
           <a href="{% url 'reporte:index_reporte' %}" class="item">
-            <h3><i class="file text outline huge icon"></i></h3>
+            <h3><i class="material-icons huge">insert_drive_file</i></h3>
             Reporte
           </a>
         </div>

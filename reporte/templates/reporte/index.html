@@ -19,7 +19,7 @@
     {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR' or request.session.cargo != 'ADMINISTRADOR' %}
     <div class="ui vertical compact labeled icon inverted teal huge menu">
       <a href="{% url 'reporte:pedidos_reporte' %}"class="item">
-        <h3><i class="express-listar huge icon"></i></h3>
+        <h3><i class="material-icons huge">list</i></h3>
         Pedidos
       </a>
     </div>
@@ -27,7 +27,7 @@
     {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR'  or request.session.cargo != 'ADMINISTRADOR' %}
     <div class="ui vertical compact labeled icon inverted teal huge menu">
       <a href="{% url 'reporte:empleados_reporte' %}"class="item">
-        <h3><i class="express-listar huge icon"></i></h3>
+        <h3><i class="material-icons huge">list</i></h3>
         Listado de Empleados
       </a>
     </div>
@@ -35,7 +35,7 @@
     {% if request.session.cargo == 'ADMINISTRADOR' or request.session.cargo == 'SUPERVISOR' or request.session.cargo != 'ADMINISTRADOR' %}
       <div class="ui vertical compact labeled icon inverted teal huge menu">
         <a href="{% url 'reporte:tiempos_empleado_reporte' %}"class="item">
-          <h3><i class="express-listar huge icon"></i></h3>
+          <h3><i class="material-icons huge">list</i></h3>
           Carga de Empleado
         </a>
       </div>

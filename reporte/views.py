@@ -128,7 +128,7 @@ class Pdf(View):
         cursor.execute(consulta)
         #cursor.execute('select get_info_empleados_report(18,\'2016-05-04\',\'2016-05-04\')')
         row = cursor.fetchone()
-        res = simplejson.loads('%s' % row[0])
+        res = row[0]
         #
         if len(res) > 0:
             trab = res[0]['f1'][0]
@@ -215,7 +215,7 @@ class Excel(View):
                     'select get_info_empleados_report_act(%s,\'%s\',\'%s\',%s)' % (id_emp, ini, fin,'true' if estado else 'false'))
 
         row = cursor.fetchone()
-        res = simplejson.loads('%s' % row[0])
+        res = row[0]
         # Create the HttpResponse object with the appropriate CSV header.
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="Reporte Empleado.csv"'

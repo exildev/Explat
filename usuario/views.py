@@ -18,7 +18,8 @@ from django.views import generic
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.views import login, logout
 from django.views.generic import TemplateView
-
+from django.contrib.auth.decorators import login_required
+from exp.settings import LOGIN_URL
 
 class IndexCliente(TemplateView):
 
@@ -85,6 +86,7 @@ class EmpleadoAdd(View):
 # end class
 
 
+@login_required(login_url=settings.LOGIN_URL)
 @csrf_exempt
 def searchEmpleadoTabla(request):
     length = request.GET.get('length', '0')
@@ -96,7 +98,7 @@ def searchEmpleadoTabla(request):
     search = request.GET.get('search[value]', False)
     cursor = connection.cursor()
     cursor.execute('select tabla_empleado(%d,\'%s\'::text,\'%s\'::text,%s::integer,%s::integer)' % (
-        request.user.id, busqueda, order, start, length))
+        request.user.id if request.user.id else 0, busqueda, order, start, length))
     row = cursor.fetchone()
     return HttpResponse(row[0], content_type="application/json")
 # end def
@@ -165,7 +167,7 @@ class ClienteAdd(FormView):
     # end def
 # end class
 
-
+@login_required(login_url=settings.LOGIN_URL)
 @csrf_exempt
 def searchCliente(request):
     length = request.GET.get('length', 0)
@@ -285,7 +287,7 @@ class TablaTienda(View):
         busqueda = request.GET.get('columns[1][search][value]', '')
         cursor = connection.cursor()
         cursor.execute('select tabla_tienda(%d,\'%s\'::text,%s::integer,%s::integer)' % (
-            request.user.id, busqueda, start, length))
+            request.user.id if request.user.id else 0, busqueda, start, length))
         row = cursor.fetchone()
         return HttpResponse(row[0], content_type="application/json")
     # end def

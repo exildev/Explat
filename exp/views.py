@@ -4,6 +4,7 @@ from django.views.generic import View
 from django.conf import settings
 from usuario import models as mod_usuario
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import redirect_to_login
 from django.utils.decorators import method_decorator
 
 

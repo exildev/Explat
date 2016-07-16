@@ -113,7 +113,7 @@ function tablaPedidos(){
 					if (full.estado == 0 && full.activacion==0){
                 		m+="<a href=\"/pedidos/pedido/edit/"+data+"/\" class=\"ui icon green\"><i class=\"material-icons green\">mode_edit</i></a>";
 					}
-                	m+="<a href=\"/pedidos/pedido/factura/"+data+"\" class=\"ui icon stop imp\"><i class=\"material-icons red\">delete_forever</i></a>";
+                	m+="<a href=\"/pedidos/pedido/factura/"+data+"\" class=\"ui icon stop imp\"><i class=\"material-icons green\">print</i></a>";
                 	return m;
 				}
             }

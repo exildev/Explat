@@ -28,4 +28,4 @@ $BODY$
 ALTER FUNCTION mis_pedidos_asignados(integer, integer, integer)
   OWNER TO postgres;
 
-  select * from pedido_pedido
+ --select * from pedido_pedido

@@ -53,6 +53,6 @@ ALTER FUNCTION ws_add_pedido_service(json)
   OWNER TO postgres;
 
 
-select * from pedido_pedido
-select * from usuario_empresa
-update pedido_pedido set total= case when id%2=0 then 2222.365 else 595959 end
+--select * from pedido_pedido
+--select * from usuario_empresa
+--update pedido_pedido set total= case when id%2=0 then 2222.365 else 595959 end

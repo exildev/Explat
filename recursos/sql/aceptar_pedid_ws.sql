@@ -1,6 +1,6 @@
-﻿select * from motorizado_motorizado
-select * from pedido_pedidows
-select aceptar_pw_service(1,'4')
+﻿--select * from motorizado_motorizado
+--select * from pedido_pedidows
+--select aceptar_pw_service(1,'4')
 create or replace function aceptar_pw_service(id_pedido integer, idt_motor text) returns text as $$
 declare 
 	pedido record;

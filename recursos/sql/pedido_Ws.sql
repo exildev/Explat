@@ -64,6 +64,6 @@ $BODY$
 ALTER FUNCTION ws_add_pedido_service(json)
   OWNER TO postgres;
 
-select * from pedido_pedidows
-select * from pedido_configuraciontiempo
-insert into pedido_configuraciontiempo (retraso,pedido,distancia) values (0.5,0.5,1000)
+--select * from pedido_pedidows
+--select * from pedido_configuraciontiempo
+--insert into pedido_configuraciontiempo (retraso,pedido,distancia) values (0.5,0.5,1000)

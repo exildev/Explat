@@ -1,6 +1,4 @@
-﻿
-
-select reactivar_pedido(10)
+﻿select reactivar_pedido(10)
 create or replace function reactivar_pedido(id_ped integer) returns json as $$
 declare 
 	pedido record;
@@ -31,8 +29,8 @@ end;
 $$language plpgsql;
 drop function reactivar_pedido(int)
 
-select last(id) from pedido_pedido
-select num_pedido from pedido_pedido as p  order by p.id desc limit 1
-select string_to_array('EX_12', '_')
+--select last(id) from pedido_pedido
+--select num_pedido from pedido_pedido as p  order by p.id desc limit 1
+--select string_to_array('EX_12', '_')
 
-select * from pedido_itemspedido wher pedido_id
+--select * from pedido_itemspedido wher pedido_id

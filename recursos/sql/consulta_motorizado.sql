@@ -1,4 +1,4 @@
-﻿--CREATE TYPE t AS (identificador text, lat numeric, lng numeric);
+﻿CREATE TYPE t AS (identificador text, lat numeric, lng numeric);
 --drop FUNCTION auto_asignar(tienda_id integer, motorizado_json json);
 CREATE OR REPLACE FUNCTION auto_asignar(tienda_pk integer, motorizado_json json) RETURNS text AS
 
@@ -34,4 +34,4 @@ end;
 $$
 language plpgsql;
 
-select auto_asignar(2, '[{"identificador":"2","lat": 10.390944, "lng": -75.478158},{"identificador":"1","lat": 10.391707, "lng": -75.479040}, {"identificador":"4","lat": 10.3790921, "lng": -75.4738238}]');
+--select auto_asignar(2, '[{"identificador":"2","lat": 10.390944, "lng": -75.478158},{"identificador":"1","lat": 10.391707, "lng": -75.479040}, {"identificador":"4","lat": 10.3790921, "lng": -75.4738238}]');

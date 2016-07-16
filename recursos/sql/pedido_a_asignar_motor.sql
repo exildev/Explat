@@ -1,4 +1,4 @@
-﻿select pedidos_a_asignar_motor(10,0,10)
+﻿--select pedidos_a_asignar_motor(10,0,10)
 
 CREATE OR REPLACE FUNCTION pedidos_a_asignar_motor(id_des integer, start_ integer, length_ integer)
   RETURNS text AS
@@ -21,23 +21,24 @@ end;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
+
 ALTER FUNCTION pedidos_a_asignar_motor(integer, integer, integer)
   OWNER TO postgres;
  
- select case when motorizado_id is null then 1 else 0 end  from pedido_pedido
- select * from pedido_pedido
-  select * from pedido_pedido
+-- select case when motorizado_id is null then 1 else 0 end  from pedido_pedido
+-- select * from pedido_pedido
+--  select * from pedido_pedido
 
- select * from auth_user
- select * from usuario_usuario
- select p.num_pedido as num,upper(u.first_name)||' '||upper(u.last_name) as nom,tablameses(p.fecha_pedido) as fecha from pedido_pedido as p inner join auth_user  as u on (p.alistador_id=10 and p.supervisor_id=u.id and p.motorizado_id is null)
+--select * from auth_user
+-- select * from usuario_usuario
+-- select p.num_pedido as num,upper(u.first_name)||' '||upper(u.last_name) as nom,tablameses(p.fecha_pedido) as fecha from pedido_pedido as p inner join auth_user  as u on (p.alistador_id=10 and p.supervisor_id=u.id and p.motorizado_id is null)
 
 
 
  -- Function: tablameses(date)
 
 -- DROP FUNCTION tablameses(date);
-select tablameses('2016-06-5')
+--select tablameses('2016-06-5')
 
 CREATE OR REPLACE FUNCTION tablameses(f date)
   RETURNS text AS
@@ -87,5 +88,5 @@ $BODY$
 ALTER FUNCTION mis_pedidos_asignados(integer, integer, integer)
   OWNER TO postgres;
 
-  select * from pedido_pedido
+--select * from pedido_pedido
 

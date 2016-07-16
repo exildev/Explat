@@ -1,8 +1,4 @@
-﻿
-
-
-
-create or replace function get_add_pedido_admin(id_pedido integer) returns json as $$
+﻿create or replace function get_add_pedido_admin(id_pedido integer) returns json as $$
 declare 
 begin
 	return (SELECT COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (

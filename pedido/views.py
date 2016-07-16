@@ -955,7 +955,7 @@ class ConfiguracionTiempo(View):
         if configuracion:
             return render(request, 'pedido/addConfiguracion.html', {'pk': configuracion.id, 'form': forms.AddConfiguracion(instance=configuracion)})
         # end if
-        return render(request, 'pedido/addConfiguracion.html', {'pk': 0, 'form': forms.AddConfiguracion()})
+        return render(request, 'pedido/addConfiguracion.html', { 'form': forms.AddConfiguracion()})
     # end def
 
 

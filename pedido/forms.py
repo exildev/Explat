@@ -140,15 +140,17 @@ class AddConfiguracion(forms.ModelForm):
 
     def clean(self):
         print self
-        if self.primero > 31:
-            self._errors['primero'] = [u'Numero debe ser menor a 31']
+        clean_data = super(AddConfiguracion, self).clean()
+        primero = clean_data.get("primero")
+        segundo = clean_data.get("segundo")
+        if primero > 31:
+            self.add_error('primero', 'Numero debe ser menor a 31')
         # end if
-        if self.segundo > 31:
-            self._errors['segundo'] = [u'Numero debe ser menor a 31']
+        if segundo > 31:
+            self.add_error('segundo', 'Numero debe ser menor a 31')
         # end if
-        if self.primero > self.segundo:
-            self._errors['primero'] = [
-                u'Numero debe ser menor a el segundo valor']
+        if primero > segundo:
+            self.add_error('primero', 'Numero debe ser menor a el segundo valor')
         # end if
     # end def
 

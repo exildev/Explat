@@ -52,7 +52,7 @@ urlpatterns += [
 
 # Gestion cantidad de periodos en el periodo actual de quincena
 urlpatterns += [
-    url(r'^get/info/$', login_required(views.InfoMotorizado.as_view()), name='info_motorizado'),
+    url(r'^get/info/$',views.InfoMotorizado.as_view(), name='info_motorizado'),
 ]
 
 

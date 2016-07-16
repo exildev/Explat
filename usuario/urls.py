@@ -48,12 +48,18 @@ urlpatterns += [
 
 # Gestion servicios de autenticacion
 urlpatterns += [
-    url(r'tiendas/ws/', login_required(views.Store.as_view()),name='get_tiendas'),
+    url(r'tiendas/ws/', login_required(views.Store.as_view()), name='get_tiendas'),
 ]
 
 
 # Gestion servicios de autenticacion
 urlpatterns += [
-    url(r'session/', views.Login.as_view(),name='ws_loguin'),
+    url(r'session/', views.Login.as_view(), name='ws_loguin'),
     url(r'logged/', views.is_logged, name="is_logged"),
+]
+
+# Gestion listar motorizado
+urlpatterns += [
+    url(r'^ws/list/supervisor/$', login_required(views.ListSupervisor.as_view()), name='ws_list_super'),
+    url(r'^ws/list/alistador/$', login_required(views.ListAlistador.as_view()), name='ws_list_alist'),
 ]

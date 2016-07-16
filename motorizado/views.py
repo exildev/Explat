@@ -19,8 +19,11 @@ from django.core.urlresolvers import reverse_lazy
 from usuario import models as usuario
 from django.core.exceptions import PermissionDenied
 from exp.decorators import administrador_required, supervisor_required
+from exp import settings
+from django.contrib.auth.decorators import login_required
 
 
+@login_required(login_url=settings.LOGIN_URL)
 def add_motorizado(request):
     user = models.Empleado.objects.filter(username=request.user).first()
     empresa = usuario.Empresa.objects.filter(first_name=user.empresa).first()
@@ -72,6 +75,7 @@ def add_motorizado(request):
             return render(request, 'motorizado/addMotorizado.html', {'error': 'No hay empleados disponibles para asignarles una moto'})
 
 
+@login_required(login_url=settings.LOGIN_URL)
 @csrf_exempt
 def searchMotorizado(request):
     length = request.GET.get('length', '0')
@@ -89,6 +93,7 @@ def searchMotorizado(request):
 # end def
 
 
+@login_required(login_url=settings.LOGIN_URL)
 def editMotorizado(request, motorizado_id):
     motorizado = get_object_or_404(models.Motorizado, pk=motorizado_id)
     if request.method == 'POST':
@@ -111,6 +116,7 @@ def editMotorizado(request, motorizado_id):
 # end def
 
 
+@login_required(login_url=settings.LOGIN_URL)
 def infoMoto(request, moto_id):
     moto = get_object_or_404(models.Moto, pk=moto_id)
     soat = models.Soat.objects.get(numeroS=moto.soat)
@@ -177,6 +183,7 @@ class AsignarMoto(View):
 # end class
 
 
+@login_required(login_url=settings.LOGIN_URL)
 @csrf_exempt
 def ListMoto(request):
     length = request.GET.get('length', '0')
@@ -188,7 +195,7 @@ def ListMoto(request):
     search = request.GET.get('search[value]', False)
     cursor = connection.cursor()
     cursor.execute('select tabla_moto(%d,\'%s\'::text,\'%s\'::text,%s::integer,%s::integer)' % (
-        request.user.id, busqueda, order, start, length))
+        request.user.id if request.user.id else 0, busqueda, order, start, length))
     row = cursor.fetchone()
     return HttpResponse(row[0], content_type="application/json")
 # end def
@@ -235,6 +242,7 @@ class EditMoto(View):
 # end class
 
 
+@login_required(login_url=settings.LOGIN_URL)
 def DeleteMoto(request, pk):
     moto = get_object_or_404(models.Moto, pk=pk).delete()
     return redirect(reverse('motorizado:list_moto'))
@@ -253,7 +261,7 @@ class SearchMotorizadoPed(View):
         search = request.GET.get('search[value]', '')
         cursor = connection.cursor()
         cursor.execute('select tabla_pedidos_motorizado(%d,\'%s\'::text,\'%s\'::text,%s::integer,%s::integer)' % (
-            request.user.id, search, order, start, length))
+            request.user.id if request.user.id else 0, search, order, start, length))
         row = cursor.fetchone()
         return HttpResponse(row[0], content_type="application/json")
     # end def
@@ -273,6 +281,29 @@ class InfoMotorizado(supra.SupraListView):
         apellidos = 'empleado__last_name'
         foto = 'empleado__foto'
     # end class
+# end class
+
+
+class ListMotorizado(supra.SupraListView):
+    model = models.Motorizado
+    search_key = 'q'
+    list_display = ['ident', 'nombre']
+    search_fields = ['empleado__tienda__id']
+    list_filter = ['empleado__tienda__id']
+    paginate_by = 10000
+
+    class Renderer:
+        ident = 'empleado__identificacion'
+    # end class
+
+    def nombre(self, obj, row):
+        return '%s %s' % (obj.empleado.first_name, obj.empleado.last_name)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(ListMotorizado, self).get_queryset()
+        return queryset.filter(tipo=1)
+    # end def
 # end class
 
 

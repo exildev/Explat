@@ -397,3 +397,49 @@ class Store(supra.SupraListView):
         return queryset.filter(empleado__empresa=empresa).distinct('id')
     # end def
 # end class
+
+
+class ListSupervisor(supra.SupraListView):
+    model = models.Empleado
+    search_key = 'q'
+    list_display = ['ident', 'nombre']
+    search_fields = ['tienda__id']
+    list_filter = ['tienda__id']
+    paginate_by = 10000
+
+    class Renderer:
+        ident = 'usuario_ptr_id'
+    # end class
+
+    def nombre(self, obj, row):
+        return '%s %s' % (obj.first_name, obj.last_name)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(ListSupervisor, self).get_queryset()
+        return queryset.filter(cargo='SUPERVISOR')
+    # end def
+# end class
+
+
+class ListAlistador(supra.SupraListView):
+    model = models.Empleado
+    search_key = 'q'
+    list_display = ['ident', 'nombre']
+    search_fields = ['tienda__id']
+    list_filter = ['tienda__id']
+    paginate_by = 10000
+
+    class Renderer:
+        ident = 'usuario_ptr_id'
+    # end class
+
+    def nombre(self, obj, row):
+        return '%s %s' % (obj.first_name, obj.last_name)
+    # end def
+
+    def get_queryset(self):
+        queryset = super(ListAlistador, self).get_queryset()
+        return queryset.filter(cargo='ALISTADOR')
+    # end def
+# end class

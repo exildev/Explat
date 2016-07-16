@@ -945,7 +945,7 @@ class ConfiguracionTiempo(View):
                 addconfi.save()
                 return render(request, 'pedido/addConfiguracion.html', {'pk': addconfi.id, 'form': form})
             # end if
-            return render(request, 'pedido/addConfiguracion.html', {'pk': 0, 'form': form})
+            return render(request, 'pedido/addConfiguracion.html', {'form': form})
         # end if
     # end def
 

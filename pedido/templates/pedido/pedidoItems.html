@@ -68,7 +68,7 @@
 								<td>{{ item.cantidad|intcomma }}</td>
 								<td>${{ item.valor_unitario|intcomma }}</td>
 								<td>${{ item.valor_total|intcomma }}</td>
-								<td><a href="{% url 'pedido:delete_item_pedido' item.id pedido.id %}" class="ui icon green"><i class="express-denegado large red icon"></i></a></td>
+								<td><a href="{% url 'pedido:delete_item_pedido' item.id pedido.id %}" class="ui icon green"><i class="material-icons red">delete_forever</i></a></td>
 							</tr>
 						{% endfor %}
 					</tbody>

@@ -119,12 +119,12 @@ urlpatterns += [
 
 # Gestion Auto Asignar Pedido
 urlpatterns += [
-    url(r'^ws/cancelado/$', views.WsPedidoCancelado.as_view(), name='wspedidocancelado'),
+    url(r'^ws/cancelado/$', views.WsPedidoCancelado.as_view(), name='wspedidocanceladofinal'),
     url(r'^ws/reactivar/$', views.WsPedidoReactivar.as_view(), name='wspedidoreactivar'),
 ]
 
 # Gestion de Consulta de pedido
 urlpatterns += [
-    url(r'^info/pedido/cliente/$', TemplateView.as_view(template_name='pedido/pedidoinfo.html'), name='wspedidocancelado'),
+    url(r'^info/pedido/cliente/$', TemplateView.as_view(template_name='pedido/pedidoinfo.html'), name='info_pedido_cliente'),
     url(r'^ws/info/pedido/$', views.WsInfoPedido.as_view(), name='ws_info_pedido'),
 ]

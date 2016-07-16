@@ -149,7 +149,7 @@ class EditPedido(FormView):
             f = pedidoForm.save(commit=False)
             f.empresa = empresa
             f.save()
-            models.Pedido.objects.filter(id=pedido.id).update(activado=True)
+            #models.Pedido.objects.filter(id=pedido.id).update(activado=True)
             motor_sig = f.motorizado.motorizado.identifier
             print motor_ant, motor_sig
             if motor_ant != motor_sig:

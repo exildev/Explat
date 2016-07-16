@@ -129,10 +129,10 @@ class AddConfiguracion(forms.ModelForm):
                   'gps', 'primero', 'segundo', 'empresa',)
         exclude = ('empresa',)
         widgets = {
-            'retraso': forms.NumberInput(attrs={'placeholder': 'Tiempo retraso del motorizado'}),
-            'pedido': forms.NumberInput(attrs={'placeholder': 'Tiempo de retraso del pedido'}),
-            'distancia': forms.NumberInput(attrs={'placeholder': 'Distancia para asignacion de pedido'}),
-            'gps': forms.NumberInput(attrs={'placeholder': 'Tiempo de envío de Gps'}),
+            'retraso': forms.NumberInput(attrs={'placeholder': 'Tiempo retraso del motorizado(Min)'}),
+            'pedido': forms.NumberInput(attrs={'placeholder': 'Tiempo de retraso del pedido(Min)'}),
+            'distancia': forms.NumberInput(attrs={'placeholder': 'Distancia para asignacion de pedido(Mts)'}),
+            'gps': forms.NumberInput(attrs={'placeholder': 'Tiempo de envío de Gps(Min)'}),
             'primero': forms.NumberInput(attrs={'placeholder': 'Primer corte de quincena'}),
             'segundo': forms.NumberInput(attrs={'placeholder': 'Segundo corte de quincena'}),
         }

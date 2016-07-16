@@ -80,7 +80,7 @@ function limpiarSelect(){
 }
 
 function getMotorizado(t){
-    var motorizadado = $('select[name="motorizado"]').val();
+    var motorizado = $('select[name="motorizado"]').val();
     $.ajax({
         url:"/motorizado/ws/list/motorizado/?q="+t+"&page=1",
         type:'get',
@@ -91,7 +91,7 @@ function getMotorizado(t){
                 for (var key in r){
                     var nom = r[key].nombre,
                         ident = r[key].ident;
-                    $('select[name="motorizado"]').append("<option value=\""+ident+"\""+(str(ident)==motorizado?"selected":"")+">"+nom+"</option>");
+                    $('select[name="motorizado"]').append("<option value=\""+ident+"\""+(String(ident)==motorizado?"selected":"")+">"+nom+"</option>");
                 }
             }else{
                 mensajem.dialog('open');
@@ -112,7 +112,7 @@ function getSupervisor(t){
                 for (var key in r){
                     var nom = r[key].nombre,
                         ident = r[key].ident;
-                    $('select[name="supervisor"]').append("<option value=\""+ident+"\""+(str(ident)==supervisor?"selected":"")+">"+nom+"</option>");
+                    $('select[name="supervisor"]').append("<option value=\""+ident+"\""+(String(ident)==supervisor?"selected":"")+">"+nom+"</option>");
                 }
             }else{
                 mensajes.dialog('open');
@@ -133,7 +133,7 @@ function getAlistador(t){
                 for (var key in r){
                     var nom = r[key].nombre,
                         ident = r[key].ident;
-                    $('select[name="alistador"]').append("<option value=\""+ident+"\""+(str(ident)==alistador?"selected":"")+">"+nom+"</option>");
+                    $('select[name="alistador"]').append("<option value=\""+ident+"\""+(String(ident)==alistador?"selected":"")+">"+nom+"</option>");
                 }
             }else{
                 mensajea.dialog('open');

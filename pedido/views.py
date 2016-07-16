@@ -926,7 +926,7 @@ class ConfiguracionTiempo(View):
 
     def post(self, request, *args, **kwargs):
         empresa = mod_usuario.Empresa.objects.filter(empleado__id=request.user.id).first()
-        id = request.POST.get('id', False)
+        id = request.POST.get('id', "")
         if validNum(id):
             configuracion = get_object_or_404(models.ConfiguracionTiempo, pk=int(id))
             form = forms.AddConfiguracion(request.POST, instance=configuracion)

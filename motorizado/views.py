@@ -20,7 +20,6 @@ from usuario import models as usuario
 from django.core.exceptions import PermissionDenied
 from exp.decorators import administrador_required, supervisor_required
 
-
 def add_motorizado(request):
     user = models.Empleado.objects.filter(username=request.user).first()
     empresa = usuario.Empresa.objects.filter(first_name=user.empresa).first()
@@ -299,7 +298,7 @@ class ListarRastreo(supra.SupraListView):
 
     def get_queryset(self):
         queryset = super(ListarRastreo, self).get_queryset()
-        print queryset.query
+
         sql = """
             select (
                 select COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (

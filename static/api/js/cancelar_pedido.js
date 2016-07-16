@@ -21,7 +21,7 @@ $(document).on('ready', function() {
                 $(this).dialog("close");
             },
             "Aceptar": function() {
-                envio();
+                envioCancelar();
             }
         }
     });
@@ -47,10 +47,10 @@ $(document).on('ready', function() {
     });
 });
 
-function envio() {
+function envioCancelar() {
     var id = $('input[name="pedido"]:checked').val();
-    console.log(id);
     if (id != undefined) {
+        alert("PAsola validacion");
         $.ajax({
             url: '/pedidos/ws/cancelado/',
             data: {

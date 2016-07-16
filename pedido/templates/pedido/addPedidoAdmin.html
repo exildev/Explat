@@ -151,12 +151,26 @@
 	</form>
   </div>
 </div>
+<div id="menm" title="Registrar Pedido">
+	<h3>No existen empleados para esta tienda.</h3>
+</div>
+<div id="mens" title="Registrar Pedido">
+	<h3>No existen supervisor para esta tienda.</h3>
+</div>
+<div id="mena" title="Registrar Pedido">
+	<h3>No existen alistador para esta tienda.</h3>
+</div>
 {% endblock %}
 
 {% block addjs %}
+<script src="{{ STATIC_URL }}api/js/jquery.js"></script>
+<script src="{{ STATIC_URL }}api/js/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="{{ STATIC_URL }}api/js/motorizado_tienda_add.js"></script>
 <script>
 	$( document ).ready(function() {
-		$('.ui.dropdown').dropdown();
+
 	});
 	$(function(){
 		$('#add-cliente').click(function(){

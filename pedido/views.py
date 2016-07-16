@@ -51,6 +51,7 @@ class AddPedido(View):
 class AddPedidoAdmin(View):
 
     def get(self, request, *args, **kwargs):
+        print 'llegando'
         empresa = mod_usuario.Empresa.objects.filter(
             empleado__id=request.user.id).first()
         if empresa is None:
@@ -65,10 +66,9 @@ class AddPedidoAdmin(View):
         formP.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
-            empleado__empresa=empresa)
+            empleado__empresa=empresa, tipo=1)
         return render(request, 'pedido/addPedidoAdmin.html',
-                      {'formC': formC, 'formP': formP, 'motorizados':
-                       mod_motorizado.Motorizado.objects.filter(empleado__empresa=empresa), 'motorizadosE': mod_motorizado.Motorizado.objects.filter(empleado__empresa__username="express")})
+                      {'formC': formC, 'formP': formP, 'motorizados': motori, 'motorizadosE': []})
     # end def
 
     def post(self, request, *args, **kwargs):
@@ -104,12 +104,12 @@ class AddPedidoAdmin(View):
         formP.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
-            empleado__empresa=empresa)
+            empleado__empresa=empresa,tipo=1)
         formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
             empresa=empresa)
         info = {'formC': formC, 'formP': formP,
-                'motorizados': mod_motorizado.Motorizado.objects.filter(empleado__empresa=empresa),
-                'motorizadosE': mod_motorizado.Motorizado.objects.filter(empleado__empresa__username="express")}
+                'motorizados': motori,
+                'motorizadosE': []}
         return render(request, 'pedido/addPedidoAdmin.html', info)
     # end def
 # end class
@@ -1023,7 +1023,8 @@ class WsPedidoReactivar(View):
                     cursor = connection.cursor()
                     cursor.execute('select reactivar_pedido(%s::integer)' % pedido)
                     row = cursor.fetchone()
-                    lista = row[0]
+                    lista = json.loads('%s' % row[0])
+                    print lista
                     if lista:
                         with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
                             socketIO.emit('asignar-pedido', {

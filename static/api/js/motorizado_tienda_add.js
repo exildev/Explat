@@ -4,8 +4,9 @@ $(document).on('ready',function(){
         getSupervisor(tienda);
         getAlistador(tienda);
         getMotorizado(tienda);
+    }else{
+        limpiarSelect();
     }
-    limpiarSelect();
     mensajem = $("#menm").dialog({
         autoOpen: false,
         draggable: false,

@@ -240,10 +240,10 @@ class FinalizarPedido(View):
                     if total > 0:
                         if not pedido.confirmado:
                             models.Pedido.objects.filter(id=kwargs['pk']).update(
-                                total=total, confirmado=True, activado=True)
+                                total=total, confirmado=True)
                         else:
                             models.Pedido.objects.filter(id=kwargs['pk']).update(
-                                total=total, activado=True)
+                                total=total)
                         # end if
                         cursor = connection.cursor()
                         cursor.execute(

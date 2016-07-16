@@ -30,7 +30,7 @@ urlpatterns += [
     url(r'^cliente/add/$', login_required(views.ClienteAdd.as_view()), name='add_cliente'),
     url(r'^cliente/list/$', login_required(TemplateView.as_view(template_name='usuario/clienteSearch.html')), name='list_cliente'),
     url(r'^cliente/search/$', views.searchCliente, name='search_cliente'),
-    url(r'^cliente/details/(?P<pk>\d+)/$', login_required(views.DetailCliente.as_view(template_name='usuario/infoCliente.html')), name='details_empleado'),
+    url(r'^cliente/details/(?P<pk>\d+)/$', login_required(views.DetailCliente.as_view(template_name='usuario/infoCliente.html')), name='details_cliente'),
     url(r'^cliente/edit/(?P<pk>\d+)/$', login_required(views.UpdateCliente.as_view(template_name='usuario/editCliente.html')), name='edit_cliente'),
 ]
 

@@ -66,3 +66,9 @@ urlpatterns += [
 urlpatterns += [
     url(r'^ws/list/motorizado/$', views.ListMotorizado.as_view(), name='ws_list_moto'),
 ]
+
+# Gestion listar motorizado
+urlpatterns += [
+    url(r'^notificaciones/$', views.ListNotificaciones.as_view(), name='ws_list_noti'),
+    url(r'^ws/notificaciones/$', views.ValidListNotificaciones.as_view(), name='ws_valid_list_noti'),
+]

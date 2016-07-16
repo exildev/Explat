@@ -1,7 +1,3 @@
--- Function: ws_add_pedido_service(json)
-
--- DROP FUNCTION ws_add_pedido_service(json);
-
 CREATE OR REPLACE FUNCTION ws_add_pedido_service(_json json)
   RETURNS text AS
 $BODY$
@@ -24,6 +20,9 @@ declare
 	tiempo_pedido numeric;
 	tienda record;
 	configuracion record;
+	gen_nom_ped text;
+	gen_nom_emp text;
+	get_nom_arra text[];
 begin
 		for x in select * from json_array_elements(_json::json->'pedido') loop
 			id_emp :=cast(x."value"::json->>'tienda' as json)->>'identificador'::text;
@@ -38,9 +37,21 @@ begin
 					end if;
 				end loop;
 				if val_item then
+					/*+++ Generar el nombre del pedido ws */
+					select num_pedido from pedido_pedidows where tienda_id= cast(tienda.id as integer) order by id desc limit 1 into gen_nom_ped;
+					gen_nom_ped:= case when gen_nom_ped is null then null when length(gen_nom_ped)=0 then null else gen_nom_ped end;
+					if gen_nom_ped is not null then
+						select num_pedido from pedido_pedidows order by id desc limit 1 into gen_nom_ped;
+						get_nom_arra:=string_to_array(gen_nom_ped,'_');
+						gen_nom_emp:=get_nom_arra[1]||'_'||(cast(get_nom_arra[2] as integer) +1);
+					else
+						select e.first_name from usuario_tienda as t inner join usuario_empresa as e on (t.empresa_id=e.id and t.id=cast(tienda.id as integer)) limit 1 into gen_nom_emp;
+						gen_nom_emp :=  left(upper(gen_nom_emp), 2)||'WS_1';
+					end if;
+					/*+++++++++++++++++*/
 					select c.gps from usuario_tienda as t inner join usuario_empresa as e on (t.empresa_id=e.id and t.id=2) inner join pedido_configuraciontiempo as c on (c.empresa_id=e.id) limit 1 into configuracion;
 					insert into pedido_pedidows (activado,detalle,num_pedido,npedido_express,cliente,fecha_pedido,tienda_id,tipo_pago,total,entregado,despachado,confirmado,alistado)
-					values	(True,x."value",'','',x."value"::json->>'cliente',now(),cast(tienda.id as integer),case when x."value"::json->>'tipo_pago'= '1' then 'Efectivo' when x."value"::json->>'tipo_pago' = '2' then 'Tarjeta' else 'Remision' end,cast(x."value"::json->>'total_pedido' as numeric),false,false,false,false)RETURNING id into id_inser;
+					values	(True,x."value",gen_nom_emp,gen_nom_emp,x."value"::json->>'cliente',now(),cast(tienda.id as integer),case when x."value"::json->>'tipo_pago'= '1' then 'Efectivo' when x."value"::json->>'tipo_pago' = '2' then 'Tarjeta' else 'Remision' end,cast(x."value"::json->>'total_pedido' as numeric),false,false,false,false)RETURNING id into id_inser;
 					insert into pedido_timews(creado,pedido_id) values (now(),id_inser);
 					SELECT COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (
 						select id,nit,direccion,latitud,longitud,referencia,celular,fijo from usuario_tienda where id = cast(tienda.id as integer) limit 1

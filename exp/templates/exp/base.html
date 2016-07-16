@@ -16,6 +16,16 @@
         if($('a[href="/"]').length > 1){
           $('a[href="/"]:first').remove();
         }
+        $.ajax({
+            url: '/motorizado/ws/notificaciones/?q=&page=1',
+            dataType: 'json',
+            type: 'get',
+            success: function(response) {
+                if (response.object_list.length > 0){
+                    $('.express-notificacion').addClass('red');
+                }
+            }
+        });
       }
       window.onload = init;
     </script>

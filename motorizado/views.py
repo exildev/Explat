@@ -21,7 +21,9 @@ from django.core.exceptions import PermissionDenied
 from exp.decorators import administrador_required, supervisor_required
 from exp import settings
 from django.contrib.auth.decorators import login_required
-
+from datetime import date, timedelta
+from . import models
+from django.db.models import Q
 
 @login_required(login_url=settings.LOGIN_URL)
 def add_motorizado(request):
@@ -287,7 +289,7 @@ class InfoMotorizado(supra.SupraListView):
 class ListMotorizado(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
-    list_display = ['ident', 'nombre','id_m']
+    list_display = ['ident', 'nombre', 'id_m']
     search_fields = ['empleado__tienda__id']
     list_filter = ['empleado__tienda__id']
     paginate_by = 10000
@@ -353,7 +355,8 @@ class ListarRastreo(supra.SupraListView):
             ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
         """
         obj = queryset.extra(select={'direccion': sql, 'num_pedido': sql2})
-        empresa = usuario.Empresa.objects.filter(empleado__id=self.request.user.id).first()
+        empresa = usuario.Empresa.objects.filter(
+            empleado__id=self.request.user.id).first()
         return obj.filter(empleado__empresa=empresa)
     # end def
 
@@ -369,22 +372,58 @@ class Rastreo(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         empresa = models.Empresa.objects.filter(
             empleado__id=request.user.id).first()
-        ctx = {'empresa': empresa.id if empresa else 0, 'token': django.middleware.csrf.get_token(request)}
+        ctx = {'empresa': empresa.id if empresa else 0,
+               'token': django.middleware.csrf.get_token(request)}
         return render(request, 'motorizado/rastreo.html', ctx)
     # end def
 # end class
 
 
 class CantidadPedido(View):
+
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         motorizado = request.POST.get('motorizado', False)
         if motorizado:
             cursor = connection.cursor()
-            cursor.execute('select cant_pedidos_motor_periodo(\'%s\')' % motorizado)
+            cursor.execute(
+                'select cant_pedidos_motor_periodo(\'%s\')' % motorizado)
             row = cursor.fetchone()
-            return HttpResponse('%s'%row[0], content_type='application/json', status=200)
+            return HttpResponse('%s' % row[0], content_type='application/json', status=200)
         # end if
         return HttpResponse('0', content_type='application/json', status=200)
+    # end def
+# end class
+
+
+class ListNotificaciones(TemplateView):
+    template_name = 'motorizado/notificaciones.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Five days before
+        today = date.today()
+        this_date_plus_five_days = today + timedelta(days=5)
+        expired_soat = models.Moto.objects.filter(soat__fecha_expiracionS__range=[today, this_date_plus_five_days],empresaM__empleado__id=request.user.id)
+        expired_tecno = models.Moto.objects.filter(tecno__fecha_expiracionT__range=[today, this_date_plus_five_days],empresaM__empleado__id=request.user.id)
+        return render(request, 'motorizado/notificaciones.html', {'expired_soat': expired_soat, 'expired_tecno': expired_tecno})
+    # end def
+# end class
+
+
+class ValidListNotificaciones(supra.SupraListView):
+    model = models.Moto
+    search_key = 'q'
+    list_display = ['tipo']
+    search_fields = ['tipo']
+    list_filter = ['tipo']
+    paginate_by = 100000
+
+    def get_queryset(self):
+        queryset = super(ValidListNotificaciones, self).get_queryset()
+        today = date.today()
+        this_date_plus_five_days = today + timedelta(days=5)
+        return queryset.filter(Q(empresaM__id=self.request.user.id) &
+            (Q(soat__fecha_expiracionS__range=[today, this_date_plus_five_days])|
+            Q(tecno__fecha_expiracionT__range=[today, this_date_plus_five_days])))
     # end def
 # end class

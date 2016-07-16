@@ -239,7 +239,7 @@ class FinalizarPedido(View):
                     total = resul['suma'] if resul['suma'] is not None else 0
                     if total > 0:
                         models.Pedido.objects.filter(id=kwargs['pk']).update(
-                            total=total, confirmado=True)
+                            total=total)
                         cursor = connection.cursor()
                         cursor.execute(
                             'select get_add_pedido_admin(%d)' % pedido.id)

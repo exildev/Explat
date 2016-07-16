@@ -149,7 +149,7 @@ class EditPedido(FormView):
             f = pedidoForm.save(commit=False)
             f.empresa = empresa
             f.save()
-            #models.Pedido.objects.filter(id=pedido.id).update(activado=True)
+            models.Pedido.objects.filter(id=pedido.id).update(activado=True)
             motor_sig = f.motorizado.motorizado.identifier
             print motor_ant, motor_sig
             if motor_ant != motor_sig:
@@ -238,8 +238,13 @@ class FinalizarPedido(View):
                     resul = items.aggregate(suma=Sum('valor_total'))
                     total = resul['suma'] if resul['suma'] is not None else 0
                     if total > 0:
-                        models.Pedido.objects.filter(id=kwargs['pk']).update(
-                            total=total)
+                        if not pedido.confirmado:
+                            models.Pedido.objects.filter(id=kwargs['pk']).update(
+                                total=total, confirmado=True, activado=True)
+                        else:
+                            models.Pedido.objects.filter(id=kwargs['pk']).update(
+                                total=total, activado=True)
+                        # end if
                         cursor = connection.cursor()
                         cursor.execute(
                             'select get_add_pedido_admin(%d)' % pedido.id)

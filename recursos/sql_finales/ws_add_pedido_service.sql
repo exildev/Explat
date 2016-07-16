@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ws_add_pedido_service(_json json)
+﻿CREATE OR REPLACE FUNCTION ws_add_pedido_service(_json json)
   RETURNS text AS
 $BODY$
 declare
@@ -77,3 +77,37 @@ $BODY$
   COST 100;
 ALTER FUNCTION ws_add_pedido_service(json)
   OWNER TO postgres;
+
+select ws_add_pedido_service('')
+
+{
+        "pedido": [{
+            "id": "ws_ped",
+            "cliente": {
+                "nombre": "mirlan",
+                "apellidos": "Reyes Polo",
+                "identificacion": "45454545454",
+                "direccion": "dsdsdsdsddsdsdsdsdssds",
+                "celular":"366454545",
+                "fijo":"6605648"
+            },
+            "tienda": {
+                "identificador": "3"
+            },
+            "descripcion": [{
+                "nombre": "jajaja",
+                "cantidad": 5,
+                "valor": 1000
+            }, {
+                "nombre": "jajaja",
+                "cantidad": 5,
+                "valor": 1000
+            }],
+            "total_pedido": 50000,
+            "tipo_pago": 1
+        }, {
+            "id": "ws_ped",
+            "cliente": {
+                "nombre": "mirlan",
+                "apellidos": "Reyes Polo",
+                "identificacion": "45454545454","direccion": "dsdsdsdsddsdsdsdsdssds","celular":"366454545","fijo":"6605648"},"tienda": {"identificador": "123456"},"descripcion": [{"nombre": "jajaja","cantidad": 5,"valor": 1000}, {"nombre": "jajaja","cantidad": 5,"valor": 1000}],"total_pedido": 50000,"tipo_pago": 1}]}

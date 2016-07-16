@@ -287,13 +287,14 @@ class InfoMotorizado(supra.SupraListView):
 class ListMotorizado(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
-    list_display = ['ident', 'nombre']
+    list_display = ['ident', 'nombre','id_m']
     search_fields = ['empleado__tienda__id']
     list_filter = ['empleado__tienda__id']
     paginate_by = 10000
 
     class Renderer:
         ident = 'empleado__identificacion'
+        id_m = 'empleado__usuario_ptr_id'
     # end class
 
     def nombre(self, obj, row):

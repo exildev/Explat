@@ -62,8 +62,7 @@ urlpatterns += [
 
 ]
 
-# Gestion cantidad de periodos en el periodo actual de quincena
+# Gestion listar motorizado
 urlpatterns += [
-    url(r'^ws/list/motorizado/$', login_required(views.ListMotorizado.as_view()), name='ws_list_moto'),
-
+    url(r'^ws/list/motorizado/$', views.ListMotorizado.as_view(), name='ws_list_moto'),
 ]

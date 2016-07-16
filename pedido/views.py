@@ -460,8 +460,7 @@ class FacturaPedido(PDFTemplateView):
 
 class MisPedidos(View):
 
-    @method_decorator(motorizado_required)
-    @method_decorator(alistador_required)
+
     def dispatch(self, request, *args, **kwargs):
         return super(self.__class__, self).dispatch(request, *args, **kwargs)
 

@@ -54,7 +54,7 @@ urlpatterns += [
 
 # Getsion de actualizacion de pedidos
 urlpatterns += [
-    url(r'^emp/ws/pedido/$', login_required(views.WsPedidoEmpresa.as_view()), name='ws_serPedido'),
+    url(r'^emp/ws/pedido/$', views.WsPedidoEmpresa.as_view(), name='ws_serPedido'),
 ]
 
 

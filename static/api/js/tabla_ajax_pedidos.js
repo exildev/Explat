@@ -110,7 +110,7 @@ function tablaPedidos(){
                 "render": function ( data, type, full, meta ) {
                 	var m="";
                 	m+="<a href=\"/pedidos/pedido/info/"+data+"/\" class=\"ui icon green\"><i class=\"material-icons green\">remove_red_eye</i></a>";
-					if (full.estado == 0){
+					if (full.estado == 0 && full.activacion==0){
                 		m+="<a href=\"/pedidos/pedido/edit/"+data+"/\" class=\"ui icon green\"><i class=\"material-icons green\">mode_edit</i></a>";
 					}
                 	m+="<a href=\"/pedidos/pedido/factura/"+data+"\" class=\"ui icon stop imp\"><i class=\"material-icons red\">delete_forever</i></a>";

@@ -8,5 +8,3 @@ $$language plpgsql;
 
 create trigger comfiguracion_tiempos_empresa after insert on usuario_empresa
 	for each row execute procedure comfiguracion_tiempos_empresa()
-
-

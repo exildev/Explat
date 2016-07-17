@@ -1,9 +1,8 @@
+
 """
 Django settings for express project.
-
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
-
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
@@ -62,7 +61,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         # Or path to database file if using sqlite3.
-        'NAME': 'express_norte',
+        'NAME': 'exp',
         # The following settings are not used with sqlite3:
         'USER': 'postgres',
         'PASSWORD': 'Exile*74522547',
@@ -95,8 +94,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
+
+
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -104,7 +104,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    #os.path.normpath(os.path.join(os.path.dirname(__file__), '../static/')),
+    os.path.normpath(os.path.join(os.path.dirname(__file__), '../static/')),
 )
 
 
@@ -160,9 +160,7 @@ try:
     from .local_settings import *
 except ImportError:
     pass
-
 # Production database, smtp, roots etc..
-
 try:
     from .production_settings import *
 except ImportError:

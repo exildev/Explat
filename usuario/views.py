@@ -33,8 +33,8 @@ class Index(TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_superuser:
-            #return redirect('/plataforma/')
-            return render(request, 'usuario/index_general.html')
+            return redirect('/plataforma/')
+            # return render(request, 'usuario/index_general.html')
         # end if
         return render(request, 'usuario/index_general.html')
     # end def

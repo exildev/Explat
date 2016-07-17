@@ -31,7 +31,7 @@
     <h2>Tecnico-Mecanica</h2>
     <div class="ui divided selection list">
     {%for moto in expired_tecno%}
-			<a href="{% url 'domicilios:edit_moto' moto.id %}" class="item">
+			<a href="{% url 'motorizado:edit_moto' moto.id %}" class="item">
 				<div class="ui red horizontal label">Vence</div>
 				 {{moto.tecno.fecha_expiracionT}} - Para la Moto con placa: {{moto}}
 			</a>

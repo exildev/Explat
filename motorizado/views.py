@@ -422,7 +422,7 @@ class ValidListNotificaciones(supra.SupraListView):
         queryset = super(ValidListNotificaciones, self).get_queryset()
         today = date.today()
         this_date_plus_five_days = today + timedelta(days=5)
-        return queryset.filter(Q(empresaM__id=self.request.user.id) &
+        return queryset.filter(Q(empresaM__empleado__id=self.request.user.id)).filter(
             (Q(soat__fecha_expiracionS__range=[today, this_date_plus_five_days])|
             Q(tecno__fecha_expiracionT__range=[today, this_date_plus_five_days])))
     # end def

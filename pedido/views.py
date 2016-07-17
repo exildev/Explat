@@ -249,7 +249,7 @@ class FinalizarPedido(View):
                         if lista:
                             if not pedido.confirmado:
                                 with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
-                                    socketIO.emit('asignar-pedido', {
+                                    socketIO.emit('modificar-pedido', {
                                                   'pedido': lista[0], 'tipo': 1, 'retraso': lista[0]['retraso']})
                                     socketIO.wait(seconds=0)
                                 # end with

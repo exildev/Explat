@@ -76,9 +76,9 @@ class ItemsPedido(models.Model):
     pedido = models.ForeignKey(Pedido)
     item = models.ForeignKey(Items)
     cantidad = models.DecimalField(max_digits=20, decimal_places=2, validators=[
-                                   validators.RegexValidator(re.compile('^[1-9][0-9]*$'), ('numero no valida'), 'invalid')])
+                                   validators.RegexValidator(re.compile('^[1-9]+[0-9]*.[1-9]+[0-9]*|[1-9]+[0-9]*$'), ('numero no valida'), 'invalid')])
     valor_unitario = models.DecimalField(max_digits=20, decimal_places=2, validators=[
-                                         validators.RegexValidator(re.compile('^[1-9][0-9]*$'), ('numero no valida'), 'invalid')])
+                                         validators.RegexValidator(re.compile('^[1-9]+[0-9]*.[1-9]+[0-9]*|[1-9]+[0-9]*$'), ('numero no valida'), 'invalid')])
     valor_total = models.DecimalField(max_digits=20, decimal_places=2)
 
     def __str__(self):

@@ -92,11 +92,23 @@ class AddItemsPedidoForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('pedido', 'valor_total',)
         widgets = {
-            "cantidad": forms.NumberInput(attrs={'placeholder': 'Cantidad', 'step': '1'}),
+            "cantidad": forms.NumberInput(attrs={'placeholder': 'Cantidad'}),
             "valor_unitario": forms.NumberInput(attrs={'placeholder': 'Valor Unitario'}),
             "item": forms.Select(attrs={'class': 'ui fluid search selection dropdown'}),
         }
 
+        def clean(self):
+            print self
+            clean_data = super(AddItemsPedidoForm, self).clean()
+            cantidad = clean_data.get("cantidad")
+            valor_unitario = clean_data.get("valor_unitario")
+            if cantidad < 0:
+                self.add_error('cantidad', 'Numero debe ser mayor a 0')
+            # end if
+            if valor_unitario < 0:
+                self.add_error('valor_unitario', 'valor_unitario debe ser mayor a 0')
+            # end if
+        # end def
 
 class EditPedidoAdminApiForm(forms.ModelForm):
 

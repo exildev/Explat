@@ -161,11 +161,13 @@ class AsignarMoto(View):
 
     def get(self, request, *args, **kwargs):
         empleadosC = usuario.Empleado.objects.filter(
-            cargo='MOTORIZADO', motorizado__empleado__isnull=True, empresa__empleado__id=request.user.id).first()
+            cargo='MOTORIZADO', motorizado__empleado__isnull=True, empresa__empleado__id=request.user.id)
         motosC = models.Moto.objects.filter(
-            motorizado__moto__isnull=True, estado=True, empresaM__empleado__id=request.user.id).first()
+            motorizado__moto__isnull=True, estado=True, empresaM__empleado__id=request.user.id)
         if empleadosC and motosC:
             form = forms.AsignarMotoForm()
+            form.fields['moto'].queryset = motosC
+            form.fields['empleado'].queryset = empleadosC
             return render(request, 'motorizado/asignarMoto.html', {'form': form})
         # end if
         error = "No hay motos disponibles  para ser asignadas" if motosC is None else "No hay empleados disponibles para ser asignados"
@@ -180,6 +182,10 @@ class AsignarMoto(View):
                        'texto': "Se a asignado una moto correctamente"}
             return render(request, 'motorizado/index.html', {'mensaje': mensaje})
         # end if
+        form.fields['empleado'].queryset = usuario.Empleado.objects.filter(
+            cargo='MOTORIZADO', motorizado__empleado__isnull=True, empresa__empleado__id=request.user.id)
+        form.fields['moto'].queryset = models.Moto.objects.filter(
+            motorizado__moto__isnull=True, estado=True, empresaM__empleado__id=request.user.id)
         return render(request, 'motorizado/asignarMoto.html', {'form': form})
     # end def
 # end class

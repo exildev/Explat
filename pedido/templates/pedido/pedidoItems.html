@@ -31,7 +31,7 @@
 					<div class="four fields">
 						<div class="field {% if form.item.errors %}error{% endif %} ui action input">
 							{{form.item}}
-							<a href="{ url 'domicilios:api_item_pedido' %}" class="ui blue icon button"><i class="plus icon"></i></a>
+							<a href="{% url 'pedido:add_item' %}" class="ui blue icon button"><i class="plus icon"></i></a>
 						</div>
 						<div class="field {% if form.cantidad.errors %}error{% endif %}">
 			        {{ form.cantidad }}

@@ -215,11 +215,15 @@ class AddItemPedido(View):
         formItems = forms.AddItemsPedidoForm(request.POST)
         if formItems.is_valid():
             formI = formItems.save(commit=False)
-            formI.pedido = pedido
-            formI.valor_total = formI.valor_unitario * formI.cantidad
-            formI.save()
-            return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': pedido.id}))
+            print "llego a la vaina"
+            if formI.valor_unitario > 0 and formI.cantidad > 0:
+                formI.pedido = pedido
+                formI.valor_total = formI.valor_unitario * formI.cantidad
+                formI.save()
+                return redirect(reverse('pedido:add_item_pedido', kwargs={'pk': pedido.id}))
         # end if
+        formItems.fields["item"].queryset = models.Items.objects.filter(
+            empresaI=pedido.empresa, status=True)
         return render(request, 'pedido/pedidoItems.html',
                       {'pedido': pedido, 'form': formItems, 'items': items, 'total': total})
         # end if
@@ -511,7 +515,7 @@ class TablaPedidosAsignar(View):
         search = request.GET.get('search[value]', False)
         cursor = connection.cursor()
         cursor.execute('select pedidos_a_asignar_motor(%d,%s,%s)' %
-                       (request.user.id, start, length))
+                       (request.user.id if request.user.id else 0, start, length))
         row = cursor.fetchone()
         return HttpResponse(row[0], content_type="application/json")
     # end def

@@ -1023,8 +1023,11 @@ class WsPedidoReactivar(View):
                     cursor = connection.cursor()
                     cursor.execute('select reactivar_pedido(%s::integer)' % pedido)
                     row = cursor.fetchone()
-                    lista = json.loads('%s' % row[0])
-                    print lista
+                    try
+                        lista = json.loads('%s' % row[0])
+                    except:
+                        lista = row[0]
+                    # end try
                     if lista:
                         with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
                             socketIO.emit('asignar-pedido', {

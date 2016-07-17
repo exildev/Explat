@@ -49,8 +49,7 @@ $(document).on('ready', function() {
 
 function envioCancelar() {
     var id = $('input[name="pedido"]:checked').val();
-    if (id != undefined) {
-        alert("PAsola validacion");
+    if (id != undefined){
         $.ajax({
             url: '/pedidos/ws/cancelado/',
             data: {

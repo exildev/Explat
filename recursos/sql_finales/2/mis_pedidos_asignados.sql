@@ -22,7 +22,7 @@ begin
 		 select distinct p.id,p.num_pedido as num,p.npedido_express as nom,tablameses(p.fecha_pedido) as fecha
 		  from usuario_empleado as e
 		  inner join pedido_pedido as p
-		  on (p.supervisor_id=e.usuario_ptr_id or p.alistador_id = e.usuario_ptr_id and e.usuario_ptr_id=id_des and e.empresa_id=emp_id) order by p.id desc  limit length_ offset start_
+		  on ((p.supervisor_id=e.usuario_ptr_id or p.alistador_id = e.usuario_ptr_id) and e.usuario_ptr_id=id_des and e.empresa_id=emp_id) order by p.id desc  limit length_ offset start_
 	) p into l ;
 	return '{"recordsFiltered": '|| t ||', "recordsTotal": '|| json_array_length(l) ||', "data": '|| l||'}';
 

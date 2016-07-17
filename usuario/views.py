@@ -29,6 +29,17 @@ class IndexCliente(TemplateView):
 # end class
 
 
+class Index(TemplateView):
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            #return redirect('/plataforma/')
+            return render(request, 'usuario/index_general.html')
+        # end if
+        return render(request, 'usuario/index_general.html')
+    # end def
+# end class
+
 def custom_login(request, **kwargs):
     if request.user.is_authenticated():
         return redirect(reverse('usuario:index_general'))
@@ -89,6 +100,7 @@ class EmpleadoAdd(View):
 @login_required(login_url=settings.LOGIN_URL)
 @csrf_exempt
 def searchEmpleadoTabla(request):
+    print "Este es el usuario ",request.user.id
     length = request.GET.get('length', '0')
     columnas = ['nombre', 'descripcion']
     num_columno = request.GET.get('order[0][column]', '0')
@@ -97,8 +109,10 @@ def searchEmpleadoTabla(request):
     start = request.GET.get('start', 0)
     search = request.GET.get('search[value]', False)
     cursor = connection.cursor()
-    cursor.execute('select tabla_empleado(%d,\'%s\'::text,\'%s\'::text,%s::integer,%s::integer)' % (
-        request.user.id if request.user.id else 0, busqueda, order, start, length))
+    cadena = 'select tabla_empleado(%d,\'%s\'::text,\'%s\'::text,%s::integer,%s::integer)' % (
+        request.user.id if request.user.id else 0, busqueda, order, start, length)
+    print cadena
+    cursor.execute(cadena)
     row = cursor.fetchone()
     return HttpResponse(row[0], content_type="application/json")
 # end def
@@ -178,8 +192,10 @@ def searchCliente(request):
     search = request.GET.get('search[value]', False)
     busqueda = request.GET.get('columns[1][search][value]', '')
     cursor = connection.cursor()
-    cursor.execute('select tabla_cliente(%d,\'%s\'::text,0,%s::integer,%s::integer)' % (
-        request.user.id, busqueda, start, length))
+    cadena = 'select tabla_cliente(%d,\'%s\'::text,0,%s::integer,%s::integer)' % (
+        request.user.id if request.user.id else 0, busqueda, start, length)
+    print cadena
+    cursor.execute(cadena)
     row = cursor.fetchone()
     return HttpResponse(row[0], content_type="application/json")
 # end def

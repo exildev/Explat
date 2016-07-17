@@ -492,7 +492,7 @@ class TablaMisPedidos(View):
         search = request.GET.get('search[value]', False)
         cursor = connection.cursor()
         cursor.execute('select mis_pedidos_asignados(%d,%s,%s)' %
-                       (request.user.id, start, length))
+                       (request.user.id if request.user.id else 0, start, length))
         row = cursor.fetchone()
         return HttpResponse(row[0], content_type="application/json")
     # end def
@@ -1023,7 +1023,7 @@ class WsPedidoReactivar(View):
                     cursor = connection.cursor()
                     cursor.execute('select reactivar_pedido(%s::integer)' % pedido)
                     row = cursor.fetchone()
-                    try
+                    try:
                         lista = json.loads('%s' % row[0])
                     except:
                         lista = row[0]

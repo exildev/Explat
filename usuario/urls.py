@@ -20,7 +20,7 @@ urlpatterns += [
     url(r'^empleado/details/(?P<empleado_id>\d+)/$', views.infoEmpleado, name='details_empleado'),
     url(r'^empleado/edit/(?P<empleado_id>\d+)/$', views.editEmpleado, name='edit_empleado'),
     url(r'^empleado/edit/pass/(?P<pk>\d+)/$', login_required(views.PassChangeEmpleado.as_view(template_name='usuario/passChangeEmpleado.html')), name='edit_pass_empleado'),
-    url(r'^$', login_required(TemplateView.as_view(template_name='usuario/index_general.html')), name='index_general'),
+    url(r'^$', login_required(views.Index.as_view()), name='index_general'),
 ]
 
 

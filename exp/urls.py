@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 import settings
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^plataforma/', include(admin.site.urls)),
     url(r'^usuario/', include('usuario.urls', namespace='usuario')),
     url(r'^motorizado/', include('motorizado.urls', namespace='motorizado')),
     url(r'^pedidos/', include('pedido.urls', namespace='pedido')),

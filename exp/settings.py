@@ -112,9 +112,9 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-TEMPLATE_CONTEXT_PROCESSORS = TCP + [
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
-]
+)
 
 SUIT_CONFIG = {
     # header

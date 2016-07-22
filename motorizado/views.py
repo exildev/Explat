@@ -25,6 +25,7 @@ from datetime import date, timedelta
 from . import models
 from django.db.models import Q
 
+
 @login_required(login_url=settings.LOGIN_URL)
 def add_motorizado(request):
     user = models.Empleado.objects.filter(username=request.user).first()
@@ -408,9 +409,11 @@ class ListNotificaciones(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         # Five days before
         today = date.today()
-        this_date_plus_five_days = today + timedelta(days=5)
-        expired_soat = models.Moto.objects.filter(soat__fecha_expiracionS__range=[today, this_date_plus_five_days],empresaM__empleado__id=request.user.id)
-        expired_tecno = models.Moto.objects.filter(tecno__fecha_expiracionT__range=[today, this_date_plus_five_days],empresaM__empleado__id=request.user.id)
+        this_date_plus_five_days = today + timedelta(days=20)
+        expired_soat = models.Moto.objects.filter(soat__fecha_expiracionS__range=[
+                                                  today, this_date_plus_five_days], empresaM__empleado__id=request.user.id)
+        expired_tecno = models.Moto.objects.filter(tecno__fecha_expiracionT__range=[
+                                                   today, this_date_plus_five_days], empresaM__empleado__id=request.user.id)
         return render(request, 'motorizado/notificaciones.html', {'expired_soat': expired_soat, 'expired_tecno': expired_tecno})
     # end def
 # end class
@@ -427,9 +430,9 @@ class ValidListNotificaciones(supra.SupraListView):
     def get_queryset(self):
         queryset = super(ValidListNotificaciones, self).get_queryset()
         today = date.today()
-        this_date_plus_five_days = today + timedelta(days=5)
+        this_date_plus_five_days = today + timedelta(days=20)
         return queryset.filter(Q(empresaM__empleado__id=self.request.user.id)).filter(
-            (Q(soat__fecha_expiracionS__range=[today, this_date_plus_five_days])|
-            Q(tecno__fecha_expiracionT__range=[today, this_date_plus_five_days])))
+            (Q(soat__fecha_expiracionS__range=[today, this_date_plus_five_days]) |
+             Q(tecno__fecha_expiracionT__range=[today, this_date_plus_five_days])))
     # end def
 # end class

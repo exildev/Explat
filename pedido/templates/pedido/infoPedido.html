@@ -43,7 +43,7 @@
 				      <td>{{ pedido.alistador.first_name|title }} {{ pedido.alistador.last_name|title }}</td>
 				      <td>{{ pedido.motorizado.first_name|title }} {{ pedido.motorizado.last_name|title }}</td>
 							<td>COP $ {% if pedido.total %}{{pedido.total|intcomma}} {% else %}0 {% endif %}</td>
-						<td><strong>{% if tiempos.tiempo_entrego %} Si {% else %} No {% endif %}</strong></td>
+						<td><strong>{% if tiempo.entregado %} Si {% else %} No {% endif %}</strong></td>
 				    </tr>
 				  </tbody>
 				</table>
@@ -140,9 +140,9 @@
 						</thead>
 						<tbody>
 								<tr>
-									<td>{% if tiempos.tiempo_pedido %}{{ tiempos.tiempo_pedido }}{% else %} No Asignado {% endif %}</td>
-									<td>{% if tiempos.tiempo_asignacion %}{{ tiempos.tiempo_asignacion }}{% else %} No Asignado {% endif %}</td>
-									<td>{% if tiempos.tiempo_entrego %}{{ tiempos.tiempo_entrego }}{% else %} No Asignado {% endif %}</td>
+									<td>{% if tiempo.creado %}{{ tiempo.creado }}{% else %} No Asignado {% endif %}</td>
+									<td>{% if tiempo.despachado %}{{ tiempo.despachado }}{% else %} No Asignado {% endif %}</td>
+									<td>{% if tiempo.entregado %}{{ tiempo.entregado }}{% else %} No Asignado {% endif %}</td>
 								</tr>
 						</tbody>
 					</table>

@@ -69,6 +69,7 @@ class Tienda(models.Model):
     longitud = models.FloatField()
     url = models.URLField()
     status = models.BooleanField(default=True)
+    token = models.CharField(blank=True, null=True, max_length=1000)
 
     def __str__(self):
         return self.nombre

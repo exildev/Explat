@@ -26,7 +26,7 @@ from django.utils.decorators import method_decorator
 import json
 from socketIO_client import SocketIO, LoggingNamespace
 from supra.auths import methods, oauth
-
+from . import service
 
 class Despacho(TemplateView):
     template_name = 'pedido/despacharpedido.html'
@@ -104,7 +104,7 @@ class AddPedidoAdmin(View):
         formP.fields["supervisor"].queryset = mod_usuario.Empleado.objects.filter(
             cargo="SUPERVISOR").filter(empresa=empresa)
         motori = mod_motorizado.Motorizado.objects.filter(
-            empleado__empresa=empresa,tipo=1)
+            empleado__empresa=empresa, tipo=1)
         formP.fields['tienda'].queryset = mod_usuario.Tienda.objects.filter(
             empresa=empresa)
         info = {'formC': formC, 'formP': formP,
@@ -213,9 +213,10 @@ class AddItemPedido(View):
             resul = items.aggregate(suma=Sum('valor_total'))
             total = resul['suma'] if resul['suma'] is not None else 0
         formItems = forms.AddItemsPedidoForm(request.POST)
+        print "llego"
         if formItems.is_valid():
             formI = formItems.save(commit=False)
-            print "llego a la vaina"
+            print "llego a la vaina  %d %d" % (formI.valor_unitario, formI.cantidad)
             if formI.valor_unitario > 0 and formI.cantidad > 0:
                 formI.pedido = pedido
                 formI.valor_total = formI.valor_unitario * formI.cantidad
@@ -440,7 +441,9 @@ class InfoPedido(FormView):
     def get(self, request, *args, **kwargs):
         pedido = get_object_or_404(models.Pedido, pk=kwargs['pk'])
         items = models.ItemsPedido.objects.filter(pedido=pedido)
-        return render(request, 'pedido/infoPedido.html', {'pedido': pedido, 'items': items})
+        tiempos = models.Time.objects.filter(pedido=pedido).first()
+        print tiempos
+        return render(request, 'pedido/infoPedido.html', {'pedido': pedido, 'items': items, 'tiempo': tiempos})
     # end def
 # end class
 
@@ -464,7 +467,6 @@ class FacturaPedido(PDFTemplateView):
 
 
 class MisPedidos(View):
-
 
     def dispatch(self, request, *args, **kwargs):
         return super(self.__class__, self).dispatch(request, *args, **kwargs)
@@ -617,24 +619,38 @@ class WsPedidoEmpresa(View):
     # end def
 
     def post(self, request, *args, **kwargs):
-        print "llego a el servicio y no se exploto"
-        cursor = connection.cursor()
-        cursor.execute('select ws_add_pedido_service(\'%s\'::json)' %
-                       request.body.decode('utf-8'))
-        row = cursor.fetchone()
-        lista = json.loads(row[0])
-        if lista['respuesta']:
-            if len(lista['pedidos']) > 0:
-                with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
-                    socketIO.emit('add-pedido', {
-                                  'pedidos': lista['pedidos'], 'tipo': 2, 'retraso': lista['retardo']})
-                    socketIO.wait(seconds=0)
-                # end with
-                lista.pop('pedidos')
+        print request.body.decode('utf-8')
+        try:
+            resp = json.loads(request.body.decode('utf-8'))['token']
+        except:
+            return HttpResponse('{"r":"Error en el token"}', content_type="application/json", status=403)
+        # end try
+        if resp:
+            tienda = mod_usuario.Tienda.objects.filter(token=resp).first()
+            if tienda:
+                cursor = connection.cursor()
+                cursor.execute('select ws_add_pedido_service(\'%s\'::json)' %
+                               request.body.decode('utf-8'))
+                row = cursor.fetchone()
+                lista = json.loads(row[0])
+                if lista['respuesta']:
+                    if len(lista['pedidos']) > 0:
+                        with SocketIO('104.236.33.228', 4000, LoggingNamespace) as socketIO:
+                            socketIO.emit('add-pedido', {
+                                          'pedidos': lista['pedidos'], 'tipo': 2, 'retraso': lista['retardo']})
+                            socketIO.wait(seconds=0)
+                        # end with
+                        lista.pop('pedidos')
+                    # end if
+                # end if
+                url_ = tienda.url.split('/', 1) if tienda.url is not None or len(tienda.url) > 0 else ["", ""]
+                url_ = ["", ""] if len(url_) < 2 else url_
+                thead_respose_empresa = service.SendResponseEmpresa('solicitud_Empresa_%d' % tienda.id, lista, url_[0], "/"+url_[1],tienda.id)
+                thead_respose_empresa.start()
+                return HttpResponse(json.dumps(lista), content_type="application/json")
             # end if
         # end if
-        print lista
-        return HttpResponse(json.dumps(lista), content_type="application/json")
+        return HttpResponse('{"r":"Error en el token"}', content_type="application/json", status=403)
     # end def
 # end class
 
@@ -830,7 +846,8 @@ class ConfirmacionPedido(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         motorizado = request.POST.get('motorizado', '')
         pedido = request.POST.get('pedido', 0)
-        pedidov = models.Pedido.objects.filter(id=pedido, motorizado__motorizado__identifier=motorizado).first()
+        pedidov = models.Pedido.objects.filter(
+            id=pedido, motorizado__motorizado__identifier=motorizado).first()
         if pedidov:
             models.Pedido.objects.filter(id=int(pedido)).update(entregado=True)
             return super(ConfirmacionPedido, self).dispatch(request, *args, **kwargs)
@@ -848,9 +865,11 @@ class ConfirmacionPedidoWS(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         motorizado = request.POST.get('motorizado', '')
         pedido = request.POST.get('pedido', 0)
-        pedidov = models.PedidoWS.objects.filter(id=pedido, motorizado__motorizado__identifier=motorizado).first()
+        pedidov = models.PedidoWS.objects.filter(
+            id=pedido, motorizado__motorizado__identifier=motorizado).first()
         if pedidov:
-            models.PedidoWS.objects.filter(id=int(pedido)).update(entregado=True)
+            models.PedidoWS.objects.filter(
+                id=int(pedido)).update(entregado=True)
             return super(ConfirmacionPedidoWS, self).dispatch(request, *args, **kwargs)
         # end if
         return HttpResponse('{"motorizado":["Este campo es obligatorio"]}')
@@ -892,9 +911,11 @@ class CancelarPPlataforma(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         motorizado = request.POST.get('motorizado', '')
         n_pedido = request.POST.get('pedido', 0)
-        pedido = models.Pedido.objects.filter(id=n_pedido, motorizado__motorizado__identifier=motorizado).first()
+        pedido = models.Pedido.objects.filter(
+            id=n_pedido, motorizado__motorizado__identifier=motorizado).first()
         if pedido:
-            models.Pedido.objects.filter(id=int(n_pedido)).update(activado=False)
+            models.Pedido.objects.filter(
+                id=int(n_pedido)).update(activado=False)
             return super(CancelarPPlataforma, self).dispatch(request, *args, **kwargs)
         # end if
         return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
@@ -910,9 +931,11 @@ class CancelarPWService(supra.SupraFormView):
     def dispatch(self, request, *args, **kwargs):
         motorizado = request.POST.get('motorizado', '')
         n_pedido = request.POST.get('pedido', 0)
-        pedido = models.PedidoWS.objects.filter(id=n_pedido, motorizado__motorizado__identifier=motorizado).first()
+        pedido = models.PedidoWS.objects.filter(
+            id=n_pedido, motorizado__motorizado__identifier=motorizado).first()
         if pedido:
-            models.PedidoWs.objects.filter(id=int(n_pedido)).update(activado=False)
+            models.PedidoWs.objects.filter(
+                id=int(n_pedido)).update(activado=False)
             return super(CancelarPWService, self).dispatch(request, *args, **kwargs)
         # end if
         return HttpResponse('[{"status":false}]', content_type='application/json', status=404)
@@ -930,14 +953,17 @@ class ConfiguracionTiempo(View):
     # end def
 
     def post(self, request, *args, **kwargs):
-        empresa = mod_usuario.Empresa.objects.filter(empleado__id=request.user.id).first()
+        empresa = mod_usuario.Empresa.objects.filter(
+            empleado__id=request.user.id).first()
         id = request.POST.get('id', "")
         if validNum(id):
-            configuracion = get_object_or_404(models.ConfiguracionTiempo, pk=int(id))
+            configuracion = get_object_or_404(
+                models.ConfiguracionTiempo, pk=int(id))
             form = forms.AddConfiguracion(request.POST, instance=configuracion)
             if form.is_valid():
                 addconfi = form.save(commit=False)
-                addconfi.empresa = mod_usuario.Empresa.objects.filter(empleado__id=request.user.id).first()
+                addconfi.empresa = mod_usuario.Empresa.objects.filter(
+                    empleado__id=request.user.id).first()
                 addconfi.save()
                 return redirect(reverse('pedido:configurar_pplataforma'))
             # end if
@@ -946,7 +972,8 @@ class ConfiguracionTiempo(View):
             form = forms.AddConfiguracion(request.POST)
             if form.is_valid():
                 addconfi = form.save(commit=False)
-                addconfi.empresa = mod_usuario.Empresa.objects.filter(empleado__id=request.user.id).first()
+                addconfi.empresa = mod_usuario.Empresa.objects.filter(
+                    empleado__id=request.user.id).first()
                 addconfi.save()
                 return render(request, 'pedido/addConfiguracion.html', {'pk': addconfi.id, 'form': form})
             # end if
@@ -960,7 +987,7 @@ class ConfiguracionTiempo(View):
         if configuracion:
             return render(request, 'pedido/addConfiguracion.html', {'pk': configuracion.id, 'form': forms.AddConfiguracion(instance=configuracion)})
         # end if
-        return render(request, 'pedido/addConfiguracion.html', { 'form': forms.AddConfiguracion()})
+        return render(request, 'pedido/addConfiguracion.html', {'form': forms.AddConfiguracion()})
     # end def
 
 
@@ -990,6 +1017,7 @@ class ReactivarPPlataforma(View):
 
 
 class WsPedidoCancelado(View):
+
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(WsPedidoCancelado, self).dispatch(*args, **kwargs)
@@ -1013,6 +1041,7 @@ class WsPedidoCancelado(View):
 
 
 class WsPedidoReactivar(View):
+
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(WsPedidoReactivar, self).dispatch(*args, **kwargs)
@@ -1025,7 +1054,8 @@ class WsPedidoReactivar(View):
                 pedido_ = models.Pedido.objects.filter(id=int(pedido)).first()
                 if pedido_:
                     cursor = connection.cursor()
-                    cursor.execute('select reactivar_pedido(%s::integer)' % pedido)
+                    cursor.execute(
+                        'select reactivar_pedido(%s::integer)' % pedido)
                     row = cursor.fetchone()
                     try:
                         lista = json.loads('%s' % row[0])
@@ -1048,6 +1078,7 @@ class WsPedidoReactivar(View):
 
 
 class WsInfoPedido(View):
+
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(WsInfoPedido, self).dispatch(*args, **kwargs)
@@ -1057,15 +1088,17 @@ class WsInfoPedido(View):
         pedido = request.POST.get('pedido', False)
         if pedido:
             cursor = connection.cursor()
-            cursor.execute('select alistar,despacho,entrega,cliente from pedidos_tiempos_actualizada where nump=\'%s\'' % pedido)
+            cursor.execute(
+                'select get_info_pedido_cliente(\'%s\')' % pedido)
             row = cursor.fetchone()
             if row:
-                return HttpResponse('{"r":true,"alistar":"%s","despacho":"%s","entrega":"%s","cliente":"%s"}' % (row[0], row[1], row[2], row[3]), content_type="application/json")
+                return HttpResponse(row[0], content_type="application/json")
             # end if
         # end if
         return HttpResponse('{"r":false}', content_type="application/json")
     # end def
 # end class
+
 
 def validNum(cad):
     return re.match('^\d+$', cad)

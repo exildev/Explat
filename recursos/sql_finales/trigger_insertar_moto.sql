@@ -1,3 +1,4 @@
+﻿
 CREATE OR REPLACE FUNCTION insertar_moto()
   RETURNS trigger AS
 $BODY$

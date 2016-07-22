@@ -7,11 +7,12 @@ $( document ).ready(function() {
           data:{pedido:$('#pedido').val()},
           success:function(data){
               if(data.r){
+                  var res = data.lista[0];
                   $('.clear').val("");
-                  $('#alistamiento').val(data.alistar);
-                  $('#despacho').val(data.despacho);
-                  $('#entrega').val(data.entrega);
-                  $('#cliente').val(data.cliente);
+                  $('#creado').val(res.creado);
+                  $('#alistamiento').val(res.alistamiento);
+                  $('#entrega').val(res.entregado);
+                  $('#cliente').val(res.cliente);
               }else{
                   $('.clear, #pedido').val("");
                   alert("El pedido no se encuentra registrado.");

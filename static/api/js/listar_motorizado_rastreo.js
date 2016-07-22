@@ -87,7 +87,7 @@ window.explat.cargarMotorizados = function(q, pag, sub, rq) {
 };
 
 function enviarPedido() {
-    var res = {
+    var res = {"token":"1913bb7180af8ecf340b507ff9ca4f7b",
         "pedido": [{
             "id": "ws_ped",
             "cliente": {
@@ -99,7 +99,7 @@ function enviarPedido() {
                 "fijo":"6605648"
             },
             "tienda": {
-                "identificador": "1"
+                "identificador": "3"
             },
             "descripcion": [{
                 "nombre": "jajaja",

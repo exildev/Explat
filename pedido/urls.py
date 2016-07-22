@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-import views
+from . import views
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 

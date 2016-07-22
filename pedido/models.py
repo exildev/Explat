@@ -276,3 +276,15 @@ class CancelarPedidoWs(models.Model):
         return str(self.pedido.num_pedido)
     # end def
 # end class
+
+
+class LogEnvio(models.Model):
+    tienda = models.CharField(max_length=1000)
+    status = models.CharField(max_length=1000)
+    response = models.CharField(max_length=10000)
+    data = models.CharField(max_length=100000)
+
+    def __unicode__(self):
+        return self.empresa
+    # end def
+# end class

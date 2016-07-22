@@ -40,6 +40,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
     ]
     list_display = ('first_name', 'last_name', 'cargo', 'empresa',)
 
+
 admin.site.register(models.Ciudad, CiudadAdmin)
 admin.site.register(models.Empresa, EmpresaAdmin)
 admin.site.register(models.Tienda, TiendaAdmin)

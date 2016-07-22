@@ -11,27 +11,6 @@
 	</style>
 {% endblock %}
 {% block content_user %}
-<div class="one column row">
-  <div class="column">
-    <div class="ui labeled huge input">
-      <a href="{% url 'pedido:index_pedido' %}" class="ui teal icon huge button">
-      <i class="express-atras icon"></i>
-      </a>
-      <a class="ui olive label">Consultar Pedido</a>
-    </div>
-  </div>
-  {% if mensaje %}
-      <div class="ui center aligned container row">
-        <div class="ui {{ mensaje.tipo }} message">
-          <div class=" content">
-            <div class="header">
-              {{ mensaje.texto }}
-            </div>
-          </div>
-        </div>
-      </div>
-   {% endif %}
-</div>
 
 <div class="ui container grid" style="margin-bottom:50px;">
   <div class="center aligned column">
@@ -57,18 +36,18 @@
 	    </div>
         <div class="two fields">
 				<div class="field">
-					<h2 class="ui teal header">Tiempo de alistamiento</h2>
+					<h2 class="ui teal header">Tiempo de creación</h2>
 				</div>
 				<div class="field">
-					<input type="text" id="alistamiento" class="clear" disabled>
+					<input type="text" id="creado" class="clear" disabled>
 				</div>
 	    </div>
         <div class="two fields">
 				<div class="field">
-					<h2 class="ui teal header">Tiempo de despacho</h2>
+					<h2 class="ui teal header">Tiempo de alistamiento</h2>
 				</div>
 				<div class="field">
-					<input type="text" id="despacho" class="clear" disabled>
+					<input type="text" id="alistamiento" class="clear" disabled>
 				</div>
 	    </div>
         <div class="two fields">

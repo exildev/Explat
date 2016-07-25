@@ -31,7 +31,6 @@ class SendResponseEmpresa(threading.Thread):
             # print ver_source
             abrir_conexion.close()
         except socket_error as serr:
-            print self.data
             res = models.LogEnvio(tienda=self.tienda, status='500', response='No existe respuesta de la tienda', data=self.data)
             res.save()
         # end try

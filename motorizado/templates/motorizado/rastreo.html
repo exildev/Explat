@@ -59,6 +59,7 @@
     console.log("esta en el socket");
     console.log($('#token').val());
       socket.emit('select-motorizado',{'token':$('#token').val(),'motorizado':'359291054481645'});
+      socket.emit('clear-motorizado',{'token':$('#token').val()});
   }
 </script>
 <script type="text/javascript" src="{{ STATIC_URL }}api/js/listar_motorizado_rastreo.js"></script>

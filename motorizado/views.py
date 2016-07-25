@@ -344,13 +344,13 @@ class ListarRastreo(supra.SupraListView):
         sql = """
             select (
                 select COALESCE(array_to_json(array_agg(row_to_json(p))), '[]') from (
-                		select replace(t.direccion,'"','') as direccion,t.num_pedido
-                        from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion,
+                		select replace(t.direccion,'"','') as direccion,t.num_pedido,t.cliente
+                        from (select  replace((cast(cliente as json)::json->'nombre')::text||' '||(cast(cliente as json)::json->'apellidos')::text,'"','') as cliente,id,(cast(cliente as json)::json->'direccion')::text as direccion,
                         case when num_pedido is null or length(num_pedido)=0 then 'pedido_Ws' else num_pedido end as num_pedido  from pedido_pedidows
                         where motorizado_id=m.empleado_id and entregado=false and activado=true and despachado=true
                         union
-                        select p.id, c.direccion as direccion,case when p.num_pedido is not null then p.num_pedido else 'pedido_plataforma' end as num_pedido
-                        from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and p.motorizado_id=m.empleado_id and p.entregado=false)) as t
+                        select c.first_name||' '||c.last_name as cliente, p.id, c.direccion as direccion,case when p.num_pedido is not null then p.num_pedido else 'pedido_plataforma' end as num_pedido
+                        from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and p.motorizado_id=m.empleado_id and p.entregado=false and p.activado=true and p.despachado=true)) as t
                 	) p
                 ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
        """
@@ -358,7 +358,7 @@ class ListarRastreo(supra.SupraListView):
            select (
             	select count(t.direccion) as direccion from (select  id,(cast(cliente as json)::json->'direccion')::text as direccion from pedido_pedidows where motorizado_id=m.empleado_id and entregado=false and activado=true and despachado=true
             	union
-            	select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id and c.id=1 and p.motorizado_id=m.empleado_id and p.entregado=false and p.activado=true)) as t
+            	select p.id, c.direccion as direccion from pedido_pedido as p inner join usuario_cliente as c on(p.cliente_id=c.id  and p.motorizado_id=m.empleado_id and p.entregado=false and p.activado=true and p.despachado=true)) as t
             ) as pepidos  from motorizado_motorizado as m where m.empleado_id="motorizado_motorizado"."empleado_id" limit 1
         """
         obj = queryset.extra(select={'direccion': sql, 'num_pedido': sql2})

@@ -25,8 +25,8 @@ class Items(models.Model):
         verbose_name = "Item"
         verbose_name_plural = "Items"
 
-    def __str__(self):
-        return self.codigo + " - " + self.descripcion
+    def __unicode__(self):
+        return unicode(self.codigo) + " - " + unicode(self.descripcion)
 
 
 TIPO_PAGO = (
@@ -63,8 +63,8 @@ class Pedido(models.Model):
         verbose_name = "Pedido"
         verbose_name_plural = "Pedidos"
 
-    def __str__(self):
-        return self.num_pedido
+    def __unicode__(self):
+        return unicode(self.num_pedido)
 
     def Entregado(self):
         pedido = Pedido.objects.get(npedido_express=self.npedido_express)
@@ -81,8 +81,8 @@ class ItemsPedido(models.Model):
                                          validators.RegexValidator(re.compile('^[1-9]+[0-9]*.[1-9]+[0-9]*|[1-9]+[0-9]*$'), ('numero no valida'), 'invalid')])
     valor_total = models.DecimalField(max_digits=20, decimal_places=2)
 
-    def __str__(self):
-        return str(self.pedido.num_pedido)
+    def __unicode__(self):
+        return unicode(self.pedido.num_pedido)
     # end def
 
     class Meta:
@@ -150,8 +150,8 @@ class PedidoWS(models.Model):
         verbose_name_plural = "PedidosWs"
     # end if
 
-    def __str__(self):
-        return self.cliente
+    def __unicode__(self):
+        return unicode(self.cliente)
     # end if
 
 
@@ -163,8 +163,8 @@ class TimeWS(models.Model):
     entregado = models.DateTimeField(null=True)
     pedido = models.OneToOneField(PedidoWS)
 
-    def __str__(self):
-        return self.cliente
+    def __unicode__(self):
+        return unicode(self.cliente)
     # end def
 # end class
 
@@ -174,7 +174,7 @@ class Punto(models.Model):
     longitud = models.FloatField()
 
     def __unicode__(self):
-        return '%d - %d' % (self.latitud, self.longitud)
+        return u'%d - %d' % (self.latitud, self.longitud)
     # end def
 
 # end class
@@ -190,8 +190,8 @@ class ConfirmarPedido(models.Model):
         verbose_name_plural = "Confirmaciones Pedidos"
     # end def
 
-    def __str__(self):
-        return str(self.pedido.num_pedido)
+    def __unicode__(self):
+        return unicode(self.pedido.num_pedido)
     # end def
 # end class
 
@@ -206,8 +206,8 @@ class ConfirmarPedidoWs(models.Model):
         verbose_name_plural = "Confirmaciones PedidoWS"
     # end def
 
-    def __str__(self):
-        return str(self.pedido.num_pedido)
+    def __unicode__(self):
+        return unicode(self.pedido.num_pedido)
     # end def
 # end class
 
@@ -218,7 +218,7 @@ class Seguimiento(models.Model):
     ruta = models.ManyToManyField(Punto)
 
     def __unicode__(self):
-        return '%s' % (self.pedido.num_pedido)
+        return u'%s' % (self.pedido.num_pedido)
     # end def
 # end class
 
@@ -237,11 +237,11 @@ class ConfiguracionTiempo(models.Model):
     segundo = models.IntegerField(verbose_name="Segundo corte de quincena")
 
     def __unicode__(self):
-        return 'Tiempo de plataforma %d' % self.retraso
+        return u'Tiempo de plataforma %d' % self.retraso
     # end def
 
     def __str__(self):
-        return 'Tiempos de plataforma %d' % self.retraso
+        return u'Tiempos de plataforma %d' % self.retraso
     # end def
 # end class
 
@@ -256,8 +256,8 @@ class CancelarPedido(models.Model):
         verbose_name_plural = "Cancelaciones de Pedidos"
     # end def
 
-    def __str__(self):
-        return str(self.pedido.num_pedido)
+    def __unicode__(self):
+        return unicode(self.pedido.num_pedido)
     # end def
 # end class
 
@@ -272,8 +272,8 @@ class CancelarPedidoWs(models.Model):
         verbose_name_plural = "Cancelaciones de PedidoWS"
     # end def
 
-    def __str__(self):
-        return str(self.pedido.num_pedido)
+    def __unicode__(self):
+        return unicode(self.pedido.num_pedido)
     # end def
 # end class
 
@@ -285,6 +285,6 @@ class LogEnvio(models.Model):
     data = models.CharField(max_length=100000)
 
     def __unicode__(self):
-        return self.empresa
+        return unicode(self.empresa)
     # end def
 # end class

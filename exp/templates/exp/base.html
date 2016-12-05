@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+{% load staticfiles %}
 <html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>{% block title %}{% endblock %} - Express Del Norte</title>
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}dist/semantic.min.css">
-      <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'dist/semantic.min.css' %}">
+      <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css' %}">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <!--script type="text/javascript" src="{{ STATIC_URL }}js/jquery.plugin.js"></script-->

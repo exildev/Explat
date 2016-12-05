@@ -1,5 +1,6 @@
 {% extends "exp/base_user.html" %}
-{% block title %}Listar Empleados{% endblock %}
+{% load staticfiles %}
+{% block title %}Listar Empleados jajaja{% endblock %}
 {% block content_user %}
 <div class="one column row">
 	<div class="column">
@@ -51,9 +52,9 @@
 {% endblock %}
 
 {% block addjs %}
-	<script src="{{ STATIC_URL }}api/js/jquery.js"></script>
-	<script src="{{ STATIC_URL }}api/js/jquery.min.js"></script>
-	<script src="{{ STATIC_URL }}api/js/dataTables.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}api/js/tabla_ajax_empleado.js"></script>
-	<script src="{{ STATIC_URL }}api/js/empleadoSearch.js" ></script>
+	<script src="{% static 'api/js/jquery.js' %}"></script>
+	<script src="{% static 'api/js/jquery.min.js' %}"></script>
+	<script src="{% static 'api/js/dataTables.js' %}"></script>
+	<script type="text/javascript" src="{% static 'api/js/tabla_ajax_empleado.js' %}"></script>
+	<script src="{% static 'api/js/empleadoSearch.js' %}"></script>
 {% endblock %}

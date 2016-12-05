@@ -128,3 +128,9 @@ urlpatterns += [
     url(r'^info/pedido/cliente/$', TemplateView.as_view(template_name='pedido/pedidoinfo.html'), name='info_pedido_cliente'),
     url(r'^ws/info/pedido/$', views.WsInfoPedido.as_view(), name='ws_info_pedido'),
 ]
+
+# Gestion de pedidos cancelados
+urlpatterns += [
+    url(r'^cancelados/$', login_required(TemplateView.as_view(template_name='pedido/cancelados.html')), name='pedidos_cancelados'),
+    url(r'^ws/cancelados/$', views.TablaCancelados.as_view(), name='pedidos_cancelados'),
+]

@@ -1,7 +1,7 @@
 {% extends "exp/base.html" %}
-
+{% load staticfiles %}
 {% block addcss %}
-  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 {% block addcss_user %}{% endblock %}
 {% endblock %}
 

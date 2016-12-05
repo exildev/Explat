@@ -1,4 +1,5 @@
 {% extends "exp/base_user.html" %}
+{% load staticfiles %}
 {% block title %}Reporte Empleados {% endblock %}
 {% block content_user %}
 
@@ -57,15 +58,15 @@
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/jquery-acordion.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-aco' %}rdion.css">
     <script type="text/javascript">
 		$( "#acordeon").accordion();
     </script>
-	<script src="{{ STATIC_URL }}api/js/jquery.js"></script>
-	<script src="{{ STATIC_URL }}api/js/jquery.min.js"></script>
-	<script src="{{ STATIC_URL }}api/js/dataTables.js"></script>
+	<script src="{% static 'api/js/jquery.js' %}"></script>
+	<script src="{% static 'api/js/jquery.min.js' %}"></script>
+	<script src="{% static 'api/js/dataTables.js' %}"></script>
 	<!--script type="text/javascript" src="{{ STATIC_URL }}api/js/tabla_load_ajax_reporte_empleados.js"></script-->
 
-	<script src="{{ STATIC_URL }}api/js/reporte_empleados.js" ></script>
+	<script src="{% static 'api/js/reporte_empleados.js' %}" ></script>
 
 {% endblock %}

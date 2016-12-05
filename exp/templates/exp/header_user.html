@@ -1,11 +1,11 @@
 <!-- { load moto_notifications %}
 { has_exprired "check" as has_exprired_soat_tecno %} -->
-
+{% load staticfiles %}
 <div class="one column row">
   <div class="column">
     <div class="ui olive inverted bottom fixed large menu">
       <div class="item">
-        <img src="{{ STATIC_URL }}img/logo_express_black_and_white.svg">
+        <img src="{% static 'img/logo_express_black_and_white.svg' %}">
       </div>
       <div class="ui grid">
         <div class="one computer only column row">

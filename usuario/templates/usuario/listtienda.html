@@ -1,4 +1,5 @@
 {% extends "exp/base_user.html" %}
+{% load staticfiles %}
 {% block title %}Buscar Clientes{% endblock %}
 {% block content_user %}
 <div class="one column row">
@@ -65,9 +66,9 @@
 {% endblock %}
 
 {% block addjs %}
-	<script src="{{ STATIC_URL }}api/js/jquery.js"></script>
-	<script src="{{ STATIC_URL }}api/js/jquery.min.js"></script>
-	<script src="{{ STATIC_URL }}api/js/dataTables.js"></script>
-	<script src="{{ STATIC_URL }}api/js/tabla_ajax_tienda.js"></script>
-	<script src="{{ STATIC_URL }}api/js/tiendaSearch.js" ></script>
+	<script src="{% static 'api/js/jquery.js' %}"></script>
+	<script src="{% static 'api/js/jquery.min.js' %}"></script>
+	<script src="{% static 'api/js/dataTables.js' %}"></script>
+	<script src="{% static 'api/js/tabla_ajax_tienda.js' %}"></script>
+	<script src="{% static 'api/js/tiendaSearch.js' %}"></script>
 {% endblock %}

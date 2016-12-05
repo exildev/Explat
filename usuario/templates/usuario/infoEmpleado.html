@@ -1,7 +1,8 @@
 {% extends "exp/base_user.html" %}
+{% load staticfiles %}
 {% block title %}Informacion del Empleado{% endblock %}
 {% block addcss %}
-	<link rel="stylesheet" href="{{ STATIC_URL }}css/etiquetas_texto.css">
+	<link rel="stylesheet" href="{% static 'css/etiquetas_texto.css' %}">
 {% endblock %}
 {% block content_user %}
 <div class="one column row">

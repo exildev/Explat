@@ -24,6 +24,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import date, timedelta
 from . import models
 from django.db.models import Q
+from exp.settings import HOST_NODE, PORT_NODE
 
 
 @login_required(login_url=settings.LOGIN_URL)
@@ -107,7 +108,7 @@ def editMotorizado(request, motorizado_id):
             motorizados = models.Motorizado.objects.filter(
                 empleado__id=request.user.id)
             mensaje = {'tipo': 'success',
-                       'texto': "Se a editado un motorizado correctamente"}
+                       'texto': "Se a editado un motorizado correctamente", 'host_node': '%s:%d' % (HOST_NODE, PORT_NODE)}
             return render(request, 'motorizado/motorizado.html', {'mensaje': mensaje, 'motorizados': motorizados})
     else:
         emp = usuario.Empresa.objects.filter(

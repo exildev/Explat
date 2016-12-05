@@ -1,7 +1,8 @@
 {% extends "exp/base_user.html" %}
+{% load staticfiles %}
 {% block title %}Clasificación de Empleados{% endblock %}
 {% block addcss_user %}
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/flora.datepick.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/flora.datepick.css' %}">
 	<style type="text/css">
 		#id_busq{
 			margin-top: 0px !important;
@@ -124,17 +125,17 @@
 {% endblock %}
 
 {% block addjs %}
-	<script src="{{ STATIC_URL }}api/js/jquery.js"></script>
-	<script src="{{ STATIC_URL }}api/js/jquery.min.js"></script>
-	<script src="{{ STATIC_URL }}api/js/dataTables.js"></script>
-	<script src="{{ STATIC_URL }}api/js/tipo_empleado.js"></script>
-	<script src="{{ STATIC_URL }}api/js/tabla_ajax_info_repor_empleados.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.plugin.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.datepick.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.datepick-es.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/browser.js"></script>
+	<script src="{% static 'api/js/jquery.js' %}"></script>
+	<script src="{% static 'api/js/jquery.min.js' %}"></script>
+	<script src="{% static 'api/js/dataTables.js' %}"></script>
+	<script src="{% static 'api/js/tipo_empleado.js' %}"></script>
+	<script src="{% static 'api/js/tabla_ajax_info_repor_empleados.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.plugin.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.datepick.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.datepick-es.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/browser.js' %}"></script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-	<script src="{{ STATIC_URL }}api/js/tipo_empleado_api.js"></script>
+	<script src="{% static 'api/js/tipo_empleado_api.js' %}"></script>
 
 {% endblock %}

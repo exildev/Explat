@@ -1,5 +1,6 @@
 {% extends "exp/base_user.html" %} {% block title %}Añadir Empleado{% endblock %} {% block addcss_user %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/flora.datepick.css"> {% endblock %} {% block content_user %}
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/flora.datepick.css' %}"> {% endblock %} {% block content_user %}
 <div class="one column row">
 
 	<div class="column">
@@ -68,8 +69,8 @@
 	</div>
 </div>
 {% endblock %} {% block addjs %}
-<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.plugin.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.datepick.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.datepick-es.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/browser.js"></script>
+<script type="text/javascript" src="{% static 'js/jquery.plugin.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.datepick.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.datepick-es.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/browser.js' %}"></script>
 {% endblock %}

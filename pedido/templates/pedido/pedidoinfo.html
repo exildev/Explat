@@ -1,7 +1,8 @@
 {% extends "exp/base_user.html" %}
+{% load staticfiles %}
 {% block title %}Nuevo Item{% endblock %}
 {% block addcss_user %}
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/flora.datepick.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/flora.datepick.css' %}">
 	<style type="text/css">
 		#id_busq{
 			margin-top: 0px !important;
@@ -65,7 +66,7 @@
 {% endblock %}
 
 {% block addjs %}
-<script src="{{ STATIC_URL }}api/js/jquery.js"></script>
-<script src="{{ STATIC_URL }}api/js/jquery.min.js"></script>
-<script src="{{ STATIC_URL }}api/js/info_pedido_cliente.js"></script>
+<script src="{% static 'api/js/jquery.js' %}"></script>
+<script src="{% static 'api/js/jquery.min.js' %}"></script>
+<script src="{% static 'api/js/info_pedido_cliente.js' %}"></script>
 {% endblock %}

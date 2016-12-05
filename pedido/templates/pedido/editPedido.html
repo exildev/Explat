@@ -1,4 +1,5 @@
 {% extends "exp/base_user.html" %}
+{% load staticfiles %}
 {% block title %}Editar Pedido{% endblock %}
 {% block content_user %}
 <div class="one column row">
@@ -86,11 +87,11 @@
 {% endblock %}
 
 {% block addjs %}
-<script src="{{ STATIC_URL }}api/js/jquery.js"></script>
-<script src="{{ STATIC_URL }}api/js/jquery.min.js"></script>
+<script src="{% static 'api/js/jquery.js' %}"></script>
+<script src="{% static 'api/js/jquery.min.js' %}"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="{{ STATIC_URL }}api/js/motorizado_tienda_edit.js"></script>
+<script src="{% static 'api/js/motorizado_tienda_edit.js' %}"></script>
 <script>
 	$( document ).ready(function() {
 

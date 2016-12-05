@@ -7,3 +7,6 @@ reportlab>=2.7,<3
 supra
 socketIO-client
 psycopg2
+html5lib==1.0b8
+django-braces
+https://pypi.python.org/packages/source/d/django-braces/django-braces-1.8.1.tar.gz

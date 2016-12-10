@@ -38,7 +38,7 @@ class ConfiguracionPedidoAdmin(admin.ModelAdmin):
 # end class
 
 class MotivoCancelacionAdmin(admin.ModelAdmin):
-    form = forms.AddMotivoCancelacionFormAdmin
+    form = forms.AddMotivoCancelacionFormAdminF
     list_display = ['get_empresa', 'nombre', 'descripcion',]
     list_display_links = ['get_empresa']
 

@@ -226,3 +226,25 @@ class AddMotivoCancelacionFormAdmin(forms.ModelForm):
     def clean(self):
         clean_data = super(AddMotivoCancelacionFormAdmin, self).clean()
     # end def
+
+
+class AddMotivoCancelacionFormAdminF(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(AddMotivoCancelacionFormAdminF, self).__init__(*args, **kwargs)
+        self.fields['configuracion'].label= "Empresa"
+    # end def
+
+    class Meta:
+        model = models.MotivoCancelacion
+        fields = ['configuracion','nombre', 'descripcion',]
+        exclude = ['estado',]
+        widgets = {
+            'nombre': forms.Textarea(attrs={'cols': 200, 'rows': 5}),
+            'descripcion': forms.Textarea(attrs={'cols': 200, 'rows': 5}),
+        }
+    # end class
+
+    def clean(self):
+        clean_data = super(AddMotivoCancelacionFormAdminF, self).clean()
+    # end def

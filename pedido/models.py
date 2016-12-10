@@ -312,7 +312,7 @@ class ConfiguracionPedido(models.Model):
 class MotivoCancelacion(models.Model):
     configuracion = models.ForeignKey(ConfiguracionPedido)
     nombre = models.CharField(max_length=300, unique=True)
-    descripcion = models.CharField(max_length=800)
+    descripcion = models.CharField(max_length=800, null=True, blank=True)
     estado = models.BooleanField(default=True)
 
     def __unicode__(self):

@@ -151,7 +151,6 @@ class AddConfiguracion(forms.ModelForm):
     # end class
 
     def clean(self):
-        print self
         clean_data = super(AddConfiguracion, self).clean()
         primero = clean_data.get("primero")
         segundo = clean_data.get("segundo")
@@ -167,3 +166,63 @@ class AddConfiguracion(forms.ModelForm):
     # end def
 
 # end class
+
+
+class AddConfPedidoFormAdmin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AddConfPedidoFormAdmin, self).__init__(*args, **kwargs)
+        self.fields['empresa'].queryset = usuario.Empresa.objects.filter(configuracionpedido=None)
+    # end def
+    class Meta:
+        model = models.ConfiguracionPedido
+        fields = ['empresa', 'tirillatp1','tirillatp2','cerrartp1','cerrartp2',]
+        exclude = ['estado',]
+    # end class
+
+    def clean(self):
+        clean_data = super(AddConfPedidoFormAdmin, self).clean()
+        empresa = clean_data.get("empresa")
+        if empresa is None:
+            self.add_error('empresa', 'Debe seleccionar una empresa.')
+        # end if
+    # end def
+# end class
+
+class EditConfPedidoFormAdmin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EditConfPedidoFormAdmin, self).__init__(*args, **kwargs)
+        print self.instance.empresa.id
+        emp = usuario.Empresa.objects.all()
+        self.fields['empresa'].queryset = emp.filter(id=self.instance.empresa.id) if self.instance else emp
+    # end def
+    class Meta:
+        model = models.ConfiguracionPedido
+        fields = ['empresa', 'tirillatp1','tirillatp2','cerrartp1','cerrartp2',]
+        exclude = ['estado',]
+    # end class
+
+    def clean(self):
+        clean_data = super(EditConfPedidoFormAdmin, self).clean()
+        empresa = clean_data.get("empresa")
+        if empresa is None:
+            self.add_error('empresa', 'Debe seleccionar una empresa.')
+        # end if
+    # end def
+# end class
+
+
+
+class AddMotivoCancelacionFormAdmin(forms.ModelForm):
+    class Meta:
+        model = models.MotivoCancelacion
+        fields = ['nombre', 'descripcion',]
+        exclude = ['estado',]
+        widgets = {
+            'nombre': forms.Textarea(attrs={'cols': 200, 'rows': 5}),
+            'descripcion': forms.Textarea(attrs={'cols': 200, 'rows': 5}),
+        }
+    # end class
+
+    def clean(self):
+        clean_data = super(AddMotivoCancelacionFormAdmin, self).clean()
+    # end def

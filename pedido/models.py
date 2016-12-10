@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from usuario.models import Cliente,  Empleado,  Empresa, Tienda
 import re
@@ -286,5 +287,39 @@ class LogEnvio(models.Model):
 
     def __unicode__(self):
         return unicode(self.empresa)
+    # end def
+# end class
+
+
+class ConfiguracionPedido(models.Model):
+    empresa =  models.ForeignKey(Empresa)
+    tirillatp1 = models.IntegerField(choices= ((1,'Con total'), (2,'Sin total')), verbose_name="Motorizados planta", default=1)
+    tirillatp2 = models.IntegerField(choices= ((1,'Con total'), (2,'Sin total')), verbose_name="Motorizados suscripcion", default=1)
+    cerrartp1 = models.IntegerField(choices= ((1,'Con Foto'), (2,'Con Botón')), verbose_name="Motorizados planta", default=1)
+    cerrartp2 = models.IntegerField(choices= ((1,'Con Foto'), (2,'Con Botón')), verbose_name="Motorizados suscripcion", default=1)
+    estado = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return u'%s'%self.empresa.first_name
+    # end def
+
+    def __str__(self):
+        return u'%s'%self.empresa.first_name
+    # end def
+# end class
+
+
+class MotivoCancelacion(models.Model):
+    configuracion = models.ForeignKey(ConfiguracionPedido)
+    nombre = models.CharField(max_length=300, unique=True)
+    descripcion = models.CharField(max_length=800)
+    estado = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return u'%s'%self.nombre
+    # end def
+
+    def __str__(self):
+        return u'%s'%self.nombre
     # end def
 # end class

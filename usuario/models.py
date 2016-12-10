@@ -39,7 +39,7 @@ class Empresa(models.Model):
     username = models.CharField(max_length=50)
     nit = models.CharField(max_length=50, validators=[validators.RegexValidator(
         re.compile('^[0-9]+$'), ('numero no valida'))])
-    logo = models.ImageField(upload_to='logos_empresas/')
+    logo = models.ImageField(upload_to='logos_empresas/', null=True, blank=True)
     web = models.URLField()
     direccion = models.CharField(max_length=50)
     ciudad = models.ForeignKey(Ciudad)

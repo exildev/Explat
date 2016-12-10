@@ -36,11 +36,12 @@ function tablaMisPedidos(){
                 "data": "num"
             },
             {
-            	"data":"nom"
-            },
-            {
             	"class":"center aligned",
                 "data": "fecha",
+            },
+						{
+            	"class":"center aligned",
+                "data": "motorizado",
             },
             {
             	"className":"center aligned",

@@ -41,6 +41,7 @@ class MotivoCancelacionAdmin(admin.ModelAdmin):
     form = forms.AddMotivoCancelacionFormAdminF
     list_display = ['get_empresa', 'nombre', 'descripcion',]
     list_display_links = ['get_empresa']
+    search_fields = ['configuracion__empresa__first_name','nombre','descripcion']
 
     def get_empresa(self, obj):
         return obj.configuracion.empresa.first_name if obj.configuracion.empresa else u'------ ----'

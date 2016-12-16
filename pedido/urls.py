@@ -133,4 +133,5 @@ urlpatterns += [
 urlpatterns += [
     url(r'^cancelados/$', login_required(TemplateView.as_view(template_name='pedido/cancelados.html')), name='pedidos_cancelados'),
     url(r'^ws/cancelados/$', views.TablaCancelados.as_view(), name='ws_pedidos_cancelados'),
+    url(r'^ws/motivos/cancelacion/$', views.MotCancelacion.as_view(), name='ws_motv_cancelados'),    
 ]

@@ -247,38 +247,6 @@ class ConfiguracionTiempo(models.Model):
 # end class
 
 
-class CancelarPedido(models.Model):
-    pedido = models.ForeignKey(Pedido)
-    fecha = models.DateTimeField(auto_now=True)
-    imagen = models.ImageField(upload_to='cancelarp/')
-
-    class Meta:
-        verbose_name = "Cancelar Pedido"
-        verbose_name_plural = "Cancelaciones de Pedidos"
-    # end def
-
-    def __unicode__(self):
-        return unicode(self.pedido.num_pedido)
-    # end def
-# end class
-
-
-class CancelarPedidoWs(models.Model):
-    pedido = models.ForeignKey(PedidoWS)
-    fecha = models.DateTimeField(auto_now=True)
-    imagen = models.ImageField(upload_to='cancelarpw/')
-
-    class Meta:
-        verbose_name = "Cancelar PedidoWS"
-        verbose_name_plural = "Cancelaciones de PedidoWS"
-    # end def
-
-    def __unicode__(self):
-        return unicode(self.pedido.num_pedido)
-    # end def
-# end class
-
-
 class LogEnvio(models.Model):
     tienda = models.CharField(max_length=1000)
     status = models.CharField(max_length=1000)
@@ -321,5 +289,39 @@ class MotivoCancelacion(models.Model):
 
     def __str__(self):
         return u'%s'%self.nombre
+    # end def
+# end class
+
+
+class CancelarPedido(models.Model):
+    pedido = models.ForeignKey(Pedido)
+    motivo = models.ForeignKey(MotivoCancelacion)
+    fecha = models.DateTimeField(auto_now=True)
+    imagen = models.ImageField(upload_to='cancelarp/', null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Cancelar Pedido"
+        verbose_name_plural = "Cancelaciones de Pedidos"
+    # end def
+
+    def __unicode__(self):
+        return unicode(self.pedido.num_pedido)
+    # end def
+# end class
+
+
+class CancelarPedidoWs(models.Model):
+    pedido = models.ForeignKey(PedidoWS)
+    motivo = models.ForeignKey(MotivoCancelacion)
+    fecha = models.DateTimeField(auto_now=True)
+    imagen = models.ImageField(upload_to='cancelarpw/', null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Cancelar PedidoWS"
+        verbose_name_plural = "Cancelaciones de PedidoWS"
+    # end def
+
+    def __unicode__(self):
+        return unicode(self.pedido.num_pedido)
     # end def
 # end class

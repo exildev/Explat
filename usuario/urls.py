@@ -56,6 +56,7 @@ urlpatterns += [
 urlpatterns += [
     url(r'session/', views.Login.as_view(), name='ws_loguin'),
     url(r'logged/', views.is_logged, name="is_logged"),
+    url(r'set/password/$', views.SetPassWord.as_view(), name="set_password"),
 ]
 
 # Gestion listar motorizado

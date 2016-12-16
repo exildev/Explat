@@ -1119,5 +1119,21 @@ class TablaCancelados(View):
 # end def
 
 
+class MotCancelacion(supra.SupraListView):
+    model = models.MotivoCancelacion
+    search = 'q'
+    list_display = ['id','nombre']
+    search_fields = ['configuracion__empresa__empleado__motorizado__identifier']
+    list_filter = ['configuracion__empresa__empleado__motorizado__identifier']
+    paginate_by = 100
+
+    def get_queryset(self):
+        queryset = super(MotCancelacion, self).get_queryset()
+        iden = self.request.GET.get('q','000')
+        return models.MotivoCancelacion.objects.filter(configuracion__empresa__empleado__motorizado__identifier=iden)
+    # end def
+# end class
+
+
 def validNum(cad):
     return re.match('^\d+$', cad)

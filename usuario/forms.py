@@ -186,3 +186,9 @@ class AddTienda(forms.ModelForm):
         return super(AddTienda, self).save(commit)
     # end def
 # end class
+
+
+class ChangePasswordForm(forms.Form):
+    identificador = forms.CharField(max_length=30)
+    password = forms.CharField(widget=forms.PasswordInput(render_value=False))
+# end class

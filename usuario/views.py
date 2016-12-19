@@ -175,10 +175,9 @@ class SetPassWord(View):
                     usuario.set_password(raw_password=password)
                     return HttpResponse('{"r":"Ok"}', content_type="application/json", status=200)
             # end if
-            #usuario = User.objects.filter(usuario__empleado__motoizado__identifier=request.POST.get('identificador','0')).first()
-            return HttpResponse('{"r":"Campos invalidos"}', content_type="application/json", status=201)
+            return HttpResponse('{"r":"Campos invalidos"}', content_type="application/json", status=400)
         # end if
-        return HttpResponse('{"r":"Campos requeridos"}', content_type="application/json", status=201)
+        return HttpResponse('{"r":"Campos requeridos"}', content_type="application/json", status=400)
     # end def
 #
 

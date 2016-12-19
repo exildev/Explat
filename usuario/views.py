@@ -161,6 +161,12 @@ def editEmpleado(request, empleado_id):
 
 
 class SetPassWord(View):
+    
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(SetPassWord, self).dispatch(request, *args, **kwargs)
+    # end def
+    
     def get(self, request, *args, **kwargs):
         return render(request, 'usuario/set_password.html',{'form':forms.ChangePasswordForm()})
     # end def

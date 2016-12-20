@@ -72,7 +72,7 @@
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script type="text/javascript" src="{% static 'api/js/jquery.qrcode.js' %}"></script>
 <script type="text/javascript">
-	var socket = io("http://104.236.33.228:4000/");
+	var socket = io("http://{{ host_node }}");
 		socket.emit('who-i-am',{'web_id':calcMD5($('#empresa').val()),'motorizado':$('#motorizado').val()})
   	//socket.emit('hola', {'web_id': '123456', 'cell_id': 'Hola mundo'});
   	socket.on('you-are',function(data){

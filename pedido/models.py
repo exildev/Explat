@@ -184,7 +184,7 @@ class Punto(models.Model):
 class ConfirmarPedido(models.Model):
     pedido = models.ForeignKey(Pedido)
     fecha = models.DateTimeField(auto_now=True)
-    imagen = models.ImageField(upload_to='confirmarpedido/')
+    imagen = models.ImageField(upload_to='confirmarpedido/', null=True, blank=True)
 
     class Meta:
         verbose_name = "Confirmacion Pedido"

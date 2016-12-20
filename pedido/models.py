@@ -297,6 +297,7 @@ class CancelarPedido(models.Model):
     pedido = models.ForeignKey(Pedido)
     motivo = models.ForeignKey(MotivoCancelacion)
     fecha = models.DateTimeField(auto_now=True)
+    observacion = models.CharField(max_length=500)
     imagen = models.ImageField(upload_to='cancelarp/', null=True, blank=True)
 
     class Meta:
@@ -314,6 +315,7 @@ class CancelarPedidoWs(models.Model):
     pedido = models.ForeignKey(PedidoWS)
     motivo = models.ForeignKey(MotivoCancelacion)
     fecha = models.DateTimeField(auto_now=True)
+    observacion = models.CharField(max_length=500)
     imagen = models.ImageField(upload_to='cancelarpw/', null=True, blank=True)
 
     class Meta:

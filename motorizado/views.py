@@ -280,7 +280,7 @@ class SearchMotorizadoPed(View):
 class InfoMotorizado(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
-    list_display = ['identificador', 'nombre', 'apellidos', 'foto']
+    list_display = ['identificador', 'nombre', 'apellidos', 'foto','tirilla','cancelar','cerrar']
     search_fields = ['identifier']
     list_filter = ['identifier']
     paginate_by = 1
@@ -290,21 +290,6 @@ class InfoMotorizado(supra.SupraListView):
         nombre = 'empleado__first_name'
         apellidos = 'empleado__last_name'
         foto = 'empleado__foto'
-    # end class
-    
-    class InfoMotorizado(supra.SupraListView):
-        model = models.Motorizado
-        search_key = 'q'
-        list_display = ['identificador', 'nombre', 'apellidos', 'foto','tirilla','cancelar','cerrar']
-        search_fields = ['identifier']
-        list_filter = ['identifier']
-        paginate_by = 1
-
-        class Renderer:
-            identificador = 'identifier'
-            nombre = 'empleado__first_name'
-            apellidos = 'empleado__last_name'
-            foto = 'empleado__foto'
     # end class
 
     def get_queryset(self):

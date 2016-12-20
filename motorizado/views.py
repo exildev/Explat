@@ -291,6 +291,46 @@ class InfoMotorizado(supra.SupraListView):
         apellidos = 'empleado__last_name'
         foto = 'empleado__foto'
     # end class
+    
+    class InfoMotorizado(supra.SupraListView):
+    model = models.Motorizado
+    search_key = 'q'
+    list_display = ['identificador', 'nombre', 'apellidos', 'foto','tirilla','cancelar','cerrar']
+    search_fields = ['identifier']
+    list_filter = ['identifier']
+    paginate_by = 1
+
+    class Renderer:
+        identificador = 'identifier'
+        nombre = 'empleado__first_name'
+        apellidos = 'empleado__last_name'
+        foto = 'empleado__foto'
+    # end class
+
+    def get_queryset(self):
+        queryset = super(InfoMotorizado, self).get_queryset()
+        tirilla ="""
+        select case when m.tipo=1 then tirillatp1 else tirillatp2 end as tirrilla
+		 from motorizado_motorizado as m
+		 inner join usuario_empleado as e on (m.empleado_id=e.usuario_ptr_id and "motorizado_motorizado"."id"=m.id)
+         inner join pedido_configuracionpedido as c on (e.empresa_id=c.empresa_id and c.estado=true) limit 1
+        """
+        cerrar ="""
+        select case when m.tipo=1 then cerrartp1 else cerrartp2 end as cerrar
+		 from motorizado_motorizado as m
+		 inner join usuario_empleado as e on (m.empleado_id=e.usuario_ptr_id and "motorizado_motorizado"."id"=m.id)
+         inner join pedido_configuracionpedido as c on (e.empresa_id=c.empresa_id and c.estado=true) limit 1
+        """
+        cancelar ="""
+        select case when m.tipo=1 then cancelartp1 else cancelartp2 end as cancelar
+		 from motorizado_motorizado as m
+		 inner join usuario_empleado as e on (m.empleado_id=e.usuario_ptr_id and "motorizado_motorizado"."id"=m.id)
+         inner join pedido_configuracionpedido as c on (e.empresa_id=c.empresa_id and c.estado=true) limit 1
+        """
+        # return queryset.filter(tipo=1)
+        return queryset.extra(select={'tirilla':tirilla,'cancelar':cancelar, 'cerrar':cerrar})
+    # end def
+
 # end class
 
 

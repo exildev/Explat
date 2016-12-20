@@ -1,5 +1,6 @@
 {% extends "exp/base_user.html" %}
 {% load staticfiles %}
+{% load static %}
 {% block title %}Editar Motorizado{% endblock %}
 {% block addcss_user %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/flora.datepick.css' %}">
@@ -60,10 +61,10 @@
 {% endblock %}
 
 {% block addjs %}
-<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.plugin.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.datepick.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.datepick-es.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}api/js/md5.js">
+<script type="text/javascript" src='{% static "js/jquery.plugin.js" %}'></script>
+<script type="text/javascript" src='{% static "js/jquery.datepick.js" %}'></script>
+<script type="text/javascript" src='{% static "js/jquery.datepick-es.js" %}'></script>
+<script type="text/javascript" src='{% static "api/js/md5.js" %}'>
 <script type="text/javascript">
 	$( document ).ready(function() {
 		$('.ui.dropdown').dropdown();

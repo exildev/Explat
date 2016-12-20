@@ -179,6 +179,7 @@ class SetPassWord(View):
             if motori :
                     usuario = User.objects.filter(usuario__empleado=motori.empleado).first()
                     usuario.set_password(raw_password=password)
+                    usuario.save()
                     return HttpResponse('{"r":"Ok"}', content_type="application/json", status=200)
             # end if
             return HttpResponse('{"r":"Campos invalidos"}', content_type="application/json", status=400)

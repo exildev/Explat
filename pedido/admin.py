@@ -20,6 +20,7 @@ class ConfiguracionPedidoAdmin(admin.ModelAdmin):
         (None, {'fields':('empresa',)}),
         ('Tirilla', {'fields':['tirillatp1', 'tirillatp2',]}),
         ('Entrega', {'fields':['cerrartp1', 'cerrartp2',]}),
+        ('Cancelar', {'fields':['cancelartp1', 'cancelartp2',]}),
     ]
 
     def get_queryset(self, request):

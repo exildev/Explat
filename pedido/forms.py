@@ -175,7 +175,7 @@ class AddConfPedidoFormAdmin(forms.ModelForm):
     # end def
     class Meta:
         model = models.ConfiguracionPedido
-        fields = ['empresa', 'tirillatp1','tirillatp2','cerrartp1','cerrartp2',]
+        fields = ['empresa', 'tirillatp1','tirillatp2','cerrartp1','cerrartp2','cancelartp1','cancelartp2',]
         exclude = ['estado',]
     # end class
 
@@ -197,7 +197,7 @@ class EditConfPedidoFormAdmin(forms.ModelForm):
     # end def
     class Meta:
         model = models.ConfiguracionPedido
-        fields = ['empresa', 'tirillatp1','tirillatp2','cerrartp1','cerrartp2',]
+        fields = ['empresa', 'tirillatp1','tirillatp2','cerrartp1','cerrartp2','cancelartp1','cancelartp2',]
         exclude = ['estado',]
     # end class
 

@@ -448,17 +448,29 @@ class ListNotificaciones(TemplateView):
 class ValidListNotificaciones(supra.SupraListView):
     model = models.Moto
     search_key = 'q'
-    list_display = ['tipo']
+    list_display = ['soat_','tecno_','tipo','identificador','placa','motorizado__empleado__first_name']
     search_fields = ['tipo']
     list_filter = ['tipo']
     paginate_by = 100000
+
+    class Renderer:
+        identificador = 'motorizado__identifier'
+    # end class
 
     def get_queryset(self):
         queryset = super(ValidListNotificaciones, self).get_queryset()
         today = date.today()
         this_date_plus_five_days = today + timedelta(days=20)
+        query_soat = """
+        select case when cast(s."fecha_expiracionS" as date)> current_date and cast(s."fecha_expiracionS" as date) <= now()  + interval '480 hour' then 'false' else tablameses(s."fecha_expiracionS") end as soat from motorizado_moto as m
+		 left join motorizado_soat as s on (m.soat_id=s.id) where m.id="motorizado_moto"."id" limit 1
+        """
+        query_tecno = """
+        select case when cast(t."fecha_expiracionT" as date)> current_date and cast(t."fecha_expiracionT" as date) <= now()  + interval '480 hour' then 'false' else tablameses(t."fecha_expiracionT") end as soat from motorizado_moto as m
+		 left join motorizado_tecno as t on (m.tecno_id=t.id) where m.id="motorizado_moto"."id" limit 1
+        """
         return queryset.filter(Q(empresaM__empleado__id=self.request.user.id)).filter(
             (Q(soat__fecha_expiracionS__range=[today, this_date_plus_five_days]) |
-             Q(tecno__fecha_expiracionT__range=[today, this_date_plus_five_days])))
+             Q(tecno__fecha_expiracionT__range=[today, this_date_plus_five_days]))).extra(select={'soat_':query_soat,'tecno_':query_tecno})
     # end def
 # end class

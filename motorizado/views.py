@@ -497,7 +497,7 @@ class ValidSoatTecno(supra.SupraListView):
 		 left join motorizado_soat as s on (m.soat_id=s.id) where m.id="motorizado_moto"."id" limit 1
         """
         query_tecno = """
-        select case when cast(t."fecha_expiracionT" as date)> current_date and cast(t."fecha_expiracionT" as date) <= now()  + interval '480 hour' then 'false' else tablameses(t."fecha_expiracionT") end as soat from motorizado_moto as m
+        select case when cast(t."fecha_expiracionT" as date)> current_date and cast(t."fecha_expiracionT" as date) <= now()  + interval '480 hour' then  tablameses(t."fecha_expiracionT") else 'false' end as soat from motorizado_moto as m
 		 left join motorizado_tecno as t on (m.tecno_id=t.id) where m.id="motorizado_moto"."id" limit 1
         """
         return queryset.filter(Q(empresaM__empleado__id=self.request.user.id)).filter(

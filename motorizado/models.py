@@ -76,3 +76,18 @@ class Motorizado(models.Model):
     def __unicode__(self):
         return self.empleado.first_name
     # end if
+
+
+class Configuracion(models.Model):
+    empresa = models.ForeignKey(Empresa)
+    soat = models.IntegerField()
+    soat = models.IntegerField()
+
+    def __str__(self):
+        return self.empresa.first_name
+    # end def
+
+    def __unicode__(self):
+        return self.empresa.first_name
+    # end def
+# end class

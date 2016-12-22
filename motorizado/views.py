@@ -493,7 +493,7 @@ class ValidSoatTecno(supra.SupraListView):
         today = date.today()
         this_date_plus_five_days = today + timedelta(days=20)
         query_soat = """
-        select case when cast(s."fecha_expiracionS" as date)> current_date and cast(s."fecha_expiracionS" as date) <= now()  + interval '480 hour' then 'false' else tablameses(s."fecha_expiracionS") end as soat from motorizado_moto as m
+        select case when cast(s."fecha_expiracionS" as date)> current_date and cast(s."fecha_expiracionS" as date) <= now()  + interval '480 hour' then tablameses(s."fecha_expiracionS") else 'false' end as soat from motorizado_moto as m
 		 left join motorizado_soat as s on (m.soat_id=s.id) where m.id="motorizado_moto"."id" limit 1
         """
         query_tecno = """
@@ -503,5 +503,6 @@ class ValidSoatTecno(supra.SupraListView):
         return queryset.filter(Q(empresaM__empleado__id=self.request.user.id)).filter(
             (Q(soat__fecha_expiracionS__range=[today, this_date_plus_five_days]) |
              Q(tecno__fecha_expiracionT__range=[today, this_date_plus_five_days]))).extra(select={'soat_':query_soat,'tecno_':query_tecno})
+        # return queryset.extra(select={'soat_':query_soat,'tecno_':query_tecno})
     # end def
 # end class

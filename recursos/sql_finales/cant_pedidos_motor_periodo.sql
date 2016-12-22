@@ -1,10 +1,11 @@
--- Function: cant_pedidos_motor_periodo(text)
+CREATE OR REPLACE FUNCTION public.cant_pedidos_motor_periodo(
+	identif text)
+RETURNS numeric
+    LANGUAGE 'plpgsql'
+    COST 100.0
 
--- DROP FUNCTION cant_pedidos_motor_periodo(text);
+AS $function$
 
-CREATE OR REPLACE FUNCTION cant_pedidos_motor_periodo(identif text)
-  RETURNS numeric AS
-$BODY$
 declare
  motorizado record;
 begin
@@ -25,7 +26,7 @@ begin
 							case when extract(day from current_date) > c.primero and extract(day from current_date) < c.segundo then
 							     cast(''||extract(year from current_date)||'-'||extract(month from current_date)||'-'||c.segundo as date)
 								else
-							     cast(''||extract(year from current_date)||'-'||extract(month from current_date)+1||'-'||c.primero as date)
+							     cast(''||extract(year from current_date)+case when extract(month from current_date) = 12 then 1 else 0 end||'-'||case when extract(month from current_date) = 12 then 1 else extract(month from current_date)+1 end||'-'||c.primero as date)
 							 end
 				union
 				select p.id*100000 from public.pedido_pedidows as p inner join public.usuario_tienda as t on (p.motorizado_id=motorizado.empleado and p.tienda_id=t.id and p.entregado=true and p.activado=true) inner join public.pedido_configuraciontiempo as c on (t.empresa_id=c.empresa_id and p.activado = true and p.entregado= true)
@@ -40,12 +41,12 @@ begin
 							case when extract(day from current_date) > c.primero and extract(day from current_date) < c.segundo then
 							     cast(''||extract(year from current_date)||'-'||extract(month from current_date)||'-'||c.segundo as date)
 								else
-							     cast(''||extract(year from current_date)||'-'||extract(month from current_date)+1||'-'||c.primero as date)
+							     cast(''||extract(year from current_date)+case when extract(month from current_date) = 12 then 1 else 0 end||'-'||case when extract(month from current_date) = 12 then 1 else extract(month from current_date)+1 end||'-'||c.primero as date)
 					        end
 		      ) as q);
 end;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION cant_pedidos_motor_periodo(text)
-  OWNER TO postgres;
+
+$function$;
+
+ALTER FUNCTION public.cant_pedidos_motor_periodo(text)
+    OWNER TO postgres;

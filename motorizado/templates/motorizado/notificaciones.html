@@ -19,6 +19,9 @@
           <a href="{% url 'motorizado:edit_moto' moto.id %}" class="item">
 						<div class="ui red horizontal label">Vence</div>
 		        {{moto.soat.fecha_expiracionS}} - Para la Moto con placa: {{moto}}
+						{% if moto.motorizado %}
+							- Motorizado {{moto.motorizado.empleado.first_name}} {{moto.motorizado.empleado.last_name}}
+						{% endif%}
           </a>
         {% empty %}
 				<a class="item">
@@ -34,6 +37,9 @@
 			<a href="{% url 'motorizado:edit_moto' moto.id %}" class="item">
 				<div class="ui red horizontal label">Vence</div>
 				 {{moto.tecno.fecha_expiracionT}} - Para la Moto con placa: {{moto}}
+				 {% if moto.motorizado %}
+					 - Motorizado {{moto.motorizado.empleado.first_name}} {{moto.motorizado.empleado.last_name}}
+				 {% endif%}
 			</a>
         {% empty %}
 				<a class="item">

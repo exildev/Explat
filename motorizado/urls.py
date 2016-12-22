@@ -71,4 +71,5 @@ urlpatterns += [
 urlpatterns += [
     url(r'^notificaciones/$', views.ListNotificaciones.as_view(), name='ws_list_noti'),
     url(r'^ws/notificaciones/$', views.ValidListNotificaciones.as_view(), name='ws_valid_list_noti'),
+    url(r'^ws/valid/tecsoap/$', views.ValidSoatTecno.as_view(), name='ws_valid_tecno_soap'),
 ]

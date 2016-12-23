@@ -622,8 +622,9 @@ class WsPedidoEmpresa(View):
         try:
             resp = json.loads(request.body.decode('utf-8'))['token']
         except:
-            return HttpResponse('{"r":"Error en el token"}', content_type="application/json", status=403)
+            return HttpResponse('{"r":"Error en el token"}', content_type="application/json", status=203)
         # end try
+        print resp
         if resp:
             tienda = mod_usuario.Tienda.objects.filter(token=resp).first()
             if tienda:
@@ -649,7 +650,7 @@ class WsPedidoEmpresa(View):
                 return HttpResponse(json.dumps(lista), content_type="application/json")
             # end if
         # end if
-        return HttpResponse('{"r":"Error en el token"}', content_type="application/json", status=403)
+        return HttpResponse('{"r":"Error en el token 2"}', content_type="application/json", status=403)
     # end def
 # end class
 

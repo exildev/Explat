@@ -99,7 +99,7 @@ function enviarPedido() {
                 "fijo":"6605648"
             },
             "tienda": {
-                "identificador": "3"
+                "identificador": "5"
             },
             "descripcion": [{
                 "nombre": "jajaja",
@@ -123,7 +123,7 @@ function enviarPedido() {
                 "fijo":"6605648"
             },
             "tienda": {
-                "identificador": "123456"
+                "identificador": "5"
             },
             "descripcion": [{
                 "nombre": "jajaja",

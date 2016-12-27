@@ -9,4 +9,5 @@ socketIO-client
 psycopg2
 html5lib==1.0b8
 django-braces
+django-cors-headers
 https://pypi.python.org/packages/source/d/django-braces/django-braces-1.8.1.tar.gz

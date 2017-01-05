@@ -267,6 +267,8 @@ class ConfiguracionPedido(models.Model):
     cerrartp2 = models.IntegerField(choices= ((1,'Con Foto'), (2,'Con Botón')), verbose_name="Motorizados suscripcion", default=1)
     cancelartp1 = models.IntegerField(choices= ((1,'Con Foto'), (2,'Con Botón')), verbose_name="Motorizados planta", default=1)
     cancelartp2 = models.IntegerField(choices= ((1,'Con Foto'), (2,'Con Botón')), verbose_name="Motorizados suscripcion", default=1)
+    descripciontp1 = models.IntegerField(choices= ((1,'Con Descripcion'), (2,'Sin Descripcion')), verbose_name="Motorizados planta", default=1)
+    descripciontp2 = models.IntegerField(choices= ((1,'Con Descripcion'), (2,'Sin Descripcion')), verbose_name="Motorizados suscripcion", default=1)
     estado = models.BooleanField(default=True)
 
     def __unicode__(self):

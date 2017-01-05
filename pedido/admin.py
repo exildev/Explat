@@ -21,6 +21,7 @@ class ConfiguracionPedidoAdmin(admin.ModelAdmin):
         ('Tirilla', {'fields':['tirillatp1', 'tirillatp2',]}),
         ('Entrega', {'fields':['cerrartp1', 'cerrartp2',]}),
         ('Cancelar', {'fields':['cancelartp1', 'cancelartp2',]}),
+        ('Descripcion', {'fields':['descripciontp1', 'descripciontp2',]}),
     ]
 
     def get_queryset(self, request):

@@ -280,7 +280,7 @@ class SearchMotorizadoPed(View):
 class InfoMotorizado(supra.SupraListView):
     model = models.Motorizado
     search_key = 'q'
-    list_display = ['identificador', 'nombre', 'apellidos', 'foto','tirilla','cancelar','cerrar']
+    list_display = ['identificador', 'nombre', 'apellidos', 'foto','tirilla','cancelar','cerrar','descripcion']
     search_fields = ['identifier']
     list_filter = ['identifier']
     paginate_by = 1
@@ -312,8 +312,14 @@ class InfoMotorizado(supra.SupraListView):
 		 inner join usuario_empleado as e on (m.empleado_id=e.usuario_ptr_id and "motorizado_motorizado"."id"=m.id)
          inner join pedido_configuracionpedido as c on (e.empresa_id=c.empresa_id and c.estado=true) limit 1
         """
+        desc ="""
+        select case when m.tipo=1 then descripciontp1 else descripciontp2 end as descripcion
+		 from motorizado_motorizado as m
+		 inner join usuario_empleado as e on (m.empleado_id=e.usuario_ptr_id and "motorizado_motorizado"."id"=m.id)
+         inner join pedido_configuracionpedido as c on (e.empresa_id=c.empresa_id and c.estado=true) limit 1
+        """
         # return queryset.filter(tipo=1)
-        return queryset.extra(select={'tirilla':tirilla,'cancelar':cancelar, 'cerrar':cerrar})
+        return queryset.extra(select={'tirilla':tirilla,'cancelar':cancelar, 'cerrar':cerrar,'descripcion':desc})
     # end def
 
 # end class

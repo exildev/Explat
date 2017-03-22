@@ -38,7 +38,7 @@
     			</div>
   			</div>
 		{% else %}
-		<form method="POST" action="{% url 'add_motorizado' %}" class="ui form">
+		<form method="POST" action="{% url 'motorizado:add_motorizado' %}" class="ui form">
 			{% csrf_token %}
 			<h2 class="ui teal header">&nbsp;</h2>
 	    <div class="four fields">

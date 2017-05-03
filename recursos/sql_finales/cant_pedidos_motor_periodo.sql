@@ -1,3 +1,7 @@
+-- FUNCTION: public.cant_pedidos_motor_periodo(text)
+
+-- DROP FUNCTION public.cant_pedidos_motor_periodo(text);
+
 CREATE OR REPLACE FUNCTION public.cant_pedidos_motor_periodo(
 	identif text)
 RETURNS numeric

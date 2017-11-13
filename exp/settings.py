@@ -206,6 +206,6 @@ LOGIN_URL = 'usuario:user-login'
 
 LOGIN_REDIRECT_URL = 'usuario:index_general'
 
-HOST_NODE = '104.236.33.228'
+HOST_NODE = 'http://ec2-34-228-111-154.compute-1.amazonaws.com'
 
 PORT_NODE = 4000

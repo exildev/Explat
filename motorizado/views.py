@@ -412,7 +412,7 @@ class Rastreo(TemplateView):
         empresa = models.Empresa.objects.filter(
             empleado__id=request.user.id).first()
         ctx = {'empresa': empresa.id if empresa else 0,
-               'token': django.middleware.csrf.get_token(request)}
+               'token': django.middleware.csrf.get_token(request),'host_node': '%s:%d' % (HOST_NODE, PORT_NODE)}
         return render(request, 'motorizado/rastreo.html', ctx)
     # end def
 # end class

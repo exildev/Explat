@@ -116,7 +116,7 @@ def editMotorizado(request, motorizado_id):
         emp = emp['first_name'] if emp else False
         formMotorizado = forms.editMotorizadoForm(instance=motorizado)
     # end if
-    return render(request, 'motorizado/editMotorizado.html', {'form': formMotorizado, 'empresa': emp, 'motorizado': motorizado_id})
+    return render(request, 'motorizado/editMotorizado.html', {'form': formMotorizado, 'empresa': emp, 'motorizado': motorizado_id, 'host_node': '%s:%d' % (HOST_NODE, PORT_NODE)})
 # end def
 
 

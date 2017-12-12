@@ -54,7 +54,7 @@
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script type="text/javascript" src="{% static 'api/js/jquery.qrcode.js' %}"></script>
 <script type="text/javascript">
-  var socket = io('http://104.236.33.228:4000');
+  var socket = io('http://{{ host_node }}');
   function enviarMOtorizado(){
     console.log("esta en el socket");
     console.log($('#token').val());

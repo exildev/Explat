@@ -108,7 +108,7 @@ DATABASES = {
         'NAME': 'express',
         # The following settings are not used with sqlite3:
         'USER': 'postgres',
-        'PASSWORD': '123456',
+        'PASSWORD': '85412369**$%%&*(/%$#qazxswEDC',
         'HOST': '127.0.0.1',
         # Empty for localhost through domain sockets or '127.0.0.1' for
         # localhost through TCP.
@@ -206,6 +206,6 @@ LOGIN_URL = 'usuario:user-login'
 
 LOGIN_REDIRECT_URL = 'usuario:index_general'
 
-HOST_NODE = 'ec2-54-86-48-13.compute-1.amazonaws.com'
+HOST_NODE = 'ec2-54-175-121-21.compute-1.amazonaws.com'
 
 PORT_NODE = 4000

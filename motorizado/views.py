@@ -90,8 +90,9 @@ def searchMotorizado(request):
     start = request.GET.get('start', 0)
     search = request.GET.get('search[value]', False)
     cursor = connection.cursor()
-    cursor.execute('select tabla_motorizado(%d,\'%s\'::text,\'%s\'::text,%s::integer,%s::integer)' % (
-        request.user.id, busqueda, order, start, length))
+    cadena = 'select tabla_motorizado(%d,\'%s\'::text,\'%s\'::text,%s::integer,%s::integer)' % (request.user.id, busqueda, order, start, length)
+    print cadena
+    cursor.execute(cadena)
     row = cursor.fetchone()
     return HttpResponse(row[0], content_type="application/json")
 # end def

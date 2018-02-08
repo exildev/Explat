@@ -161,12 +161,12 @@ def editEmpleado(request, empleado_id):
 
 
 class SetPassWord(View):
-    
+
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super(SetPassWord, self).dispatch(request, *args, **kwargs)
     # end def
-    
+
     def get(self, request, *args, **kwargs):
         return render(request, 'usuario/set_password.html',{'form':forms.ChangePasswordForm()})
     # end def
@@ -444,6 +444,21 @@ class Store(supra.SupraListView):
         return queryset.filter(empleado__empresa=empresa).distinct('id')
     # end def
 # end class
+
+
+class EmpresaListView(supra.SupraListView):
+    model = models.Empresa
+    list_display =['nombre', 'id']
+
+    class Renderer:
+        nombre = 'first_name'
+    #end class
+
+    def get_queryset(self):
+        queryset = super(EmpresaListView, self).get_queryset()
+        return queryset.filter(active=True)
+    #end def
+#end def
 
 
 class ListSupervisor(supra.SupraListView):

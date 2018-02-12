@@ -3,7 +3,11 @@ from django import forms
 import models
 from usuario import models as usuario
 from django.core.exceptions import ValidationError
-
+from django_select2.forms import (
+    HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
+    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
+    Select2Widget
+)
 
 class AddPedidoApiForm(forms.ModelForm):
 

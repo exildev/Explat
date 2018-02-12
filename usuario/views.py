@@ -496,3 +496,8 @@ class SolicitudAccesoView(supra.SupraFormView):
     model = models.AccesoPlataforma
     form_class = forms.SolicitudAccesoForm
     template_name = 'usuario/solicitud_acceso.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(SolicitudAccesoView, self).dispatch(*args, **kwargs)
+    # end def

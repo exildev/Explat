@@ -23,6 +23,10 @@ urlpatterns += [
     url(r'^$', login_required(views.Index.as_view()), name='index_general'),
 ]
 
+urlpatterns += [
+    url(r'^empresa/list/$', views.EmpresaListView.as_view(), name='empresa_list'),
+]
+
 
 # Gestion de Clientes
 urlpatterns += [

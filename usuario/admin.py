@@ -41,9 +41,9 @@ class EmpleadoAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'cargo', 'empresa',)
 
 
-class SolicitudAcceso(admin.ModelAdmin):
-    list_display = ['empresa','idenficicacion','nombre','identificador','autorizado']
-    search_fields = ['empresa__first_name','idenficicacion','nombre','identificador']
+class SolicitudAccesoAdmin(admin.ModelAdmin):
+    list_display = ['idenficacion','nombre','identificador','autorizado']
+    search_fields = ['idenficicacion','nombre','identificador']
 #end class
 
 admin.site.register(models.Ciudad, CiudadAdmin)
@@ -51,3 +51,4 @@ admin.site.register(models.Empresa, EmpresaAdmin)
 admin.site.register(models.Tienda, TiendaAdmin)
 admin.site.register(models.Cliente, ClienteAdmin)
 admin.site.register(models.Empleado, EmpleadoAdmin)
+admin.site.register(models.AccesoPlataforma, SolicitudAccesoAdmin)

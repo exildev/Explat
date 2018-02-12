@@ -152,3 +152,26 @@ class Opcion(models.Model):
         return self.ciudad.nombre
     # end def
 # end class
+
+
+class AccesoPlataforma(models.Model):
+    empresa = models.ForeignKey(Empresa)
+    idenficacion = models.CharField(max_length=20)
+    nombre = models.CharField(max_length=20)
+    identificador = models.CharField(max_length=30)
+    status = models.BooleanField(default=True)
+    autorizado = models.BooleanField(default=False)
+
+    def __init__(self):
+        return u'%s - %s - %s'%(self.empresa.first_name, self.idenficacion, self.nombre)
+    #end def
+
+    def __str__(self):
+        return u'%s - %s - %s'%(self.empresa.first_name, self.idenficacion, self.nombre)
+    #end def
+
+    class Meta:
+        verbose_name = 'Solicitud de acceso'
+        verbose_name_plural =  'Solicitudes de accesos'
+    #end class
+#end class

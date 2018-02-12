@@ -490,3 +490,9 @@ class ListAlistador(supra.SupraListView):
         return queryset.filter(cargo='ALISTADOR')
     # end def
 # end class
+
+
+class SolicitudAccesoView(supra.SupraFormView):
+    model = models.AccesoPlataforma
+    form_class = forms.SolicitudAccesoForm
+    template_name = 'usuario/solicitud_acceso.html'

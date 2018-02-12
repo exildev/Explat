@@ -41,6 +41,11 @@ class EmpleadoAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'cargo', 'empresa',)
 
 
+class SolicitudAcceso(admin.ModelAdmin):
+    list_display = ['empresa','idenficicacion','nombre','identificador','autorizado']
+    search_fields = ['empresa__first_name','idenficicacion','nombre','identificador']
+#end class
+
 admin.site.register(models.Ciudad, CiudadAdmin)
 admin.site.register(models.Empresa, EmpresaAdmin)
 admin.site.register(models.Tienda, TiendaAdmin)

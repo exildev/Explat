@@ -192,3 +192,11 @@ class ChangePasswordForm(forms.Form):
     identificador = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput(render_value=False))
 # end class
+
+
+class SolicitudAccesoForm(forms.ModelForm):
+    class Meta:
+        model = models.AccesoPlataforma
+        fields = ['empresa','idenficacion','identificador', 'nombre']
+        exclude = ['status','autorizado']
+    #end class

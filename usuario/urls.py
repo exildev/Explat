@@ -64,3 +64,8 @@ urlpatterns += [
     url(r'^ws/list/supervisor/$', login_required(views.ListSupervisor.as_view()), name='ws_list_super'),
     url(r'^ws/list/alistador/$', login_required(views.ListAlistador.as_view()), name='ws_list_alist'),
 ]
+
+#Solicitud de accesso a la plataform
+urlpatterns += [
+    url(r'^ws/solicitud/acceso/$', views.SolicitudAccesoView.as_view(), name='ws_solicitar_acceso'),
+]

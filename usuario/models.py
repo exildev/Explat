@@ -155,15 +155,16 @@ class Opcion(models.Model):
 
 
 class AccesoPlataforma(models.Model):
-    empresa = models.ForeignKey(Empresa)
+    emp = models.ForeignKey(Empresa, verbose_name='Empresa')
+    tienda = models.ForeignKey(Tienda, null=True, blank=True)
     idenficacion = models.CharField(max_length=20)
     nombre = models.CharField(max_length=20)
     identificador = models.CharField(max_length=30)
     status = models.BooleanField(default=True)
     autorizado = models.BooleanField(default=False)
 
-    def __init__(self):
-        return u'%s - %s - %s'%(self.empresa.first_name, self.idenficacion, self.nombre)
+    def __unicode__(self):
+        return u'%s - %s '%(self.idenficacion, self.nombre)
     #end def
 
     def __str__(self):

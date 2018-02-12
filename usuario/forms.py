@@ -200,3 +200,18 @@ class SolicitudAccesoForm(forms.ModelForm):
         fields = ['empresa','idenficacion','identificador', 'nombre']
         exclude = ['status','autorizado']
     #end class
+#end class
+
+
+class SolicitudAccesoAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.AccesoPlataforma
+        fields = ['empresa','idenficacion','identificador', 'nombre','status','autorizado']
+        widgets ={
+            "nombre":forms.TextInput(attrs={'placeholder': 'Nombres', 'required': True}),
+            "empresa": forms.TextInput(attrs={'placeholder': 'Apellidos', 'required': True}),
+            "identificacion": forms.NumberInput(attrs={'placeholder': 'Numero de Identificación'}),
+            "identificador": forms.NumberInput(attrs={'placeholder': 'Numero de Identificación'}),
+        }
+    #end class
+#end class

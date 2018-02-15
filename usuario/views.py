@@ -268,7 +268,7 @@ class PassChangeEmpleado(UpdateView):
                 'pk'], 'mensaje': mensaje}
             return render(request, 'usuario/passChangeEmpleado.html', ctx)
         # end def
-        return render(request, 'usuario/passChangeEmpleado.html', {'form': form, 'empleado': kwargs['pk'], 'mensaje': mensaje})
+        return render(request, 'usuario/passChangeEmpleado.html', {'form': form, 'empleado': kwargs['pk'], 'mensaje': 'Error en el formulario'})
     # end def
 # end class
 
@@ -516,3 +516,11 @@ class SolicitudAccesoView(supra.SupraFormView):
     def dispatch(self, *args, **kwargs):
         return super(SolicitudAccesoView, self).dispatch(*args, **kwargs)
     # end def
+
+    def post(self, request, *args, **kwargs):
+        print 'Esto es lo q hay desde el el cel ', request.POST
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)

@@ -31,13 +31,12 @@
                 </div>
             </div>
             <div class="c mapa">
-                  <iframe id="map_id" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
- src="http://{{ host_node }}/?empresa={{ empresa }}&token={{ token }}" frameborder="0" sandbox="allow-same-origin allow-scripts" ></iframe>
+                  <iframe src="http://{{ host_node }}/?empresa={{ empresa }}&token={{ token }}" frameborder="0" ></iframe>
             </div>
         </div>
     </div>
 </div>
-<input type="hidden" id="ruta_mapa" value="http://{{ host_node }}/?empresa={{ empresa }}&token={{ token }}">
+
 <input type="hidden" id="empresa" value="{% if empresa %} {{ empresa }} {% else %} nada {% endif%}">
 <input type="hidden" id="token" value="{{ token }}">
 {% csrf_token %}
@@ -55,10 +54,6 @@
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script type="text/javascript" src="{% static 'api/js/jquery.qrcode.js' %}"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-      alert('jajaja');
-      document.getElementById('map_id').sandbox='allow-same-origin allow-scripts allow-popups allow-forms';
-});
   var socket = io('http://{{ host_node }}');
   function enviarMOtorizado(){
     console.log("esta en el socket");

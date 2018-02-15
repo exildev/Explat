@@ -135,3 +135,8 @@ urlpatterns += [
     url(r'^ws/cancelados/$', views.TablaCancelados.as_view(), name='ws_pedidos_cancelados'),
     url(r'^ws/motivos/cancelacion/$', views.MotCancelacion.as_view(), name='ws_motv_cancelados'),    
 ]
+
+#Servicios para consummir desde el mobil
+urlpatterns += [
+    url(r'^ws/mobil/list/pedidos/$',views.ListPedidosMotorizadoMobil.as_view(), name='mobil_list_pedidos'),
+]

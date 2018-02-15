@@ -139,4 +139,5 @@ urlpatterns += [
 #Servicios para consummir desde el mobil
 urlpatterns += [
     url(r'^ws/mobil/list/pedidos/$',views.ListPedidosMotorizadoMobil.as_view(), name='mobil_list_pedidos'),
+    url(r'^ws/get/pedido/$',views.GetPedidoMotorizadoMobil.as_view(), name='mobil_get_pedido'),
 ]

@@ -324,6 +324,17 @@ class TablaItems(View):
     # end def
 # end def
 
+class ListPedidosMotorizadoMobil(View):
+    @method_decorator(csrf_exempt)
+    def get(self,request):
+        idenficador = request.GET.get('identificador','')
+        cursor = connection.cursor()
+        cursor.execute('select list_pedidos_motorizado(\'%s\')'%idenficador)
+        row = cursor.fetchone()
+        return HttpResponse(row, content_type='application/json')
+    #end def
+#end class
+
 
 class UpdateItem(UpdateView):
     model = models.Items

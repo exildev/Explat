@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 import re
 from django.views.generic import View, DeleteView
 from django.views import generic
+import json
 from . import forms
 from . import models
 from motorizado import models as mod_motorizado
@@ -319,10 +320,10 @@ class TablaItems(View):
             request.user.id, busqueda, order, start, length)
         cursor.execute(m)
         row = cursor.fetchone()
-        print row
         return HttpResponse(row[0], content_type="application/json")
     # end def
 # end def
+
 
 class ListPedidosMotorizadoMobil(View):
     @method_decorator(csrf_exempt)
@@ -331,7 +332,19 @@ class ListPedidosMotorizadoMobil(View):
         cursor = connection.cursor()
         cursor.execute('select list_pedidos_motorizado(\'%s\')'%idenficador)
         row = cursor.fetchone()
-        return HttpResponse(row, content_type='application/json')
+        return HttpResponse(json.dumps(row[0]), content_type='application/json')
+    #end def
+#end class
+
+
+class GetPedidoMotorizadoMobil(View):
+    @method_decorator(csrf_exempt)
+    def get(self,request):
+        pedido = request.GET.get('pedido','')
+        cursor = connection.cursor()
+        cursor.execute('select get_add_pedido_admin(\'%s\')'%pedido)
+        row = cursor.fetchone()
+        return HttpResponse(json.dumps(row[0]), content_type='application/json')
     #end def
 #end class
 

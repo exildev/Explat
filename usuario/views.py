@@ -516,3 +516,12 @@ class SolicitudAccesoView(supra.SupraFormView):
     def dispatch(self, *args, **kwargs):
         return super(SolicitudAccesoView, self).dispatch(*args, **kwargs)
     # end def
+
+    def post(self, request, *args, **kwargs):
+        print 'Esto es lo q hay desde el el cel ', request.POST
+        form = self.get_form()
+        print request.POST
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)

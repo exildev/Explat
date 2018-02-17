@@ -520,8 +520,6 @@ class SolicitudAccesoView(supra.SupraFormView):
     def post(self, request, *args, **kwargs):
         print 'Esto es lo q hay desde el el cel ', request.POST
         form = self.get_form()
+        print form.is_valid()
+        print forms.errors.as_data()
         print request.POST
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)

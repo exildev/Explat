@@ -520,6 +520,11 @@ class SolicitudAccesoView(supra.SupraFormView):
     def post(self, request, *args, **kwargs):
         print 'Esto es lo q hay desde el el cel ', request.POST
         form = self.get_form()
+        if request.POST.get('identificacion', False):
+            return HttpResponse(
+                '{ "nombre": "%s"}'
+                % ('Hola mundo'),
+                content_type="application/json", status=200)
         if form.is_valid():
             return self.form_valid(form)
         else:

@@ -197,7 +197,7 @@ class ChangePasswordForm(forms.Form):
 class SolicitudAccesoForm(forms.ModelForm):
     class Meta:
         model = models.AccesoPlataforma
-        fields = ['emp','cedula','identificador', 'nombre']
+        fields = ['emp','cedula', 'tipo', 'identificador', 'nombre', 'apellidos']
         exclude = ['status','autorizado']
     #end class
 #end class

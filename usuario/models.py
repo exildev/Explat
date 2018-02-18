@@ -16,15 +16,16 @@ class Ciudad(models.Model):
 # end class
 
 
-class Usuario(User):
-    TIPO_ID = (
+TIPO_ID = (
         ("", "Tipo de identificación"),
         ('CEDULA', 'Cedula'),
-        ('TARJETADEIDENTIDAD', 'Tarjeta de Identidad'),
+        ('TARJETA DE IDENTIDAD', 'Tarjeta de Identidad'),
         ('NIT', 'Nit'),
         ('PASAPORTE', 'Pasaporte')
     )
 
+
+class Usuario(User):
     tipo_id = models.CharField(max_length=20, choices=TIPO_ID)
     identificacion = models.CharField(max_length=15, unique=True, validators=[
                                       validators.RegexValidator(re.compile('^[0-9]+$'), ('identificacion no valida'), 'invalid')])
@@ -157,8 +158,10 @@ class Opcion(models.Model):
 class AccesoPlataforma(models.Model):
     emp = models.ForeignKey(Empresa, verbose_name='Empresa', null=True, blank=True)
     tienda = models.ForeignKey(Tienda, null=True, blank=True)
+    tipo = models.CharField(max_length=40, choices=TIPO_ID)
     cedula = models.CharField(max_length=20)
     nombre = models.CharField(max_length=50)
+    apellidos = models.CharField(max_length=50)
     identificador = models.CharField(max_length=30)
     status = models.BooleanField(default=True)
     autorizado = models.BooleanField(default=False)

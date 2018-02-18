@@ -158,7 +158,7 @@ class AccesoPlataforma(models.Model):
     emp = models.ForeignKey(Empresa, verbose_name='Empresa', null=True, blank=True)
     tienda = models.ForeignKey(Tienda, null=True, blank=True)
     idenficacion = models.CharField(max_length=20)
-    nombre = models.CharField(max_length=20)
+    nombre = models.CharField(max_length=50)
     identificador = models.CharField(max_length=30)
     status = models.BooleanField(default=True)
     autorizado = models.BooleanField(default=False)

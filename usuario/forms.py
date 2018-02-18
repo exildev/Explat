@@ -197,7 +197,7 @@ class ChangePasswordForm(forms.Form):
 class SolicitudAccesoForm(forms.ModelForm):
     class Meta:
         model = models.AccesoPlataforma
-        fields = ['emp','idenficacion','identificador', 'nombre']
+        fields = ['emp','cedula','identificador', 'nombre']
         exclude = ['status','autorizado']
     #end class
 #end class
@@ -206,7 +206,7 @@ class SolicitudAccesoForm(forms.ModelForm):
 class SolicitudAccesoAdminForm(forms.ModelForm):
     class Meta:
         model = models.AccesoPlataforma
-        fields = ['emp','idenficacion','identificador', 'nombre','status','autorizado']
+        fields = ['emp','cedula','identificador', 'nombre','status','autorizado']
         widgets ={
             "nombre":forms.TextInput(attrs={'placeholder': 'Nombres', 'required': True}),
             "identificacion": forms.NumberInput(attrs={'placeholder': 'Numero de Identificación'}),

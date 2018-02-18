@@ -523,5 +523,5 @@ class SolicitudAccesoView(supra.SupraFormView):
         print dict(form.errors)
         print request.POST
         print '---------------------------------'
-        return HttpResponse('Hola', status=400, content_type='application/json')
+        return HttpResponse('Hola', status=200, content_type='application/json')
 

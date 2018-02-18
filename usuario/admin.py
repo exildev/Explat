@@ -42,7 +42,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
 
 
 class SolicitudAccesoAdmin(admin.ModelAdmin):
-    list_display = ['idenficacion','nombre','identificador','autorizado']
+    list_display = ['cedula','nombre','identificador','autorizado']
     search_fields = ['idenficicacion','nombre','identificador']
 #end class
 

@@ -167,11 +167,11 @@ class AccesoPlataforma(models.Model):
     autorizado = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u'%s - %s '%(self.idenficacion, self.nombre)
+        return u'%s - %s '%(self.cedula, self.nombre)
     #end def
 
     def __str__(self):
-        return u'%s - %s - %s'%(self.empresa.first_name, self.idenficacion, self.nombre)
+        return u'%s - %s - %s'%(self.empresa.first_name, self.cedula, self.nombre)
     #end def
 
     class Meta:

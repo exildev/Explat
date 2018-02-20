@@ -43,7 +43,7 @@ class EmpleadoAdmin(admin.ModelAdmin):
 
 class SolicitudAccesoAdmin(admin.ModelAdmin):
     list_display = ['cedula','nombre','identificador','autorizado']
-    search_fields = ['idenficicacion','nombre','identificador']
+    search_fields = ['cedula','nombre','identificador']
 #end class
 
 admin.site.register(models.Ciudad, CiudadAdmin)

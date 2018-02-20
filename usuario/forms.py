@@ -209,7 +209,7 @@ class SolicitudAccesoAdminForm(forms.ModelForm):
         fields = ['emp','cedula','identificador', 'nombre','status','autorizado']
         widgets ={
             "nombre":forms.TextInput(attrs={'placeholder': 'Nombres', 'required': True}),
-            "identificacion": forms.NumberInput(attrs={'placeholder': 'Numero de Identificación'}),
+            "cedula": forms.NumberInput(attrs={'placeholder': 'Numero de Identificación'}),
             "identificador": forms.NumberInput(attrs={'placeholder': 'Numero de Identificación'}),
         }
     #end class
